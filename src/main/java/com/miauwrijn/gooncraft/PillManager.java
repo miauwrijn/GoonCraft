@@ -1,12 +1,12 @@
 package com.miauwrijn.gooncraft;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,107 +19,110 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.PluginManager;
 
 import com.miauwrijn.gooncraft.data.PenisStatistics;
 
 public class PillManager implements Listener, CommandExecutor {
 
+    private static final int VIAGRA_BOOST = 5;
+    private final ItemStack viagraItem;
+    private final NamespacedKey viagraKey;
+
     public PillManager() {
-        PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvents(this, Plugin.instance);
-        CreateViagraItem();
+        this.viagraKey = new NamespacedKey(Plugin.instance, "viagra");
+        this.viagraItem = createViagraItem();
+        registerRecipe();
+        
+        Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
     }
 
-    ItemStack viagraItem;
-
-    void CreateViagraItem() {
-
-        viagraItem = new ItemStack(Material.GHAST_TEAR);
-        // Set custom name
-
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GREEN + "Can't get it up or simply have a small ween, take this for a temporary boost");
-
-        NamespacedKey key = getKey("viagra");
-        ItemMeta meta = viagraItem.getItemMeta();
+    private ItemStack createViagraItem() {
+        ItemStack item = new ItemStack(Material.GHAST_TEAR);
+        ItemMeta meta = item.getItemMeta();
+        
         if (meta != null) {
             meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Viagra");
-            meta.setLore(lore);
-            meta.getPersistentDataContainer().set(key, PersistentDataType.BOOLEAN, true);
-            viagraItem.setItemMeta(meta);
+            meta.setLore(List.of(
+                ChatColor.GREEN + "Can't get it up or simply have a small ween?",
+                ChatColor.GREEN + "Take this for a temporary +" + VIAGRA_BOOST + "cm boost!"
+            ));
+            meta.getPersistentDataContainer().set(viagraKey, PersistentDataType.BOOLEAN, true);
+            item.setItemMeta(meta);
         }
+        
+        return item;
+    }
 
-        // Create a new shaped recipe
-        ShapedRecipe recipe = new ShapedRecipe(key, viagraItem);
-
-        // Define the recipe shape
+    private void registerRecipe() {
+        ShapedRecipe recipe = new ShapedRecipe(viagraKey, viagraItem);
         recipe.shape("DDD", "DSD", "DDD");
-
-        // Define the ingredients
         recipe.setIngredient('D', Material.DIAMOND);
         recipe.setIngredient('S', Material.GHAST_TEAR);
-
-        // Register the recipe
+        
         Plugin.instance.getServer().addRecipe(recipe);
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand(); // Assuming the item is held in the main hand
+        ItemStack item = player.getInventory().getItemInMainHand();
 
-        NamespacedKey viagraKey = getKey("viagra");
-        // Check if the item being interacted with is your custom item
-        if (item != null) {
-            ItemMeta meta = item.getItemMeta();
-            if (meta == null)
-                return;
-            PersistentDataContainer container = meta.getPersistentDataContainer();
-            if (!container.get(viagraKey, PersistentDataType.BOOLEAN))
-                return;
-            // check if player penis is toggled
-            PenisStatistics stats = PenisStatisticManager.getStatistics(player);
-            if (stats == null || stats.penisModel == null) {
-                player.sendMessage(
-                        ChatColor.RED + "You need to have your dick out of your pants in order to use this Viagra");
-                return;
-            }
-
-            player.sendMessage(ChatColor.GREEN
-                    + "Nice cock bro, your dick temporarily grew 5cm");
-            // consume the item
-            item.setAmount(item.getAmount() - 1);
-            // play sound ding
-            player.playSound(player.getLocation(), "entity.experience_orb.pickup", 10, 0.001f);
-            // give player a buff
-            int newSize = stats.viagraBoost + 5;
-            PenisStatisticManager.setViagraBoost(player, newSize);
+        if (!isViagraItem(item)) {
+            return;
         }
+
+        PenisStatistics stats = PenisStatisticManager.getStatistics(player);
+        if (stats == null || stats.penisModel == null) {
+            player.sendMessage(ChatColor.RED + "You need to have your dick out to use this Viagra!");
+            return;
+        }
+
+        // Consume the item
+        item.setAmount(item.getAmount() - 1);
+        
+        // Apply the boost
+        PenisStatisticManager.setViagraBoost(player, stats.viagraBoost + VIAGRA_BOOST);
+        
+        // Effects
+        player.sendMessage(ChatColor.GREEN + "Nice cock bro! Your dick temporarily grew " + VIAGRA_BOOST + "cm!");
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
+        
+        event.setCancelled(true);
     }
 
-    private NamespacedKey getKey(String key) {
-        return new NamespacedKey(Plugin.instance, key);
+    private boolean isViagraItem(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return false;
+        }
+        
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
+        
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        Boolean isViagra = container.get(viagraKey, PersistentDataType.BOOLEAN);
+        return Boolean.TRUE.equals(isViagra);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Command can only be excecuted as player");
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can use this command");
             return true;
         }
-        Player playerSender = (Player) sender;
-        if (command.getName().equalsIgnoreCase("viagra")) {
-            if (playerSender.hasPermission("gooncraft.viagra")) {
-                ItemStack item = new ItemStack(viagraItem);
-                playerSender.getInventory().addItem(item);
-                playerSender.sendMessage(ChatColor.GREEN + "You have been given a viagra pill");
-            } else {
-                playerSender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
-            }
+
+        if (!command.getName().equalsIgnoreCase("viagra")) {
+            return false;
         }
+
+        if (!player.hasPermission("gooncraft.viagra")) {
+            player.sendMessage(ChatColor.RED + "You don't have permission to spawn viagra!");
+            return true;
+        }
+
+        player.getInventory().addItem(new ItemStack(viagraItem));
+        player.sendMessage(ChatColor.GREEN + "You've been given a Viagra pill!");
         return true;
     }
 }
-

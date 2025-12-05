@@ -1,23 +1,38 @@
 package com.miauwrijn.gooncraft;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
 
 public class CooldownManager {
-    private static final HashMap<String, Long> cooldowns = new HashMap<>();
+    
+    private static final Map<String, Long> cooldowns = new ConcurrentHashMap<>();
 
-    public static boolean hasCooldown(Player player, String action, long cooldownTime) {
-        if (cooldowns.containsKey(player.getName() + action)) {
-            long secondsLeft = ((cooldowns.get(player.getName() + action) / 1000) + cooldownTime)
-                    - (System.currentTimeMillis() / 1000);
-            return secondsLeft > 0;
+    public static boolean hasCooldown(Player player, String action, long cooldownSeconds) {
+        String key = createKey(player.getUniqueId(), action);
+        Long lastUsed = cooldowns.get(key);
+        
+        if (lastUsed == null) {
+            return false;
         }
-        return false;
+        
+        long elapsedSeconds = (System.currentTimeMillis() - lastUsed) / 1000;
+        return elapsedSeconds < cooldownSeconds;
     }
 
     public static void setCooldown(Player player, String action) {
-        cooldowns.put(player.getName() + action, System.currentTimeMillis());
+        String key = createKey(player.getUniqueId(), action);
+        cooldowns.put(key, System.currentTimeMillis());
+    }
+
+    public static void clearCooldown(Player player, String action) {
+        String key = createKey(player.getUniqueId(), action);
+        cooldowns.remove(key);
+    }
+
+    private static String createKey(UUID playerId, String action) {
+        return playerId.toString() + ":" + action;
     }
 }
-

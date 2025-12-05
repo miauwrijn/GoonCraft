@@ -2,8 +2,9 @@
 
 > *The Minecraft plugin your server never knew it needed (and probably doesn't).*
 
-![Minecraft](https://img.shields.io/badge/Minecraft-1.20+-brightgreen)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen)
 ![Spigot](https://img.shields.io/badge/Spigot-API-orange)
+![Java](https://img.shields.io/badge/Java-21-blue)
 ![Maturity](https://img.shields.io/badge/Maturity-Questionable-red)
 
 ---
@@ -17,7 +18,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 📊 Detailed size & girth tracking 
 - 🌈 BBC support (Big Block Construct, obviously)
 - 💊 Craftable Viagra for *temporary enhancements*
-- 👆 The legendary **Kontvinger** command
+- 👆 The legendary **Buttfinger** command
 - ✨ Real-time 3D models using Block Displays
 
 ---
@@ -30,6 +31,11 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 4. Question your life choices
 5. Have fun!
 
+**Requirements:**
+- Minecraft 1.21.1+
+- Java 21+
+- Spigot/Paper server
+
 ---
 
 ## 🎮 Commands
@@ -37,12 +43,18 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 | Command | Description |
 |---------|-------------|
 | `/penis size` | Check your size |
-| `/penis size <player>` | Check someone else's size (creepy) |
+| `/penis size <player>` | Check someone else's size |
 | `/penis girth` | Check your girth |
+| `/penis girth <player>` | Check someone else's girth |
 | `/penis bbc` | Check your BBC status |
+| `/penis bbc <player>` | Check someone else's BBC status |
 | `/penis toggle` | Whip it out / Put it away |
-| `/kontvinger <player>` | 👆 *You know what this does* |
+| `/buttfinger <player>` | 👆 *You know what this does* |
 | `/viagra` | Spawn a Viagra pill (requires permission) |
+
+### Command Aliases
+- `/penis` → `/pp`
+- `/buttfinger` → `/bf`
 
 ### Admin Commands
 
@@ -58,9 +70,9 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 
 | Permission | Description |
 |------------|-------------|
-| `penis.size.set` | Allows setting player sizes |
-| `penis.girth.set` | Allows setting player girths |
-| `penis.bbc.set` | Allows assigning BBC status |
+| `gooncraft.size.set` | Allows setting player sizes |
+| `gooncraft.girth.set` | Allows setting player girths |
+| `gooncraft.bbc.set` | Allows assigning BBC status |
 | `gooncraft.viagra` | Allows spawning Viagra pills |
 
 ---
@@ -105,13 +117,60 @@ This plugin is:
 
 ---
 
-## 🛠️ Building from Source
+## 🛠️ Development Setup
+
+### Prerequisites
+- Docker & Docker Compose
+
+That's it! No need to install Java or Maven locally.
+
+### Quick Start
 
 ```bash
-mvn clean package
+# First time setup
+./dev/dev.sh setup      # Linux/macOS
+.\dev\dev.ps1 setup     # Windows PowerShell
+make -C dev setup       # If you have Make
+
+# Start the Minecraft server
+./dev/dev.sh start      # Linux/macOS  
+.\dev\dev.ps1 start     # Windows PowerShell
+make -C dev start       # Make
+
+# Build & reload (main dev command)
+./dev/dev.sh dev        # Linux/macOS
+.\dev\dev.ps1 dev       # Windows PowerShell
+make -C dev dev         # Make
 ```
 
-The compiled jar will be in `target/gooncraft-x.x.x.jar`
+### All Commands
+
+| Command | Description |
+|---------|-------------|
+| `start` | Start the Minecraft server |
+| `stop` | Stop the server |
+| `build` | Build the plugin |
+| `reload` | Reload plugin on server |
+| `dev` | Build + Reload (main workflow) |
+| `logs` | View server logs |
+| `console` | Attach to server console |
+| `setup` | First time setup |
+
+### Server Details
+- **Address**: `localhost:25565`
+- **RCON Port**: `25575` (password: `gooncraft`)
+- **Version**: Paper 1.21.1
+- **Mode**: Creative (for testing)
+
+### Manual Build (without Docker)
+
+```bash
+mvn clean package -DskipTests
+```
+
+**Requirements for manual build:**
+- Maven 3.6+
+- JDK 21+
 
 ---
 
@@ -136,4 +195,3 @@ Actually, maybe don't contribute. Maybe let this die. Maybe we've gone too far.
   <br><br>
   <b>Remember: Just because you CAN code something, doesn't mean you SHOULD.</b>
 </p>
-

@@ -1,23 +1,24 @@
-name: gooncraft
+name: GoonCraft
 main: com.miauwrijn.gooncraft.Plugin
-version: 0.0.3
-api-version: 1.20
+version: 0.1.0
+api-version: '1.21'
 authors: ["Miauwrijn"]
-description: GoonCraft plugin
+description: The Minecraft plugin your server never knew it needed
 commands:
-  kontvinger:
-    description: Kontvingeren command
-    usage: /<command>
+  buttfinger:
+    description: Buttfinger someone nearby
+    usage: /<command> <player>
     aliases:
-      - kv
+      - bf
     permission-message: You do not have permission to use this command
   penis:
-    description: Penis command
-    usage: /<command>
+    description: Penis commands
+    usage: /<command> <size|girth|bbc|toggle>
     aliases:
       - pp
     permission-message: You do not have permission to use this command
   viagra:
-    description: Viagra command
+    description: Get a viagra pill
     usage: /<command>
+    permission: gooncraft.viagra
     permission-message: You do not have permission to use this command

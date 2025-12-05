@@ -1,35 +1,38 @@
 package com.miauwrijn.gooncraft;
 
 import java.util.logging.Logger;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
-/*
- * gooncraft java plugin
+import com.miauwrijn.gooncraft.handlers.ButtFingerCommandHandler;
+import com.miauwrijn.gooncraft.handlers.PenisCommandHandler;
+
+/**
+ * GoonCraft - The Minecraft plugin your server never knew it needed.
  */
 public class Plugin extends JavaPlugin {
-  private static final Logger LOGGER = Logger.getLogger("gooncraft");
+    
+    private static final Logger LOGGER = Logger.getLogger("GoonCraft");
+    public static Plugin instance;
 
-  private KontvingerCommandHandler commandHandler;
-  private PenisCommandhandler penisCommandHandler;
-  private PillManager pillManager;
+    @Override
+    public void onEnable() {
+        instance = this;
+        
+        // Initialize managers
+        new PenisStatisticManager();
+        PillManager pillManager = new PillManager();
+        
+        // Register command handlers
+        getCommand("buttfinger").setExecutor(new ButtFingerCommandHandler());
+        getCommand("penis").setExecutor(new PenisCommandHandler());
+        getCommand("viagra").setExecutor(pillManager);
 
-  public static Plugin instance;
+        LOGGER.info("GoonCraft enabled! Time to get weird.");
+    }
 
-  public void onEnable() {
-    instance = this;
-    LOGGER.info("gooncraft enabled");
-    commandHandler = new KontvingerCommandHandler();
-    penisCommandHandler = new PenisCommandhandler();
-    pillManager = new PillManager();
-    new PenisStatisticManager();
-    getCommand("kontvinger").setExecutor(commandHandler);
-    getCommand("penis").setExecutor(penisCommandHandler);
-    getCommand("viagra").setExecutor(pillManager);
-
-  }
-
-  public void onDisable() {
-    LOGGER.info("gooncraft disabled");
-  }
+    @Override
+    public void onDisable() {
+        LOGGER.info("GoonCraft disabled. Put your pants back on.");
+    }
 }
-

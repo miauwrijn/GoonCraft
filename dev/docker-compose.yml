@@ -1,0 +1,61 @@
+services:
+  # Minecraft Paper Server
+  minecraft:
+    image: itzg/minecraft-server:java21
+    container_name: gooncraft-server
+    ports:
+      - "25565:25565"
+      - "25575:25575"  # RCON
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.21.10"
+      MEMORY: "2G"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "gooncraft"
+      RCON_PORT: 25575
+      MOTD: "§d§lGoonCraft §7Dev Server"
+      OPS: ""  # Add your Minecraft username here
+      SPAWN_PROTECTION: 0
+      VIEW_DISTANCE: 10
+      MODE: "creative"
+    volumes:
+      - ../server-data:/data
+      - ../target:/plugins-source:ro
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    healthcheck:
+      test: mc-health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Plugin Builder
+  build:
+    image: maven:3.9-eclipse-temurin-21
+    working_dir: /app
+    volumes:
+      - ..:/app
+      - maven-cache:/root/.m2
+    command: >
+      sh -c "mvn clean package -DskipTests -q && 
+             cp target/gooncraft-*.jar /app/server-data/plugins/ 2>/dev/null || 
+             mkdir -p /app/server-data/plugins && cp target/gooncraft-*.jar /app/server-data/plugins/ &&
+             echo '✅ Plugin built and deployed!'"
+    profiles:
+      - build
+
+  # RCON reload command
+  reload:
+    image: itzg/rcon-cli
+    command: --host minecraft --port 25575 --password gooncraft "reload confirm"
+    depends_on:
+      minecraft:
+        condition: service_healthy
+    profiles:
+      - reload
+
+volumes:
+  maven-cache:
+

@@ -2,8 +2,12 @@ package com.miauwrijn.gooncraft.models;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
@@ -21,284 +25,227 @@ import net.md_5.bungee.api.ChatColor;
 
 public class PenisModel implements Runnable {
 
-    public static int minSize = 5;
-    public static int maxSize = 30;
+    public static final int minSize = 5;
+    public static final int maxSize = 30;
+    public static final int minGirth = 5;
+    public static final int maxGirth = 15;
 
-    public static int getRandomSize() {
-        Random random = new Random();
-        return random.nextInt(maxSize - minSize) + minSize;
-    }
-
-    public static int minGirth = 5;
-    public static int maxGirth = 15;
-
-    public static int getRandomGirth() {
-        Random random = new Random();
-        return random.nextInt(maxGirth - minGirth) + minGirth;
-    }
-
-    public static boolean getRandomBbc() {
-        Random random = new Random();
-        return random.nextBoolean();
-    }
+    private static final int CUM_ANIMATION_DURATION = 10;
+    private static final int EJACULATE_CHANCE = 50;
 
     private int size;
     private int girth;
-
+    private int viagraBoost;
     private boolean bbc;
-    private Player owner;
+    private final Player owner;
 
-    public PenisModel(Player receiver, boolean bbc, int size, int girth, int viagraBoost) {
-        this.owner = receiver;
+    private BlockDisplay leftBall;
+    private BlockDisplay rightBall;
+    private BlockDisplay shaft;
+    private BlockDisplay head;
+
+    private boolean isCumming = false;
+    private int framesSinceCumStart = 0;
+    private float stretch = 0;
+
+    public PenisModel(Player owner, boolean bbc, int size, int girth, int viagraBoost) {
+        this.owner = owner;
         this.bbc = bbc;
-        this.size = size;
-        this.girth = girth;
+        this.size = clamp(size, minSize, maxSize);
+        this.girth = clamp(girth, minGirth, maxGirth);
         this.viagraBoost = viagraBoost;
-
-        buildDick();
+        buildModel();
     }
 
-    int viagraBoost = 0;
+    public static int getRandomSize() {
+        return ThreadLocalRandom.current().nextInt(minSize, maxSize + 1);
+    }
 
-    public void reload(PenisStatistics updatedStatistics) {
-        this.size = updatedStatistics.size;
-        this.girth = updatedStatistics.girth;
-        this.bbc = updatedStatistics.bbc;
-        this.viagraBoost = updatedStatistics.viagraBoost;
+    public static int getRandomGirth() {
+        return ThreadLocalRandom.current().nextInt(minGirth, maxGirth + 1);
+    }
+
+    public static boolean getRandomBbc() {
+        return ThreadLocalRandom.current().nextBoolean();
+    }
+
+    public void reload(PenisStatistics stats) {
+        this.size = clamp(stats.size, minSize, maxSize);
+        this.girth = clamp(stats.girth, minGirth, maxGirth);
+        this.bbc = stats.bbc;
+        this.viagraBoost = stats.viagraBoost;
         discard();
-        buildDick();
+        buildModel();
     }
-
-    boolean isCumming = false;
-    int framesSineCumStart = 0;
-    private final int cumAnimationDuration = 10;
 
     @Override
     public void run() {
-        // move dick
         if (isCumming) {
             animateFap();
         }
-        moveDick();
-    }
-
-    float _stretch = 0;
-
-    void animateFap() {
-        float maximumStretch = ((float) size * 0.15f) * 0.03f;
-        if (framesSineCumStart == cumAnimationDuration) {
-            isCumming = false;
-            _stretch = 0;
-            framesSineCumStart = 0;
-            return;
-        } else {
-            // set fap animationFrame
-            boolean fapOut = framesSineCumStart <= ((float) cumAnimationDuration / 2f);
-            if (fapOut) {
-                // animate out
-                _stretch += (float) maximumStretch / ((float) cumAnimationDuration / 2f);
-            } else {
-                // animate back
-                _stretch -= (float) maximumStretch / ((float) cumAnimationDuration / 2f);
-            }
-        }
-        setBlockTransformation(shaft, true, false);
-        setBlockTransformation(head, false, true);
-        framesSineCumStart++;
+        updatePosition();
     }
 
     public void discard() {
-
-        leftBall.remove();
-        rightBall.remove();
-        shaft.remove();
-        head.remove();
-
-    }
-
-    void moveDick() {
-        Location location = owner.getLocation();
-
-        // get direction of player body
-        if (location.getPitch() > 10f) {
-            location.setPitch(10f);
-        } else if (location.getPitch() < -10f) {
-            location.setPitch(-10f);
-        }
-
-        // get center of player
-        Location center = location.clone().add(0, owner.isSneaking() ? 0.55 : 0.65, 0);
-        Vector direction = center.getDirection();
-        if (owner.isSneaking()) {
-            center = center.clone().subtract(direction.clone().normalize().multiply(0.25));
-            direction = center.getDirection();
-        }
-        // set the yaw
-        Vector perpVector = new Vector(direction.getZ(), 0, -direction.getX());
-        center = center.add(direction.clone().multiply(0.075));
-        Location ballCenter = center.clone().subtract(new Vector(0, 0.075, 0));
-        // get the 2 points to build
-
-        Location left = ballCenter.clone().add(perpVector.clone().multiply(0.075));
-        Location right = ballCenter.clone().subtract(perpVector.clone().multiply(0.075));
-        leftBall.teleport(left);
-        rightBall.teleport(right);
-
-        float offset = 0.075f;
-        shaft.teleport(center.clone().add(direction.clone().multiply(offset)));
-        head.teleport(center.clone().add(direction.clone().multiply(offset + 0.015f)));
-    }
-
-    BlockDisplay leftBall = null;
-    BlockDisplay rightBall = null;
-
-    BlockDisplay shaft = null;
-    BlockDisplay head = null;
-
-    void buildDick() {
-
-        Location location = owner.getLocation();
-        World world = owner.getWorld();
-
-        BlockData block = bbc ? org.bukkit.Material.BROWN_TERRACOTTA.createBlockData()
-                : org.bukkit.Material.WHITE_TERRACOTTA.createBlockData();
-
-        BlockData headBlock = org.bukkit.Material.TERRACOTTA.createBlockData();
-
-        leftBall = buildBlock(location, block, world, false, false);
-        rightBall = buildBlock(location, block, world, false, false);
-
-        shaft = buildBlock(location, block, world, true, false);
-
-        head = buildBlock(location, headBlock, world, false, true);
-
-        moveDick();
-    }
-
-    BlockDisplay buildBlock(Location location, BlockData block, World world, boolean shaftBlock, boolean headBlock) {
-
-        // make sure size is between 1 and 30
-        if (size < minSize) {
-            size = minSize;
-        } else if (size > maxSize) {
-            size = maxSize;
-        }
-
-        // make sure girth is between 1 and 15
-        if (girth < minGirth) {
-            girth = minGirth;
-        } else if (girth > maxGirth) {
-            girth = maxGirth;
-        }
-
-        // block display entity
-        BlockDisplay blockDisplay = (BlockDisplay) world.spawnEntity(location, EntityType.BLOCK_DISPLAY);
-        blockDisplay.setBlock(block);
-        // set size of block
-        blockDisplay.setDisplayHeight(0.1f);
-        blockDisplay.setDisplayWidth(0.1f);
-
-        setBlockTransformation(blockDisplay, shaftBlock, headBlock);
-
-        blockDisplay.setGravity(false);
-        blockDisplay.setInvulnerable(true);
-        blockDisplay.setSilent(true);
-        blockDisplay.setCustomName("GOONCRAFT");
-        blockDisplay.setCustomNameVisible(false);
-
-        return blockDisplay;
-    }
-
-    void setBlockTransformation(BlockDisplay block, boolean shaftBlock,
-            boolean headBlock) {
-
-        // modify entity data to set the size transformation
-        Vector3f scale = new Vector3f(0.01f * girth, 0.01f * girth, 0.01f * girth);
-        if (shaftBlock) {
-            scale = new Vector3f(0.01f * girth, 0.01f * girth, (0.03f * (size + viagraBoost) + _stretch));
-        }
-        if (headBlock) {
-            scale = new Vector3f(0.0075f * girth, 0.0075f * girth, (0.03f * (size + 1 + viagraBoost)) + _stretch);
-        }
-        Vector3f translation = new Vector3f(-(0.5f * scale.x), -(0.5f * scale.y), 0f);
-
-        AxisAngle4f leftRotation = new AxisAngle4f(0, 0, 1, 0);
-        AxisAngle4f rightRotation = new AxisAngle4f(0, 0, 1, 0);
-
-        Transformation transformation = new Transformation(translation, leftRotation, scale, rightRotation);
-        block.setTransformation(transformation);
+        if (leftBall != null) leftBall.remove();
+        if (rightBall != null) rightBall.remove();
+        if (shaft != null) shaft.remove();
+        if (head != null) head.remove();
     }
 
     public void cum() {
-        if (!owner.isSneaking()) {
+        if (!owner.isSneaking() || isCumming) {
             return;
         }
 
-        Random random = new Random();
-        int cooldown = random.nextInt(2);
-        if (CooldownManager.hasCooldown(owner, "cum", cooldown) || isCumming) {
+        Random random = ThreadLocalRandom.current();
+        if (CooldownManager.hasCooldown(owner, "cum", random.nextInt(2))) {
             return;
         }
 
         isCumming = true;
-        // start cooldown
         CooldownManager.setCooldown(owner, "cum");
 
-        // start a runnable task that spawns a trail of white particles from the head
-
         Location location = owner.getLocation();
-
         World world = location.getWorld();
-        List<Player> players = world.getPlayers();
+        List<Player> nearbyPlayers = world.getPlayers();
+        int ejaculateRoll = random.nextInt(EJACULATE_CHANCE);
 
-        int randomEjaculateChance = random.nextInt(50);
-
-        for (Player player : players) {
+        for (Player player : nearbyPlayers) {
             double distance = player.getLocation().distance(location);
-
             if (distance < 10) {
-                if (randomEjaculateChance == 1) {
-                    player.sendMessage("<" + owner.getName() + "> " + ChatColor.GRAY + "Hmmfff.. *ejaculates*");
-                } else {
-                    if (distance < 2 && player != owner) {
-                        player.sendMessage("" +
-                                ChatColor.GOLD + "You have been cummed on by " + ChatColor.GREEN
-                                + ChatColor.BOLD + owner.getName());
-                    } else {
-                        player.sendMessage("<" + owner.getName() + "> " + ChatColor.GRAY + "Fap...");
-                    }
-                }
+                sendCumMessage(player, distance, ejaculateRoll == 1);
             }
         }
 
-        // get direction of player body
-        if (location.getPitch() > 10f) {
-            location.setPitch(10f);
-        } else if (location.getPitch() < -10f) {
-            location.setPitch(-10f);
+        spawnCumParticles(ejaculateRoll == 1);
+    }
+
+    private void animateFap() {
+        float maxStretch = (size * 0.15f) * 0.03f;
+        
+        if (framesSinceCumStart >= CUM_ANIMATION_DURATION) {
+            isCumming = false;
+            stretch = 0;
+            framesSinceCumStart = 0;
+            return;
         }
 
-        // get center of player
-        Location center = location.clone().add(0, 0.65, 0);
+        boolean extending = framesSinceCumStart <= CUM_ANIMATION_DURATION / 2;
+        float delta = maxStretch / (CUM_ANIMATION_DURATION / 2f);
+        stretch += extending ? delta : -delta;
+
+        setBlockTransformation(shaft, true, false);
+        setBlockTransformation(head, false, true);
+        framesSinceCumStart++;
+    }
+
+    private void updatePosition() {
+        Location location = owner.getLocation();
+        location.setPitch(clamp(location.getPitch(), -10f, 10f));
+
+        float heightOffset = owner.isSneaking() ? 0.55f : 0.65f;
+        Location center = location.clone().add(0, heightOffset, 0);
         Vector direction = center.getDirection();
 
-        Location headLocation = head.getLocation().clone().add(direction.clone().multiply(0.03f * (size + 2)));
+        if (owner.isSneaking()) {
+            center = center.subtract(direction.clone().normalize().multiply(0.25));
+            direction = center.getDirection();
+        }
 
-        owner.getWorld().spawnParticle(org.bukkit.Particle.CLOUD,
-                headLocation, 1, 0.001, 0.001, 0.001,
-                0.1);
+        Vector perpVector = new Vector(direction.getZ(), 0, -direction.getX());
+        center = center.add(direction.clone().multiply(0.075));
+        Location ballCenter = center.clone().subtract(new Vector(0, 0.075, 0));
 
-        // play sound
-        owner.getWorld().playSound(owner.getLocation(), org.bukkit.Sound.ENTITY_LLAMA_SPIT, 10, 2);
+        leftBall.teleport(ballCenter.clone().add(perpVector.clone().multiply(0.075)));
+        rightBall.teleport(ballCenter.clone().subtract(perpVector.clone().multiply(0.075)));
+        shaft.teleport(center.clone().add(direction.clone().multiply(0.075)));
+        head.teleport(center.clone().add(direction.clone().multiply(0.09)));
+    }
 
-        if (randomEjaculateChance == 1) {
+    private void buildModel() {
+        Location location = owner.getLocation();
+        World world = owner.getWorld();
 
-            owner.getWorld().spawnParticle(org.bukkit.Particle.CLOUD,
-                    headLocation, 20, 0.001, 0.001, 0.001,
-                    0.1);
-            owner.getWorld().playSound(owner.getLocation(), org.bukkit.Sound.ENTITY_GHAST_SCREAM, 10, 0.00001f);
+        BlockData bodyBlock = (bbc ? Material.BROWN_TERRACOTTA : Material.WHITE_TERRACOTTA).createBlockData();
+        BlockData headBlock = Material.TERRACOTTA.createBlockData();
 
+        leftBall = createBlockDisplay(location, bodyBlock, world, false, false);
+        rightBall = createBlockDisplay(location, bodyBlock, world, false, false);
+        shaft = createBlockDisplay(location, bodyBlock, world, true, false);
+        head = createBlockDisplay(location, headBlock, world, false, true);
+
+        updatePosition();
+    }
+
+    private BlockDisplay createBlockDisplay(Location location, BlockData block, World world, 
+                                            boolean isShaft, boolean isHead) {
+        BlockDisplay display = (BlockDisplay) world.spawnEntity(location, EntityType.BLOCK_DISPLAY);
+        display.setBlock(block);
+        display.setDisplayHeight(0.1f);
+        display.setDisplayWidth(0.1f);
+        display.setGravity(false);
+        display.setInvulnerable(true);
+        display.setSilent(true);
+        display.setCustomName("GOONCRAFT");
+        display.setCustomNameVisible(false);
+
+        setBlockTransformation(display, isShaft, isHead);
+        return display;
+    }
+
+    private void setBlockTransformation(BlockDisplay block, boolean isShaft, boolean isHead) {
+        float g = girth * 0.01f;
+        int totalSize = size + viagraBoost;
+
+        Vector3f scale;
+        if (isShaft) {
+            scale = new Vector3f(g, g, totalSize * 0.03f + stretch);
+        } else if (isHead) {
+            scale = new Vector3f(g * 0.75f, g * 0.75f, (totalSize + 1) * 0.03f + stretch);
+        } else {
+            scale = new Vector3f(g, g, g);
+        }
+
+        Vector3f translation = new Vector3f(-scale.x * 0.5f, -scale.y * 0.5f, 0f);
+        AxisAngle4f rotation = new AxisAngle4f(0, 0, 1, 0);
+        
+        block.setTransformation(new Transformation(translation, rotation, scale, rotation));
+    }
+
+    private void sendCumMessage(Player player, double distance, boolean isEjaculating) {
+        if (isEjaculating) {
+            player.sendMessage("<" + owner.getName() + "> " + ChatColor.GRAY + "Hmmfff.. *ejaculates*");
+        } else if (distance < 2 && player != owner) {
+            player.sendMessage(ChatColor.GOLD + "You have been cummed on by " + 
+                             ChatColor.GREEN + ChatColor.BOLD + owner.getName());
+        } else {
+            player.sendMessage("<" + owner.getName() + "> " + ChatColor.GRAY + "Fap...");
         }
     }
-}
 
+    private void spawnCumParticles(boolean isEjaculating) {
+        Location location = owner.getLocation();
+        location.setPitch(clamp(location.getPitch(), -10f, 10f));
+        
+        Location center = location.clone().add(0, 0.65, 0);
+        Vector direction = center.getDirection();
+        Location headLocation = head.getLocation().add(direction.multiply((size + 2) * 0.03f));
+
+        World world = owner.getWorld();
+        world.spawnParticle(Particle.CLOUD, headLocation, isEjaculating ? 20 : 1, 0.001, 0.001, 0.001, 0.1);
+        world.playSound(owner.getLocation(), Sound.ENTITY_LLAMA_SPIT, 1.0f, 2.0f);
+
+        if (isEjaculating) {
+            world.playSound(owner.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1.0f, 0.00001f);
+        }
+    }
+
+    private static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    private static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
+    }
+}

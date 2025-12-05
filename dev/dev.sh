@@ -1,0 +1,81 @@
+#!/bin/bash
+# GoonCraft Dev Script
+# ====================
+# Cross-platform development script (Linux/macOS/Windows Git Bash)
+#
+# Usage: ./dev/dev.sh <command>
+#   start   - Start server
+#   stop    - Stop server
+#   build   - Build plugin
+#   reload  - Reload plugin
+#   dev     - Build + Reload
+#   logs    - View logs
+
+set -e
+cd "$(dirname "$0")"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+case "$1" in
+  start)
+    echo -e "${CYAN}🚀 Starting GoonCraft server...${NC}"
+    docker compose up -d minecraft
+    echo -e "${GREEN}✅ Server starting at localhost:25565${NC}"
+    ;;
+  stop)
+    echo -e "${YELLOW}🛑 Stopping server...${NC}"
+    docker compose down
+    echo -e "${GREEN}✅ Server stopped${NC}"
+    ;;
+  build)
+    echo -e "${CYAN}🔨 Building plugin...${NC}"
+    docker compose run --rm build
+    ;;
+  reload)
+    echo -e "${CYAN}🔄 Reloading plugin...${NC}"
+    docker compose run --rm reload || echo -e "${YELLOW}⚠️  Server might not be running${NC}"
+    ;;
+  dev)
+    echo -e "${CYAN}🔨 Building plugin...${NC}"
+    docker compose run --rm build
+    echo -e "${CYAN}🔄 Reloading plugin...${NC}"
+    docker compose run --rm reload || echo -e "${YELLOW}⚠️  Server might not be running${NC}"
+    echo -e "${GREEN}✅ Dev cycle complete!${NC}"
+    ;;
+  logs)
+    docker compose logs -f minecraft
+    ;;
+  console)
+    docker attach gooncraft-server
+    ;;
+  setup)
+    echo -e "${CYAN}📦 Setting up development environment...${NC}"
+    mkdir -p ../server-data/plugins
+    docker compose pull
+    docker compose run --rm build
+    echo -e "${GREEN}✅ Setup complete! Run './dev/dev.sh start' to start the server${NC}"
+    ;;
+  *)
+    echo ""
+    echo "  GoonCraft Dev Script"
+    echo "  ===================="
+    echo ""
+    echo "  Usage: ./dev/dev.sh <command>"
+    echo ""
+    echo "  Commands:"
+    echo "    start   - Start the Minecraft server"
+    echo "    stop    - Stop the server"
+    echo "    build   - Build the plugin"
+    echo "    reload  - Reload plugin on server"
+    echo "    dev     - Build + Reload (main dev command)"
+    echo "    logs    - View server logs"
+    echo "    console - Attach to server console"
+    echo "    setup   - First time setup"
+    echo ""
+    ;;
+esac
+
