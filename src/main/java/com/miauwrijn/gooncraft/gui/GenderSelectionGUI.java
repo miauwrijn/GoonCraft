@@ -9,6 +9,7 @@ import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.GenderManager.Gender;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
  * GUI for selecting gender on first join.
@@ -115,6 +116,11 @@ public class GenderSelectionGUI extends GUI {
         }
         
         GenderManager.setGender(viewer, gender);
+        
+        // Unlock "Best of Both Worlds" achievement for selecting OTHER
+        if (gender == Gender.OTHER) {
+            StatisticsManager.unlockGenderOther(viewer);
+        }
         
         String message = switch (gender) {
             case MALE -> ConfigManager.getMessage("gender.selected-male");

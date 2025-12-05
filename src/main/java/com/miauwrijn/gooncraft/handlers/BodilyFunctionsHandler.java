@@ -10,10 +10,14 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
+import org.bukkit.entity.Wolf;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -24,6 +28,7 @@ import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.CooldownManager;
 import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
  * Handles /fart, /poop, and /piss commands.
@@ -58,6 +63,9 @@ public class BodilyFunctionsHandler implements CommandExecutor {
         }
 
         CooldownManager.setCooldown(player, "fart");
+        
+        // Track statistic
+        StatisticsManager.incrementFartCount(player);
 
         Location loc = player.getLocation().add(0, 0.5, 0);
         
@@ -92,6 +100,9 @@ public class BodilyFunctionsHandler implements CommandExecutor {
         }
 
         CooldownManager.setCooldown(player, "poop");
+        
+        // Track statistic
+        StatisticsManager.incrementPoopCount(player);
 
         Location loc = player.getLocation();
 
@@ -160,6 +171,9 @@ public class BodilyFunctionsHandler implements CommandExecutor {
         }
 
         CooldownManager.setCooldown(player, "piss");
+        
+        // Track statistic
+        StatisticsManager.incrementPissCount(player);
 
         // Start piss stream
         new BukkitRunnable() {
@@ -241,7 +255,7 @@ public class BodilyFunctionsHandler implements CommandExecutor {
     }
 
     /**
-     * Easter egg: Check for nearby animals and dye them!
+     * Easter egg: Check for nearby animals and affect them!
      * @param player The player
      * @param color "yellow" for piss, "brown" for poop, "white" for cum
      */
@@ -249,6 +263,7 @@ public class BodilyFunctionsHandler implements CommandExecutor {
         Location loc = player.getLocation();
         
         for (Entity entity : loc.getWorld().getNearbyEntities(loc, 3, 3, 3)) {
+            // === SHEEP ===
             if (entity instanceof Sheep sheep) {
                 DyeColor dyeColor = switch (color) {
                     case "yellow" -> DyeColor.YELLOW;
@@ -281,7 +296,9 @@ public class BodilyFunctionsHandler implements CommandExecutor {
                         AchievementManager.tryUnlock(player, achievement);
                     }
                 }
-            } else if (entity instanceof Chicken chicken) {
+            }
+            // === CHICKEN ===
+            else if (entity instanceof Chicken chicken) {
                 // For chickens, we can't dye them, but we can add effects!
                 DustOptions dust = new DustOptions(
                     color.equals("yellow") ? Color.YELLOW : 
@@ -315,6 +332,62 @@ public class BodilyFunctionsHandler implements CommandExecutor {
                     if (achievement != null) {
                         AchievementManager.tryUnlock(player, achievement);
                     }
+                }
+            }
+            // === PIG (white only) ===
+            else if (entity instanceof Pig pig && color.equals("white")) {
+                DustOptions dust = new DustOptions(Color.WHITE, 1.0f);
+                pig.getWorld().spawnParticle(Particle.DUST, pig.getLocation().add(0, 0.5, 0), 
+                    20, 0.4, 0.4, 0.4, 0, dust);
+                pig.getWorld().playSound(pig.getLocation(), Sound.ENTITY_PIG_AMBIENT, 1.0f, 1.5f);
+                
+                if (pig.getCustomName() == null || !pig.getCustomName().contains("Glazed")) {
+                    pig.setCustomName("§f§lGlazed Ham");
+                    pig.setCustomNameVisible(true);
+                    AchievementManager.tryUnlock(player, Achievement.WHITE_PIG);
+                    StatisticsManager.incrementPigsAffected(player);
+                }
+            }
+            // === COW (white only) ===
+            else if (entity instanceof Cow cow && color.equals("white")) {
+                DustOptions dust = new DustOptions(Color.WHITE, 1.0f);
+                cow.getWorld().spawnParticle(Particle.DUST, cow.getLocation().add(0, 1, 0), 
+                    25, 0.5, 0.5, 0.5, 0, dust);
+                cow.getWorld().playSound(cow.getLocation(), Sound.ENTITY_COW_AMBIENT, 1.0f, 1.5f);
+                
+                if (cow.getCustomName() == null || !cow.getCustomName().contains("Cream")) {
+                    cow.setCustomName("§f§lCream Cow");
+                    cow.setCustomNameVisible(true);
+                    AchievementManager.tryUnlock(player, Achievement.WHITE_COW);
+                    StatisticsManager.incrementCowsAffected(player);
+                }
+            }
+            // === WOLF (yellow only) ===
+            else if (entity instanceof Wolf wolf && color.equals("yellow")) {
+                DustOptions dust = new DustOptions(Color.YELLOW, 0.8f);
+                wolf.getWorld().spawnParticle(Particle.DUST, wolf.getLocation().add(0, 0.7, 0), 
+                    20, 0.4, 0.4, 0.4, 0, dust);
+                wolf.getWorld().playSound(wolf.getLocation(), Sound.ENTITY_WOLF_WHINE, 1.0f, 1.2f);
+                
+                if (wolf.getCustomName() == null || !wolf.getCustomName().contains("Golden")) {
+                    wolf.setCustomName("§e§lGolden Retriever");
+                    wolf.setCustomNameVisible(true);
+                    AchievementManager.tryUnlock(player, Achievement.YELLOW_WOLF);
+                    StatisticsManager.incrementWolvesAffected(player);
+                }
+            }
+            // === CAT (white only) ===
+            else if (entity instanceof Cat cat && color.equals("white")) {
+                DustOptions dust = new DustOptions(Color.WHITE, 0.6f);
+                cat.getWorld().spawnParticle(Particle.DUST, cat.getLocation().add(0, 0.4, 0), 
+                    15, 0.3, 0.3, 0.3, 0, dust);
+                cat.getWorld().playSound(cat.getLocation(), Sound.ENTITY_CAT_HISS, 1.0f, 1.5f);
+                
+                if (cat.getCustomName() == null || !cat.getCustomName().contains("Cream")) {
+                    cat.setCustomName("§f§lCream Puff");
+                    cat.setCustomNameVisible(true);
+                    AchievementManager.tryUnlock(player, Achievement.WHITE_CAT);
+                    StatisticsManager.incrementCatsAffected(player);
                 }
             }
         }

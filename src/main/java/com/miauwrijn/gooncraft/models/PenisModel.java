@@ -239,9 +239,9 @@ public class PenisModel implements Runnable {
             if (ConfigManager.showCummedOnMessages()) {
                 player.sendMessage(ConfigManager.getMessage("cum.cummed-on", "{player}", owner.getName()));
             }
-            // Track statistic for getting cummed on
-            StatisticsManager.incrementGotCummedOn(player);
-            StatisticsManager.incrementCumOnOthers(owner);
+            // Track statistic for getting cummed on (with unique player tracking)
+            StatisticsManager.incrementGotCummedOn(player, owner);
+            StatisticsManager.incrementCumOnOthers(owner, player);
         } else {
             if (ConfigManager.showFapMessages()) {
                 player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("cum.fap"));

@@ -20,15 +20,15 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 💊 Craftable Viagra for *temporary enhancements*
 - 👆 The legendary **Buttfinger** command
 - ✨ Real-time 3D models using Block Displays
-- 🏆 **33 Achievements** to unlock (including 6 hidden!)
+- 🏆 **67 Achievements** to unlock (including 11 hidden!)
 - 📈 **Statistics tracking** for all your... activities
 - 🖥️ **Beautiful GUI menus** for stats, achievements & leaderboards
 - 🏅 **Leaderboards** with interactive GUI
 - 🚻 **Gender System** - Choose male, female, or *other*
 - 🍈 **Boob models** with size & perkiness stats!
-- 🎖️ **Ranking System** - From "Innocent Virgin" to "Ultimate Degenerate"
+- 🎖️ **12 Ranks** - From "Innocent Virgin" to "Ultimate Degenerate"
 - 💨 **Bodily Functions** - /fart, /poop, /piss commands
-- 🐑 **Easter Eggs** - Hidden achievements with animals!
+- 🐑 **Easter Eggs** - Hidden achievements with 6 different animals!
 - 🔄 **Auto-updating config** - New options merge automatically
 
 ---
@@ -138,20 +138,20 @@ Earn ranks by unlocking achievements! Each achievement brings you closer to the 
 
 **Higher rank = more frequent ejaculation!** 🎉
 
-| Achievements | Rank | Ejaculation Chance |
-|-------------|------|-------------------|
-| 0 | 👶 Innocent Virgin | 1 in 50 (2%) |
-| 1 | 🤔 Curious Toucher | 1 in 46 |
-| 3 | ✋ Amateur Stroker | 1 in 42 |
-| 5 | 🔥 Goon Enthusiast | 1 in 38 |
-| 8 | 💦 Dedicated Degenerate | 1 in 34 |
-| 11 | 🍆 Advanced Coomer | 1 in 30 |
-| 14 | 👑 Professional Gooner | 1 in 26 |
-| 17 | 🎓 Master Bater | 1 in 22 |
-| 20 | ⭐ Elite Exhibitionist | 1 in 18 |
-| 23 | 🏆 Legendary Pervert | 1 in 14 |
-| 26 | ✨ Golden Gooner | 1 in 10 |
-| 33 | 🌟 **✦ ULTIMATE DEGENERATE ✦** | 1 in 5 (20%) |
+| Achievements | Rank | Icon |
+|-------------|------|------|
+| 0 | Innocent Virgin | 👶 |
+| 2 | Curious Toucher | 🤔 |
+| 5 | Amateur Stroker | ✋ |
+| 10 | Goon Enthusiast | 🔥 |
+| 15 | Dedicated Degenerate | 💦 |
+| 22 | Advanced Coomer | 🍆 |
+| 30 | Professional Gooner | 👑 |
+| 38 | Master Bater | 🎓 |
+| 47 | Elite Exhibitionist | ⭐ |
+| 55 | Legendary Pervert | 🏆 |
+| 62 | Golden Gooner | ✨ |
+| **67** | **✦ ULTIMATE DEGENERATE ✦** | 🌟 |
 
 Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 
@@ -166,20 +166,106 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 - **Exposure Time** - Total time with your equipment out
 - **Buttfingers Given/Received** - Self-explanatory
 - **Viagra Used** - Pills consumed
+- **Farts/Poops/Pisses** - Bodily function counts
+- **Jiggles/Boob Flashes** - Boob activity
+- **Gender Changes** - Times you've changed your gender
+- **Unique Players** - Different players you've interacted with
 
-### Achievement Categories
+### Achievement Categories (67 Total)
 
-| Category | Achievements | Examples |
-|----------|-------------|----------|
-| 🦴 Fapping | 6 | First Timer → Legendary Gooner (1-1000 faps) |
-| 💦 Cumming | 4 | Oops! → Bukakke Master (1-100) |
-| 😵 Got Cummed | 3 | Victim → Cum Magnet (1-50) |
-| ⏱️ Exposure | 4 | Quick Flash → Public Menace (1min-10hrs) |
-| 👆 Buttfinger | 5 | Probing → Loose (1-50) |
-| 💊 Viagra | 3 | Performance Issues → Pharmacist's Best Friend (1-50) |
-| 🐑 Hidden | 6 | ???... 🤫 |
+| Category | Count | Examples |
+|----------|-------|----------|
+| 🦴 **Fapping** | 6 | First Timer → Legendary Gooner (1-1000 faps) |
+| 💦 **Cumming** | 4 | Oops! → Bukakke Master (1-100) |
+| 😵 **Got Cummed On** | 3 | Victim → Cum Magnet (1-50) |
+| ⏱️ **Exposure** | 5 | Quick Flash → Exhibitionist Prime (1min-100hrs) |
+| 👆 **Buttfinger** | 5 | Probing → Loose (1-50) |
+| 💊 **Viagra** | 3 | Performance Issues → Pharmacist's Best Friend (1-50) |
+| 💨 **Farts** | 3 | Wind Breaker → Taco Bell Survivor (1-500) |
+| 💩 **Poops** | 3 | First Drop → IBS Warrior (1-500) |
+| 💛 **Piss** | 3 | Marking Territory → Niagara Falls (1-500) |
+| 🍈 **Boobs** | 4 | Flasher → Earthquake (1-100) |
+| 🌈 **Gender** | 3 | Best of Both Worlds → Fluid |
+| 🌍 **Location** | 6 | Mile High Club, Deep Diver, Hot & Bothered... |
+| ⚠️ **Danger** | 5 | Caught Red-Handed, Creeper's Delight... |
+| 👥 **Social** | 5 | Sharing is Caring → Stink Bomb |
+| 🏃 **Speed** | 2 | Speed Runner, Rapid Fire |
+| 🐑 **Hidden** | 11 | ???... 🤫 |
 
-**Total: 33 achievements to unlock!** (27 regular + 6 hidden easter eggs)
+### Achievement Details
+
+#### 💨 Bodily Functions
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Wind Breaker | Your first toot | Fart 1 time |
+| Crop Duster | Spread the love | Fart 50 times |
+| Taco Bell Survivor | You should see a doctor | Fart 500 times |
+| First Drop | Nature calls | Poop 1 time |
+| Regular Schedule | Fiber is important | Poop 50 times |
+| IBS Warrior | Your poor toilet | Poop 500 times |
+| Marking Territory | Claim what's yours | Piss 1 time |
+| Fire Hydrant | Like a dog | Piss 50 times |
+| Niagara Falls | Endless stream | Piss 500 times |
+
+#### 🍈 Boob Achievements
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Flasher | Show 'em off | Toggle boobs 1 time |
+| Mardi Gras | Free the nipple | Toggle boobs 50 times |
+| Jello Jigglers | Boing boing | Jiggle 10 times |
+| Earthquake | 8.0 on the Richter scale | Jiggle 100 times |
+
+#### 🌈 Gender Achievements
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Best of Both Worlds | Embrace it all | Select Other gender |
+| Identity Crisis | Can't decide | Change gender 5 times |
+| Fluid | Go with the flow | Change gender 20 times |
+
+#### 🌍 Location Achievements
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Mile High Club | Get freaky above Y=200 | Fap at high altitude |
+| Deep Diver | Aquatic activities | Fap underwater |
+| Hot & Bothered | Fap in the Nether | Fap in Nether |
+| End Game | Beat the dragon... differently | Fap in The End |
+| Dry Rub | Sandy situation | Fap in desert biome |
+| Shrinkage | It's cold! | Fap in snow biome |
+
+#### ⚠️ Danger Achievements
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Caught Red-Handed | Take damage while fapping | Get hit while fapping |
+| Didn't See That Coming | Die while exposed | Die with toggle on |
+| Too Hot To Handle | Fap while on fire | Fap while burning |
+| Terminal Velocity | Falling with style | Fap while falling |
+| Creeper's Delight | Worst timing ever | Get blown up while exposed |
+
+#### 👥 Social Achievements
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Sharing is Caring | Cum on 10 different players | Variety |
+| Popular Target | Get cummed on by 10 different players | Being social |
+| Golden Shower Hour | Piss near 10 different players | Spread the gold |
+| Stink Bomb | Fart near 10 different players | Gas attack |
+| Explorer | Buttfinger 10 different players | Finger variety |
+
+#### 🏃 Speed Achievements
+| Achievement | Description | Requirement |
+|-------------|-------------|-------------|
+| Speed Runner | Fap 10 times in 60 seconds | Fast hands |
+| Rapid Fire | Ejaculate 3 times in 30 seconds | Lucky streak |
+
+#### 🐑 Hidden Animal Easter Eggs (11)
+Discover these by... interacting with animals in creative ways! 🤫
+
+- 🐑 Sheep (3 achievements) - Yellow, Brown, White
+- 🐔 Chicken (3 achievements) - Lemon, Chocolate, Cream
+- 🐷 Pig (1 achievement) - Pork Glazing
+- 🐄 Cow (1 achievement) - Holy Cow
+- 🐺 Wolf (1 achievement) - Wet Wolf
+- 🐱 Cat (1 achievement) - Cat Got Your... Cream?
+- 💨💩 Combo (1 achievement) - Shart Attack
 
 ### Leaderboard GUI
 
@@ -233,11 +319,12 @@ Click on any player to view their detailed stats!
 - Cum particles only appear during actual ejaculation 💦
 - **Boobs have nipples** that move with perkiness!
 - **/piss** creates a realistic yellow arc with sine wave particles!
-- 🐑🐔 **Secret animal interactions** - Try doing bodily functions near sheep or chickens...
+- 🐑🐔🐷🐄🐺🐱 **Secret animal interactions** - Try doing bodily functions near animals...
   - Piss near them for a golden surprise
   - Poop near them for a brown makeover
   - Ejaculate near them for a white coating
-  - **6 hidden achievements** to discover!
+  - **11 hidden achievements** to discover!
+- **Shart Attack** - Fart and then poop within 5 seconds 💨💩
 
 ---
 
@@ -267,9 +354,15 @@ Boobs:
 Stats:
   FapCount: 42
   CumOnOthersCount: 10
+  FartCount: 25
+  PoopCount: 12
+  PissCount: 8
+  JiggleCount: 15
+  GenderChanges: 3
   # ... more stats
 Achievements:
   FIRST_FAP: true
+  FART_1: true
   # ... more achievements
 ```
 
@@ -374,13 +467,13 @@ com.miauwrijn.gooncraft/
 ├── Plugin.java              # Main plugin class
 ├── data/
 │   ├── PenisStatistics.java # Penis data model
-│   └── PlayerStats.java     # Player statistics
+│   └── PlayerStats.java     # Player statistics (67 tracked fields!)
 ├── gui/
 │   ├── GUI.java             # Base GUI class
 │   ├── GUIListener.java     # Click event handler
 │   ├── ItemBuilder.java     # Fluent item builder
 │   ├── StatsGUI.java        # Statistics menu
-│   ├── AchievementsGUI.java # Achievements menu (with hidden ???)
+│   ├── AchievementsGUI.java # Achievements menu (67 achievements!)
 │   ├── LeaderboardGUI.java  # Leaderboard menu
 │   └── GenderSelectionGUI.java # Gender picker (rainbow!)
 ├── handlers/
@@ -391,14 +484,14 @@ com.miauwrijn.gooncraft/
 │   ├── PenisCommandHandler.java
 │   └── StatsCommandHandler.java
 ├── managers/
-│   ├── AchievementManager.java # 33 achievements (6 hidden)
+│   ├── AchievementManager.java # 67 achievements (11 hidden)
 │   ├── ConfigManager.java      # Auto-merging config
 │   ├── CooldownManager.java
 │   ├── GenderManager.java
 │   ├── PenisStatisticManager.java
 │   ├── PillManager.java
 │   ├── RankManager.java        # 12 ranks with perks
-│   └── StatisticsManager.java
+│   └── StatisticsManager.java  # Tracks everything!
 └── models/
     ├── BoobModel.java       # 3D boob display with nipples
     └── PenisModel.java      # 3D penis display model

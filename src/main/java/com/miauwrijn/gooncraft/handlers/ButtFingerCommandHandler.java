@@ -60,9 +60,11 @@ public class ButtFingerCommandHandler implements CommandExecutor {
     private void buttfinger(Player executor, Player target, boolean isSelf) {
         CooldownManager.setCooldown(executor, "buttfinger");
 
-        // Track statistics
-        StatisticsManager.incrementButtfingersGiven(executor);
-        if (!isSelf) {
+        // Track statistics (with target for unique player tracking)
+        if (isSelf) {
+            StatisticsManager.incrementButtfingersGiven(executor);
+        } else {
+            StatisticsManager.incrementButtfingersGiven(executor, target);
             StatisticsManager.incrementButtfingersReceived(target);
         }
 

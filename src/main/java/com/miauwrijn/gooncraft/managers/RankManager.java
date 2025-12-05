@@ -5,26 +5,31 @@ import org.bukkit.entity.Player;
 /**
  * Manages player ranks based on achievement count.
  * Each achievement = 1 level toward the next rank.
+ * 
+ * Total achievements: 67
+ * - Regular: 56
+ * - Hidden: 11
  */
 public class RankManager {
 
     /**
      * Rank definitions with funny names.
      * Each rank requires a minimum number of achievements.
+     * Thresholds adjusted for 67 total achievements.
      */
     public enum Rank {
         INNOCENT(0, "§7Innocent Virgin", "§7", "👶"),
-        CURIOUS(1, "§aCurious Toucher", "§a", "🤔"),
-        AMATEUR(3, "§eAmateur Stroker", "§e", "✋"),
-        ENTHUSIAST(5, "§6Goon Enthusiast", "§6", "🔥"),
-        DEDICATED(8, "§cDedicated Degenerate", "§c", "💦"),
-        ADVANCED(11, "§dAdvanced Coomer", "§d", "🍆"),
-        PROFESSIONAL(14, "§5Professional Gooner", "§5", "👑"),
-        EXPERT(17, "§bMaster Bater", "§b", "🎓"),
-        ELITE(20, "§3Elite Exhibitionist", "§3", "⭐"),
-        LEGENDARY(23, "§4Legendary Pervert", "§4", "🏆"),
-        GOLDEN(26, "§6§lGolden Gooner", "§6§l", "✨"),
-        ULTIMATE(27, "§d§l✦ ULTIMATE DEGENERATE ✦", "§d§l", "🌟");
+        CURIOUS(2, "§aCurious Toucher", "§a", "🤔"),
+        AMATEUR(5, "§eAmateur Stroker", "§e", "✋"),
+        ENTHUSIAST(10, "§6Goon Enthusiast", "§6", "🔥"),
+        DEDICATED(15, "§cDedicated Degenerate", "§c", "💦"),
+        ADVANCED(22, "§dAdvanced Coomer", "§d", "🍆"),
+        PROFESSIONAL(30, "§5Professional Gooner", "§5", "👑"),
+        EXPERT(38, "§bMaster Bater", "§b", "🎓"),
+        ELITE(47, "§3Elite Exhibitionist", "§3", "⭐"),
+        LEGENDARY(55, "§4Legendary Pervert", "§4", "🏆"),
+        GOLDEN(62, "§6§lGolden Gooner", "§6§l", "✨"),
+        ULTIMATE(67, "§d§l✦ ULTIMATE DEGENERATE ✦", "§d§l", "🌟");
 
         public final int requiredAchievements;
         public final String displayName;

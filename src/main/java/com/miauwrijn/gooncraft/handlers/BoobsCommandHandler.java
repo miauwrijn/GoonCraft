@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.GenderManager;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 import com.miauwrijn.gooncraft.models.BoobModel;
 
 /**
@@ -188,6 +189,9 @@ public class BoobsCommandHandler implements CommandExecutor {
         if (model == null) {
             showBoobs(player);
             player.sendMessage(ConfigManager.getMessage("boobs.whipped-out"));
+            
+            // Track statistic for boob toggle
+            StatisticsManager.incrementBoobToggleCount(player);
         } else {
             hideBoobs(player);
             player.sendMessage(ConfigManager.getMessage("boobs.put-away"));
@@ -205,6 +209,10 @@ public class BoobsCommandHandler implements CommandExecutor {
 
         model.jiggle();
         player.sendMessage(ConfigManager.getMessage("boobs.jiggle"));
+        
+        // Track statistic for jiggle
+        StatisticsManager.incrementJiggleCount(player);
+        
         return true;
     }
 

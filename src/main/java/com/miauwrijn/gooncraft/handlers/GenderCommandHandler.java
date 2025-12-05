@@ -9,6 +9,7 @@ import com.miauwrijn.gooncraft.gui.GenderSelectionGUI;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.GenderManager.Gender;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
  * Handles /gender command to view or change gender.
@@ -43,6 +44,9 @@ public class GenderCommandHandler implements CommandExecutor {
             // Clear active models before changing
             GenderManager.clearActiveBoobModel(player);
             com.miauwrijn.gooncraft.managers.PenisStatisticManager.clearActivePenis(player);
+            
+            // Track gender change statistic
+            StatisticsManager.incrementGenderChanges(player);
             
             new GenderSelectionGUI(player).open();
             return true;
