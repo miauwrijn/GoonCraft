@@ -33,6 +33,15 @@ commands:
   piss:
     description: Take a leak (requires penis toggle)
     usage: /<command>
+  gender:
+    description: View or change your gender
+    usage: /<command> [change]
+  boobs:
+    description: Boob commands
+    usage: /<command> <size|toggle|jiggle>
+    aliases:
+      - tits
+      - breasts
 
 permissions:
   gooncraft.reload:
@@ -49,4 +58,7 @@ permissions:
     default: op
   gooncraft.bbc.set:
     description: Allows setting BBC status
+    default: op
+  gooncraft.boobs.set:
+    description: Allows setting player boob sizes
     default: op

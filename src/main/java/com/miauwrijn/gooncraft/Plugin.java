@@ -9,11 +9,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.miauwrijn.gooncraft.gui.GUIListener;
 import com.miauwrijn.gooncraft.handlers.BodilyFunctionsHandler;
+import com.miauwrijn.gooncraft.handlers.BoobsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.ButtFingerCommandHandler;
+import com.miauwrijn.gooncraft.handlers.GenderCommandHandler;
 import com.miauwrijn.gooncraft.handlers.PenisCommandHandler;
 import com.miauwrijn.gooncraft.handlers.StatsCommandHandler;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
+import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
 import com.miauwrijn.gooncraft.managers.PillManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
@@ -39,6 +42,7 @@ public class Plugin extends JavaPlugin {
         new PenisStatisticManager();
         new StatisticsManager();
         new AchievementManager();
+        new GenderManager();
         new GUIListener();
         PillManager pillManager = new PillManager();
         
@@ -56,12 +60,19 @@ public class Plugin extends JavaPlugin {
         getCommand("fart").setExecutor(bodilyHandler);
         getCommand("poop").setExecutor(bodilyHandler);
         getCommand("piss").setExecutor(bodilyHandler);
+        
+        // Gender and boobs
+        getCommand("gender").setExecutor(new GenderCommandHandler());
+        getCommand("boobs").setExecutor(new BoobsCommandHandler());
 
         LOGGER.info("GoonCraft enabled! Time to get weird.");
     }
 
     @Override
     public void onDisable() {
+        // Clean up all floating models
+        PenisStatisticManager.clearAllActivePenises();
+        GenderManager.clearAllActiveBoobModels();
         LOGGER.info("GoonCraft disabled. Put your pants back on.");
     }
 

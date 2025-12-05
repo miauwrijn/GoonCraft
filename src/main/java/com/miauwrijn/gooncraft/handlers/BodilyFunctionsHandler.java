@@ -1,18 +1,26 @@
 package com.miauwrijn.gooncraft.handlers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sheep;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
+import com.miauwrijn.gooncraft.managers.AchievementManager;
+import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.CooldownManager;
 import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
@@ -119,6 +127,9 @@ public class BodilyFunctionsHandler implements CommandExecutor {
                         }
                     }
 
+                    // Easter egg: Check for nearby sheep/chickens to dye brown
+                    checkForAnimals(player, "brown");
+
                     this.cancel();
                     return;
                 }
@@ -174,6 +185,10 @@ public class BodilyFunctionsHandler implements CommandExecutor {
                 // Create sine wave piss stream
                 double time = ticks * 0.15;
                 
+                // Yellow dust options for piss
+                DustOptions yellowPiss = new DustOptions(Color.YELLOW, 0.5f);
+                DustOptions darkYellowPiss = new DustOptions(Color.fromRGB(204, 204, 0), 0.7f);
+
                 for (double t = 0; t < 2.5; t += 0.15) {
                     // Parabolic trajectory with sine wave
                     double x = t;
@@ -189,12 +204,12 @@ public class BodilyFunctionsHandler implements CommandExecutor {
                         .add(right.clone().multiply(sineOffset))
                         .add(0, y, 0);
 
-                    // Yellow water drip particles
-                    player.getWorld().spawnParticle(Particle.FALLING_WATER, particleLoc, 1, 0.02, 0.02, 0.02, 0);
+                    // Yellow dust particles for piss stream
+                    player.getWorld().spawnParticle(Particle.DUST, particleLoc, 1, 0.02, 0.02, 0.02, 0, yellowPiss);
                     
-                    // Occasional drip particle for effect
+                    // Occasional darker yellow drip for effect
                     if (Math.random() < 0.3) {
-                        player.getWorld().spawnParticle(Particle.DRIPPING_WATER, particleLoc, 1, 0, 0, 0, 0);
+                        player.getWorld().spawnParticle(Particle.DUST, particleLoc, 1, 0, 0, 0, 0, darkYellowPiss);
                     }
                 }
 
@@ -213,10 +228,95 @@ public class BodilyFunctionsHandler implements CommandExecutor {
                     }
                 }
 
+                // Easter egg: Check for nearby sheep/chickens to dye yellow
+                if (ticks % 10 == 0) {
+                    checkForAnimals(player, "yellow");
+                }
+
                 ticks++;
             }
         }.runTaskTimer(Plugin.instance, 0L, 1L);
 
         return true;
+    }
+
+    /**
+     * Easter egg: Check for nearby animals and dye them!
+     * @param player The player
+     * @param color "yellow" for piss, "brown" for poop, "white" for cum
+     */
+    public static void checkForAnimals(Player player, String color) {
+        Location loc = player.getLocation();
+        
+        for (Entity entity : loc.getWorld().getNearbyEntities(loc, 3, 3, 3)) {
+            if (entity instanceof Sheep sheep) {
+                DyeColor dyeColor = switch (color) {
+                    case "yellow" -> DyeColor.YELLOW;
+                    case "brown" -> DyeColor.BROWN;
+                    case "white" -> DyeColor.WHITE;
+                    default -> null;
+                };
+                
+                if (dyeColor != null && sheep.getColor() != dyeColor) {
+                    sheep.setColor(dyeColor);
+                    
+                    // Spawn particles on the sheep
+                    DustOptions dust = new DustOptions(
+                        color.equals("yellow") ? Color.YELLOW : 
+                        color.equals("brown") ? Color.fromRGB(139, 69, 19) : Color.WHITE, 
+                        1.0f
+                    );
+                    sheep.getWorld().spawnParticle(Particle.DUST, sheep.getLocation().add(0, 1, 0), 
+                        20, 0.5, 0.5, 0.5, 0, dust);
+                    sheep.getWorld().playSound(sheep.getLocation(), Sound.ENTITY_SHEEP_AMBIENT, 1.0f, 1.5f);
+                    
+                    // Unlock achievement
+                    Achievement achievement = switch (color) {
+                        case "yellow" -> Achievement.YELLOW_SHEEP;
+                        case "brown" -> Achievement.BROWN_SHEEP;
+                        case "white" -> Achievement.WHITE_SHEEP;
+                        default -> null;
+                    };
+                    if (achievement != null) {
+                        AchievementManager.tryUnlock(player, achievement);
+                    }
+                }
+            } else if (entity instanceof Chicken chicken) {
+                // For chickens, we can't dye them, but we can add effects!
+                DustOptions dust = new DustOptions(
+                    color.equals("yellow") ? Color.YELLOW : 
+                    color.equals("brown") ? Color.fromRGB(139, 69, 19) : Color.WHITE, 
+                    0.8f
+                );
+                
+                // Shower the chicken with colored particles
+                chicken.getWorld().spawnParticle(Particle.DUST, chicken.getLocation().add(0, 0.5, 0), 
+                    15, 0.3, 0.3, 0.3, 0, dust);
+                chicken.getWorld().playSound(chicken.getLocation(), Sound.ENTITY_CHICKEN_HURT, 1.0f, 1.2f);
+                
+                // Give the chicken a funny custom name
+                String chickenName = switch (color) {
+                    case "yellow" -> "§e§lLemon Chicken";
+                    case "brown" -> "§6§lChocolate Nugget";
+                    case "white" -> "§f§lCreamed Chicken";
+                    default -> null;
+                };
+                if (chickenName != null && !chickenName.equals(chicken.getCustomName())) {
+                    chicken.setCustomName(chickenName);
+                    chicken.setCustomNameVisible(true);
+                    
+                    // Unlock achievement
+                    Achievement achievement = switch (color) {
+                        case "yellow" -> Achievement.YELLOW_CHICKEN;
+                        case "brown" -> Achievement.BROWN_CHICKEN;
+                        case "white" -> Achievement.WHITE_CHICKEN;
+                        default -> null;
+                    };
+                    if (achievement != null) {
+                        AchievementManager.tryUnlock(player, achievement);
+                    }
+                }
+            }
+        }
     }
 }

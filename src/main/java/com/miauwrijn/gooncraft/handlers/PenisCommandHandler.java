@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
+import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 import com.miauwrijn.gooncraft.models.PenisModel;
@@ -74,6 +75,12 @@ public class PenisCommandHandler implements CommandExecutor {
     private boolean handleToggleCommand(CommandSender sender) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ConfigManager.getMessage("only-players"));
+            return true;
+        }
+
+        // Check if player has a penis based on gender
+        if (!GenderManager.hasPenis(player)) {
+            player.sendMessage(ConfigManager.getMessage("penis.no-penis"));
             return true;
         }
 

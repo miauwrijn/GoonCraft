@@ -121,13 +121,29 @@ public class PenisStatisticManager implements Listener {
         }
     }
 
-    private void cleanupFloatingModels() {
+    /**
+     * Removes all GoonCraft block display entities from all worlds.
+     * Called on startup and shutdown to prevent floating models.
+     */
+    public static void cleanupFloatingModels() {
         for (World world : Plugin.instance.getServer().getWorlds()) {
             world.getEntities().stream()
                 .filter(e -> e.getType() == EntityType.BLOCK_DISPLAY)
                 .filter(e -> "GOONCRAFT".equalsIgnoreCase(e.getName()))
                 .forEach(org.bukkit.entity.Entity::remove);
         }
+    }
+
+    /**
+     * Clears all active penis models for all online players.
+     * Called on plugin disable.
+     */
+    public static void clearAllActivePenises() {
+        for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
+            clearActivePenis(player);
+        }
+        // Also clean up any orphaned entities
+        cleanupFloatingModels();
     }
 
     private void loadOrCreatePlayerData(Player player) {

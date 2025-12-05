@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
+import com.miauwrijn.gooncraft.managers.RankManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
@@ -21,12 +22,27 @@ public class StatsGUI extends GUI {
         // Fill border
         fillBorder(ItemBuilder.filler(Material.PURPLE_STAINED_GLASS_PANE));
         
+        // Get rank info
+        RankManager.Rank rank = RankManager.getRank(target);
+        RankManager.Rank nextRank = RankManager.getNextRank(rank);
+        int achievementsToNext = RankManager.getAchievementsToNextRank(target);
+        double progress = RankManager.getProgressToNextRank(target);
+        String progressBar = RankManager.createProgressBar(progress, 10);
+        
+        // Build rank progress lore
+        String rankProgressLine = nextRank != null 
+            ? "§7Next: " + nextRank.displayName + " §7(" + achievementsToNext + " more)"
+            : "§d§lMAX RANK ACHIEVED!";
+        
         // Player head in center top
         setItem(slot(1, 4), new ItemBuilder(Material.PLAYER_HEAD)
                 .skullOwner(target)
                 .name("§6§l" + target.getName())
                 .lore(
-                    "§7Viewing " + (isSelf ? "your" : "their") + " goon statistics",
+                    "",
+                    rank.icon + " " + rank.displayName,
+                    progressBar + " §7" + Math.round(progress * 100) + "%",
+                    rankProgressLine,
                     "",
                     "§eAchievements: §f" + AchievementManager.getUnlockedCount(target) + 
                         "§7/§f" + AchievementManager.getTotalAchievements()
@@ -107,7 +123,7 @@ public class StatsGUI extends GUI {
                 .build());
         
         // Achievements button
-        setItem(slot(3, 7), new ItemBuilder(Material.GOLD_INGOT)
+        setItem(slot(3, 6), new ItemBuilder(Material.GOLD_INGOT)
                 .name("§6§lView Achievements")
                 .lore(
                     "§7Click to view achievements!",
@@ -119,8 +135,20 @@ public class StatsGUI extends GUI {
                 .build(),
                 event -> new AchievementsGUI(viewer, target).open());
         
+        // Leaderboard button
+        setItem(slot(3, 2), new ItemBuilder(Material.DIAMOND)
+                .name("§b§lLeaderboard")
+                .lore(
+                    "§7Click to view the leaderboard!",
+                    "",
+                    "§7Compare your stats with others"
+                )
+                .glow()
+                .build(),
+                event -> new LeaderboardGUI(viewer).open());
+        
         // Close button
-        setItem(slot(4, 4), new ItemBuilder(Material.BARRIER)
+        setItem(slot(3, 4), new ItemBuilder(Material.BARRIER)
                 .name("§c§lClose")
                 .lore("§7Click to close")
                 .build(),

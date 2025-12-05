@@ -22,8 +22,12 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - ✨ Real-time 3D models using Block Displays
 - 🏆 **27 Achievements** to unlock
 - 📈 **Statistics tracking** for all your... activities
-- 🖥️ **Beautiful GUI menus** for stats & achievements
-- 🏅 **Leaderboards** to see who's the biggest gooner
+- 🖥️ **Beautiful GUI menus** for stats, achievements & leaderboards
+- 🏅 **Leaderboards** with interactive GUI
+- 🚻 **Gender System** - Choose male, female, or *other*
+- 🍈 **Boob models** for the ladies (or others!)
+- 🎖️ **Ranking System** - From "Innocent Virgin" to "Ultimate Degenerate"
+- 💨 **Bodily Functions** - /fart, /poop, /piss commands
 
 ---
 
@@ -50,8 +54,19 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 |---------|-------|-------------|
 | `/gooncraft stats [player]` | `/gc stats` | Open stats GUI |
 | `/gooncraft achievements [player]` | `/gc achievements` | Open achievements GUI |
-| `/gooncraft leaderboard [category]` | `/gc lb` | View leaderboards |
+| `/gooncraft leaderboard` | `/gc lb` | Open leaderboard GUI |
 | `/gooncraft reload` | `/gc reload` | Reload config (OP) |
+
+### Gender & Body Commands
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `/gender` | - | View your current gender |
+| `/gender change` | - | Open gender selection GUI |
+| `/boobs size` | `/tits size` | Check your boob size |
+| `/boobs size <player>` | `/tits size` | Check someone else's size |
+| `/boobs toggle` | `/tits toggle` | Flash your boobs / Cover up |
+| `/boobs jiggle` | `/tits jiggle` | *Jiggle jiggle* 🍈 |
 
 ### Penis Commands
 
@@ -64,6 +79,14 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 | `/penis bbc` | `/pp bbc` | Check your BBC status |
 | `/penis bbc <player>` | `/pp bbc` | Check someone else's BBC status |
 | `/penis toggle` | `/pp toggle` | Whip it out / Put it away |
+
+### Bodily Functions
+
+| Command | Description |
+|---------|-------------|
+| `/fart` | 💨 Let one rip |
+| `/poop` | 💩 Drop a deuce |
+| `/piss` | 💦 Take a leak (requires penis toggle) |
 
 ### Other Commands
 
@@ -79,6 +102,46 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 | `/penis size set <player> <size>` | Set someone's size (5-30cm) |
 | `/penis girth set <player> <girth>` | Set someone's girth (5-15cm) |
 | `/penis bbc set <player> <true/false>` | Assign BBC status |
+| `/boobs size set <player> <size>` | Set someone's boob size (1-10) |
+
+---
+
+## 🚻 Gender System
+
+When players join for the first time, they're prompted to select their gender:
+
+| Gender | What You Get | Icon |
+|--------|-------------|------|
+| **Male** | Penis | ⚔️ |
+| **Female** | Boobs | 🌸 |
+| **Other** | **BOTH!** | 🌈 |
+
+The "Other" option features a **rainbow animated button** because why not?
+
+Use `/gender change` anytime to switch!
+
+---
+
+## 🎖️ Ranking System
+
+Earn ranks by unlocking achievements! Each achievement brings you closer to the next rank.
+
+| Achievements | Rank | Icon |
+|-------------|------|------|
+| 0 | Innocent Virgin | 👶 |
+| 1 | Curious Toucher | 🤔 |
+| 3 | Amateur Stroker | ✋ |
+| 5 | Goon Enthusiast | 🔥 |
+| 8 | Dedicated Degenerate | 💦 |
+| 11 | Advanced Coomer | 🍆 |
+| 14 | Professional Gooner | 👑 |
+| 17 | Master Bater | 🎓 |
+| 20 | Elite Exhibitionist | ⭐ |
+| 23 | Legendary Pervert | 🏆 |
+| 26 | Golden Gooner | ✨ |
+| 27 | **✦ ULTIMATE DEGENERATE ✦** | 🌟 |
+
+Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 
 ---
 
@@ -105,8 +168,18 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 
 **Total: 27 achievements to unlock!**
 
-### Leaderboard Categories
-Use `/gc lb <category>` with: `faps`, `cumon`, `cummed`, `time`, `bf`
+### Leaderboard GUI
+
+The interactive leaderboard GUI shows rankings across multiple categories:
+- **Faps** - Total fap count
+- **Cummed On Others** - Times cummed on others
+- **Got Cummed On** - Times got cummed on
+- **Exposure Time** - Time with genitals out
+- **Buttfingers** - Buttfingers given
+- **Rank** - Player rank based on achievements
+- **Achievements** - Total achievement count
+
+Click on any player to view their detailed stats!
 
 ---
 
@@ -118,6 +191,7 @@ Use `/gc lb <category>` with: `faps`, `cumon`, `cummed`, `time`, `bf`
 | `gooncraft.size.set` | Allows setting player sizes | OP |
 | `gooncraft.girth.set` | Allows setting player girths | OP |
 | `gooncraft.bbc.set` | Allows assigning BBC status | OP |
+| `gooncraft.boobs.set` | Allows setting player boob sizes | OP |
 | `gooncraft.viagra` | Allows spawning Viagra pills | OP |
 
 ---
@@ -144,6 +218,8 @@ Use `/gc lb <category>` with: `faps`, `cumon`, `cummed`, `time`, `bf`
 - Get close to other players during the animation for a surprise message
 - There's a 1/50 chance for an *extra special* moment 😏
 - All activities are tracked for stats and achievements!
+- **Boobs jiggle** when you use the jiggle command 🍈
+- **/piss** creates a realistic arc with sine wave particles!
 
 ---
 
@@ -252,20 +328,28 @@ com.miauwrijn.gooncraft/
 │   ├── GUIListener.java     # Click event handler
 │   ├── ItemBuilder.java     # Fluent item builder
 │   ├── StatsGUI.java        # Statistics menu
-│   └── AchievementsGUI.java # Achievements menu
+│   ├── AchievementsGUI.java # Achievements menu
+│   ├── LeaderboardGUI.java  # Leaderboard menu
+│   └── GenderSelectionGUI.java # Gender picker (rainbow!)
 ├── handlers/
+│   ├── BodilyFunctionsHandler.java
+│   ├── BoobsCommandHandler.java
 │   ├── ButtFingerCommandHandler.java
+│   ├── GenderCommandHandler.java
 │   ├── PenisCommandHandler.java
 │   └── StatsCommandHandler.java
 ├── managers/
 │   ├── AchievementManager.java
 │   ├── ConfigManager.java
 │   ├── CooldownManager.java
+│   ├── GenderManager.java
 │   ├── PenisStatisticManager.java
 │   ├── PillManager.java
+│   ├── RankManager.java
 │   └── StatisticsManager.java
 └── models/
-    └── PenisModel.java      # 3D block display model
+    ├── BoobModel.java       # 3D boob display model
+    └── PenisModel.java      # 3D penis display model
 ```
 
 ---

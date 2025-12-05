@@ -18,8 +18,10 @@ import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
 import com.miauwrijn.gooncraft.data.PenisStatistics;
+import com.miauwrijn.gooncraft.handlers.BodilyFunctionsHandler;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.CooldownManager;
+import com.miauwrijn.gooncraft.managers.RankManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 public class PenisModel implements Runnable {
@@ -30,7 +32,7 @@ public class PenisModel implements Runnable {
     public static final int maxGirth = 15;
 
     private static final int CUM_ANIMATION_DURATION = 10;
-    private static final int EJACULATE_CHANCE = 50;
+    private static final int BASE_EJACULATE_CHANCE = 50; // 1 in 50 for rank 0
 
     private int size;
     private int girth;
@@ -111,16 +113,29 @@ public class PenisModel implements Runnable {
         Location location = owner.getLocation();
         World world = location.getWorld();
         List<Player> nearbyPlayers = world.getPlayers();
-        int ejaculateRoll = ThreadLocalRandom.current().nextInt(EJACULATE_CHANCE);
+        
+        // Higher rank = more frequent ejaculation
+        // Rank 0 (Innocent Virgin) = 1 in 50 chance
+        // Rank 11 (Ultimate Degenerate) = 1 in 5 chance
+        RankManager.Rank rank = RankManager.getRank(owner);
+        int rankBonus = rank.ordinal() * 4; // Each rank reduces the divisor by 4
+        int ejaculateChance = Math.max(5, BASE_EJACULATE_CHANCE - rankBonus);
+        int ejaculateRoll = ThreadLocalRandom.current().nextInt(ejaculateChance);
+        boolean isEjaculating = ejaculateRoll == 0;
 
         for (Player player : nearbyPlayers) {
             double distance = player.getLocation().distance(location);
             if (distance < 10) {
-                sendCumMessage(player, distance, ejaculateRoll == 1);
+                sendCumMessage(player, distance, isEjaculating);
             }
         }
 
-        spawnCumParticles(ejaculateRoll == 1);
+        // Only spawn cum particles when ejaculating
+        if (isEjaculating) {
+            spawnCumParticles();
+            // Easter egg: Check for nearby sheep/chickens to cover in white
+            BodilyFunctionsHandler.checkForAnimals(owner, "white");
+        }
     }
 
     private void animateFap() {
@@ -234,7 +249,7 @@ public class PenisModel implements Runnable {
         }
     }
 
-    private void spawnCumParticles(boolean isEjaculating) {
+    private void spawnCumParticles() {
         Location location = owner.getLocation();
         location.setPitch(clamp(location.getPitch(), -10f, 10f));
         
@@ -243,12 +258,9 @@ public class PenisModel implements Runnable {
         Location headLocation = head.getLocation().add(direction.multiply((size + 2) * 0.03f));
 
         World world = owner.getWorld();
-        world.spawnParticle(Particle.CLOUD, headLocation, isEjaculating ? 20 : 1, 0.001, 0.001, 0.001, 0.1);
+        world.spawnParticle(Particle.CLOUD, headLocation, 20, 0.001, 0.001, 0.001, 0.1);
         world.playSound(owner.getLocation(), Sound.ENTITY_LLAMA_SPIT, 1.0f, 2.0f);
-
-        if (isEjaculating) {
-            world.playSound(owner.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1.0f, 0.00001f);
-        }
+        world.playSound(owner.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1.0f, 0.00001f);
     }
 
     private static int clamp(int value, int min, int max) {

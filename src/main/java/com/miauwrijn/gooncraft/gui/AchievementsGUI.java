@@ -44,7 +44,7 @@ public class AchievementsGUI extends GUI {
         setCategoryButton(slot(0, 4), "time_out", "§e§lExposure", Material.CLOCK, unlocked);
         setCategoryButton(slot(0, 5), "bf_given", "§6§lButtfinger", Material.CARROT, unlocked);
         setCategoryButton(slot(0, 6), "bf_received", "§c§lGot BF'd", Material.GOLDEN_CARROT, unlocked);
-        setCategoryButton(slot(0, 7), "viagra", "§b§lViagra", Material.POTION, unlocked);
+        setCategoryButton(slot(0, 7), "hidden", "§5§l???", Material.ENDER_EYE, unlocked);
         
         // Get filtered achievements
         List<Achievement> achievements = new ArrayList<>();
@@ -192,23 +192,39 @@ public class AchievementsGUI extends GUI {
     }
 
     private org.bukkit.inventory.ItemStack createAchievementItem(Achievement achievement, boolean isUnlocked, int progress, long currentValue) {
-        Material material = isUnlocked ? Material.LIME_DYE : Material.GRAY_DYE;
-        String status = isUnlocked ? "§a§lUNLOCKED" : "§c§lLOCKED";
+        // Hidden achievements show as ??? until unlocked
+        boolean isHidden = achievement.hidden && !isUnlocked;
+        
+        Material material;
+        if (isUnlocked) {
+            material = Material.LIME_DYE;
+        } else if (isHidden) {
+            material = Material.PURPLE_DYE;
+        } else {
+            material = Material.GRAY_DYE;
+        }
+        
+        String displayName = isHidden ? "§5§k???" : achievement.name;
+        String displayDesc = isHidden ? "§5§oDiscover this secret..." : achievement.description;
+        String status = isUnlocked ? "§a§lUNLOCKED" : (isHidden ? "§5§lHIDDEN" : "§c§lLOCKED");
         
         List<String> lore = new ArrayList<>();
         lore.add("");
-        lore.add("§7" + achievement.description);
+        lore.add("§7" + displayDesc);
         lore.add("");
         lore.add(status);
         
-        if (!isUnlocked) {
+        if (!isUnlocked && !isHidden) {
             lore.add("");
             lore.add("§7Progress: §e" + currentValue + "§7/§e" + achievement.threshold);
             lore.add(createProgressBar(progress));
+        } else if (isHidden) {
+            lore.add("");
+            lore.add("§5§oFind the easter egg to unlock!");
         }
         
         ItemBuilder builder = new ItemBuilder(material)
-                .name((isUnlocked ? "§a" : "§7") + achievement.name)
+                .name((isUnlocked ? "§a" : (isHidden ? "§5" : "§7")) + displayName)
                 .lore(lore);
         
         if (isUnlocked) {
@@ -256,6 +272,7 @@ public class AchievementsGUI extends GUI {
             case "bf_given" -> "Buttfinger";
             case "bf_received" -> "Got BF'd";
             case "viagra" -> "Viagra";
+            case "hidden" -> "???";
             default -> "Unknown";
         };
     }

@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -24,6 +25,7 @@ import com.miauwrijn.gooncraft.data.PlayerStats;
 
 /**
  * Manages achievements for players.
+ * Data is stored in the players folder alongside other player data.
  */
 public class AchievementManager implements Listener {
 
@@ -65,18 +67,32 @@ public class AchievementManager implements Listener {
         // Viagra achievements
         VIAGRA_1("Performance Issues", "Use your first Viagra", "viagra", 1),
         VIAGRA_10("Pill Popper", "Use 10 Viagras", "viagra", 10),
-        VIAGRA_50("Pharmacist's Best Friend", "Use 50 Viagras", "viagra", 50);
+        VIAGRA_50("Pharmacist's Best Friend", "Use 50 Viagras", "viagra", 50),
+        
+        // Hidden easter egg achievements - animals
+        YELLOW_SHEEP("Golden Fleece", "Dye a sheep yellow in an... unconventional way", "hidden", 1, true),
+        BROWN_SHEEP("Chocolate Wool", "Give a sheep a brown makeover... naturally", "hidden", 1, true),
+        WHITE_SHEEP("Glazed & Confused", "Cover a sheep in your... essence", "hidden", 1, true),
+        YELLOW_CHICKEN("Lemon Chicken", "Make a chicken golden... with your stream", "hidden", 1, true),
+        BROWN_CHICKEN("Nugget Maker", "Drop something on a chicken", "hidden", 1, true),
+        WHITE_CHICKEN("Cream Chicken", "Give a chicken a special coating", "hidden", 1, true);
 
         public final String name;
         public final String description;
         public final String category;
         public final long threshold;
+        public final boolean hidden;
 
         Achievement(String name, String description, String category, long threshold) {
+            this(name, description, category, threshold, false);
+        }
+
+        Achievement(String name, String description, String category, long threshold, boolean hidden) {
             this.name = name;
             this.description = description;
             this.category = category;
             this.threshold = threshold;
+            this.hidden = hidden;
         }
     }
 
@@ -84,7 +100,7 @@ public class AchievementManager implements Listener {
     private static File dataFolder;
 
     public AchievementManager() {
-        dataFolder = new File(Plugin.instance.getDataFolder(), "achievements");
+        dataFolder = new File(Plugin.instance.getDataFolder(), "players");
         ensureDataFolderExists();
         loadOnlinePlayers();
         
@@ -154,11 +170,31 @@ public class AchievementManager implements Listener {
         return Achievement.values().length;
     }
 
+    /**
+     * Manually unlock an achievement (for easter eggs).
+     * Returns true if newly unlocked, false if already had it.
+     */
+    public static boolean tryUnlock(Player player, Achievement achievement) {
+        Set<Achievement> unlocked = getUnlocked(player);
+        if (unlocked.contains(achievement)) {
+            return false;
+        }
+        unlockAchievement(player, achievement);
+        return true;
+    }
+
+    /**
+     * Check if an achievement is hidden (shows as ??? until unlocked).
+     */
+    public static boolean isHidden(Achievement achievement) {
+        return achievement.hidden;
+    }
+
     // ===== Persistence =====
 
     private void ensureDataFolderExists() {
         if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            Plugin.instance.getLogger().warning("Failed to create achievements folder: " + dataFolder.getAbsolutePath());
+            Plugin.instance.getLogger().warning("Failed to create players folder: " + dataFolder.getAbsolutePath());
         }
     }
 
@@ -176,7 +212,7 @@ public class AchievementManager implements Listener {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             
             for (Achievement achievement : Achievement.values()) {
-                if (config.getBoolean(achievement.name(), false)) {
+                if (config.getBoolean("Achievements." + achievement.name(), false)) {
                     unlocked.add(achievement);
                 }
             }
@@ -195,7 +231,7 @@ public class AchievementManager implements Listener {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             
             for (Achievement achievement : Achievement.values()) {
-                config.set(achievement.name(), unlocked.contains(achievement));
+                config.set("Achievements." + achievement.name(), unlocked.contains(achievement));
             }
             
             config.save(file);
@@ -204,7 +240,7 @@ public class AchievementManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(PlayerJoinEvent event) {
         loadPlayerAchievements(event.getPlayer());
     }

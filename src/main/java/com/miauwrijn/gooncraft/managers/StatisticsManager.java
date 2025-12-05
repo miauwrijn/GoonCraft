@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -21,14 +22,15 @@ import com.miauwrijn.gooncraft.data.PlayerStats;
 
 /**
  * Manages player statistics tracking and persistence.
+ * Data is stored in the players folder alongside other player data.
  */
 public class StatisticsManager implements Listener {
 
     private static final Map<UUID, PlayerStats> playerStats = new ConcurrentHashMap<>();
-    private final File dataFolder;
+    private static File dataFolder;
 
     public StatisticsManager() {
-        this.dataFolder = new File(Plugin.instance.getDataFolder(), "stats");
+        dataFolder = new File(Plugin.instance.getDataFolder(), "players");
         ensureDataFolderExists();
         loadOnlinePlayers();
         
@@ -99,7 +101,7 @@ public class StatisticsManager implements Listener {
 
     private void ensureDataFolderExists() {
         if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            Plugin.instance.getLogger().warning("Failed to create stats folder: " + dataFolder.getAbsolutePath());
+            Plugin.instance.getLogger().warning("Failed to create players folder: " + dataFolder.getAbsolutePath());
         }
     }
 
@@ -116,13 +118,13 @@ public class StatisticsManager implements Listener {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             
             PlayerStats stats = new PlayerStats(
-                config.getInt("fapCount", 0),
-                config.getInt("cumOnOthersCount", 0),
-                config.getInt("gotCummedOnCount", 0),
-                config.getLong("totalTimeWithPenisOut", 0),
-                config.getInt("buttfingersGiven", 0),
-                config.getInt("buttfingersReceived", 0),
-                config.getInt("viagraUsed", 0)
+                config.getInt("Stats.FapCount", 0),
+                config.getInt("Stats.CumOnOthersCount", 0),
+                config.getInt("Stats.GotCummedOnCount", 0),
+                config.getLong("Stats.TotalTimeWithPenisOut", 0),
+                config.getInt("Stats.ButtfingersGiven", 0),
+                config.getInt("Stats.ButtfingersReceived", 0),
+                config.getInt("Stats.ViagraUsed", 0)
             );
             
             playerStats.put(player.getUniqueId(), stats);
@@ -144,13 +146,13 @@ public class StatisticsManager implements Listener {
         
         try {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            config.set("fapCount", stats.fapCount);
-            config.set("cumOnOthersCount", stats.cumOnOthersCount);
-            config.set("gotCummedOnCount", stats.gotCummedOnCount);
-            config.set("totalTimeWithPenisOut", stats.totalTimeWithPenisOut);
-            config.set("buttfingersGiven", stats.buttfingersGiven);
-            config.set("buttfingersReceived", stats.buttfingersReceived);
-            config.set("viagraUsed", stats.viagraUsed);
+            config.set("Stats.FapCount", stats.fapCount);
+            config.set("Stats.CumOnOthersCount", stats.cumOnOthersCount);
+            config.set("Stats.GotCummedOnCount", stats.gotCummedOnCount);
+            config.set("Stats.TotalTimeWithPenisOut", stats.totalTimeWithPenisOut);
+            config.set("Stats.ButtfingersGiven", stats.buttfingersGiven);
+            config.set("Stats.ButtfingersReceived", stats.buttfingersReceived);
+            config.set("Stats.ViagraUsed", stats.viagraUsed);
             config.save(file);
         } catch (IOException e) {
             Plugin.instance.getLogger().log(Level.WARNING, "Failed to save player stats", e);
@@ -163,7 +165,7 @@ public class StatisticsManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerJoin(PlayerJoinEvent event) {
         loadPlayerStats(event.getPlayer());
     }
