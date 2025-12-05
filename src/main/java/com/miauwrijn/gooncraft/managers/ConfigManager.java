@@ -86,6 +86,18 @@ public class ConfigManager {
         return config.getBoolean("chat.show-cummed-on-messages", true);
     }
 
+    public static boolean showFartMessages() {
+        return config.getBoolean("chat.show-fart-messages", true);
+    }
+
+    public static boolean showPoopMessages() {
+        return config.getBoolean("chat.show-poop-messages", true);
+    }
+
+    public static boolean showPissMessages() {
+        return config.getBoolean("chat.show-piss-messages", true);
+    }
+
     private static String colorize(String message) {
         if (message == null) return "";
         return ChatColor.translateAlternateColorCodes('&', message);

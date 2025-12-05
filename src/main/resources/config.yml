@@ -63,6 +63,14 @@ messages:
     ejaculate: "&7Hmmfff.. *ejaculates*"
     cummed-on: "&6You have been cummed on by &a&l{player}"
 
+  # Bodily function messages
+  bodily:
+    cooldown: "&cYou need to wait before doing that again!"
+    piss-need-toggle: "&cYou need to have your penis out to piss!"
+    fart: "&e{player} &7let one rip... &8*pffrrrt*"
+    poop: "&6{player} &7just dropped a deuce... &8*plop*"
+    piss: "&e{player} &7is taking a leak..."
+
   # Statistics
   stats:
     header: "&6&l═══ {player}'s Goon Stats ═══"
@@ -109,3 +117,9 @@ chat:
   show-ejaculate-messages: true
   # Show "You have been cummed on" messages
   show-cummed-on-messages: true
+  # Show fart messages to nearby players
+  show-fart-messages: true
+  # Show poop messages to nearby players
+  show-poop-messages: true
+  # Show piss messages to nearby players
+  show-piss-messages: true

@@ -24,6 +24,15 @@ commands:
     description: Get a viagra pill
     usage: /<command>
     permission: gooncraft.viagra
+  fart:
+    description: Let one rip
+    usage: /<command>
+  poop:
+    description: Drop a deuce
+    usage: /<command>
+  piss:
+    description: Take a leak (requires penis toggle)
+    usage: /<command>
 
 permissions:
   gooncraft.reload:

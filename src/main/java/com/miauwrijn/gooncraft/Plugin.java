@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.miauwrijn.gooncraft.gui.GUIListener;
+import com.miauwrijn.gooncraft.handlers.BodilyFunctionsHandler;
 import com.miauwrijn.gooncraft.handlers.ButtFingerCommandHandler;
 import com.miauwrijn.gooncraft.handlers.PenisCommandHandler;
 import com.miauwrijn.gooncraft.handlers.StatsCommandHandler;
@@ -49,6 +50,12 @@ public class Plugin extends JavaPlugin {
         getCommand("penis").setExecutor(new PenisCommandHandler());
         getCommand("viagra").setExecutor(pillManager);
         getCommand("gooncraft").setExecutor(this::onGooncraftCommand);
+        
+        // Bodily functions
+        BodilyFunctionsHandler bodilyHandler = new BodilyFunctionsHandler();
+        getCommand("fart").setExecutor(bodilyHandler);
+        getCommand("poop").setExecutor(bodilyHandler);
+        getCommand("piss").setExecutor(bodilyHandler);
 
         LOGGER.info("GoonCraft enabled! Time to get weird.");
     }
