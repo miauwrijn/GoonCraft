@@ -34,7 +34,7 @@ public class StatsGUI extends GUI {
             ? "§7Next: " + nextRank.displayName + " §7(" + achievementsToNext + " more)"
             : "§d§lMAX RANK ACHIEVED!";
         
-        // Player head in center top
+        // Player head in center top - click to open rank roadmap
         setItem(slot(1, 4), new ItemBuilder(Material.PLAYER_HEAD)
                 .skullOwner(target)
                 .name("§6§l" + target.getName())
@@ -45,9 +45,12 @@ public class StatsGUI extends GUI {
                     rankProgressLine,
                     "",
                     "§eAchievements: §f" + AchievementManager.getUnlockedCount(target) + 
-                        "§7/§f" + AchievementManager.getTotalAchievements()
+                        "§7/§f" + AchievementManager.getTotalAchievements(),
+                    "",
+                    "§e§lClick to view Rank Roadmap!"
                 )
-                .build());
+                .build(),
+                event -> new RankRoadmapGUI(viewer, target).open());
         
         // Fap count
         setItem(slot(2, 1), new ItemBuilder(Material.BONE)

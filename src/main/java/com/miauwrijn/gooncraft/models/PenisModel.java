@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.EntityType;
@@ -33,6 +34,11 @@ public class PenisModel implements Runnable {
 
     private static final int CUM_ANIMATION_DURATION = 10;
     private static final int BASE_EJACULATE_CHANCE = 50; // 1 in 50 for rank 0
+    
+    // Cold/stiffness modifiers
+    private static final float MIN_STIFFNESS = 0.5f; // 50% size when very cold
+    private static final float MAX_STIFFNESS = 1.0f; // 100% size when warm
+    private static final float STIFFNESS_TRANSITION_SPEED = 0.02f; // How fast stiffness changes
 
     private int size;
     private int girth;
@@ -48,6 +54,10 @@ public class PenisModel implements Runnable {
     private boolean isCumming = false;
     private int framesSinceCumStart = 0;
     private float stretch = 0;
+    
+    // Temperature-based stiffness (1.0 = full size, 0.5 = shrinkage)
+    private float currentStiffness = MAX_STIFFNESS;
+    private int coldCheckCounter = 0;
 
     public PenisModel(Player owner, boolean bbc, int size, int girth, int viagraBoost) {
         this.owner = owner;
@@ -84,7 +94,78 @@ public class PenisModel implements Runnable {
         if (isCumming) {
             animateFap();
         }
+        
+        // Check temperature and update stiffness every 20 ticks (1 second)
+        coldCheckCounter++;
+        if (coldCheckCounter >= 20) {
+            coldCheckCounter = 0;
+            updateStiffness();
+        }
+        
         updatePosition();
+    }
+    
+    /**
+     * Check if player is in a cold area and update stiffness accordingly.
+     * Cold areas cause shrinkage (lower stiffness).
+     */
+    private void updateStiffness() {
+        boolean isCold = isPlayerInCold();
+        float targetStiffness = isCold ? MIN_STIFFNESS : MAX_STIFFNESS;
+        
+        // Gradually transition stiffness
+        if (Math.abs(currentStiffness - targetStiffness) > 0.01f) {
+            if (currentStiffness < targetStiffness) {
+                currentStiffness = Math.min(currentStiffness + STIFFNESS_TRANSITION_SPEED, targetStiffness);
+            } else {
+                currentStiffness = Math.max(currentStiffness - STIFFNESS_TRANSITION_SPEED, targetStiffness);
+            }
+            
+            // Update model with new stiffness
+            setBlockTransformation(leftBall, false, false);
+            setBlockTransformation(rightBall, false, false);
+            setBlockTransformation(shaft, true, false);
+            setBlockTransformation(head, false, true);
+        }
+    }
+    
+    /**
+     * Check if player is in a cold environment (snowy biome or cold weather).
+     */
+    private boolean isPlayerInCold() {
+        Location loc = owner.getLocation();
+        World world = loc.getWorld();
+        
+        // Check biome
+        Biome biome = loc.getBlock().getBiome();
+        String biomeName = biome.name().toLowerCase();
+        
+        boolean coldBiome = biomeName.contains("snow") || 
+                           biomeName.contains("ice") || 
+                           biomeName.contains("frozen") || 
+                           biomeName.contains("cold") ||
+                           biomeName.contains("taiga") ||
+                           biomeName.contains("grove") ||
+                           biomeName.contains("peaks");
+        
+        // Check if it's snowing/raining in a cold biome
+        boolean coldWeather = world.hasStorm() && loc.getBlock().getTemperature() < 0.15;
+        
+        return coldBiome || coldWeather;
+    }
+    
+    /**
+     * Get current stiffness modifier (for external use).
+     */
+    public float getStiffness() {
+        return currentStiffness;
+    }
+    
+    /**
+     * Check if the penis is currently affected by cold.
+     */
+    public boolean isCold() {
+        return currentStiffness < MAX_STIFFNESS;
     }
 
     public void discard() {
@@ -212,15 +293,20 @@ public class PenisModel implements Runnable {
     }
 
     private void setBlockTransformation(BlockDisplay block, boolean isShaft, boolean isHead) {
-        float g = girth * 0.01f;
+        // Apply stiffness modifier (cold = smaller)
+        float stiffnessModifier = currentStiffness;
+        
+        float g = girth * 0.01f * stiffnessModifier;
         int totalSize = size + viagraBoost;
+        float effectiveSize = totalSize * stiffnessModifier;
 
         Vector3f scale;
         if (isShaft) {
-            scale = new Vector3f(g, g, totalSize * 0.03f + stretch);
+            scale = new Vector3f(g, g, effectiveSize * 0.03f + stretch);
         } else if (isHead) {
-            scale = new Vector3f(g * 0.75f, g * 0.75f, (totalSize + 1) * 0.03f + stretch);
+            scale = new Vector3f(g * 0.75f, g * 0.75f, (effectiveSize + 1) * 0.03f + stretch);
         } else {
+            // Balls also shrink in cold
             scale = new Vector3f(g, g, g);
         }
 

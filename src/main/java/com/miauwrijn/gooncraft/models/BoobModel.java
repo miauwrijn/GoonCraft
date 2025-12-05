@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.EntityType;
@@ -19,6 +20,7 @@ import com.miauwrijn.gooncraft.managers.CooldownManager;
 
 /**
  * 3D boob model using BlockDisplay entities with nipples!
+ * Nipples become stiffer (more erect) in cold areas.
  */
 public class BoobModel implements Runnable {
 
@@ -33,6 +35,11 @@ public class BoobModel implements Runnable {
     };
 
     private static final int JIGGLE_DURATION = 15;
+    
+    // Nipple stiffness modifiers (cold = stiffer nipples)
+    private static final float MIN_NIPPLE_STIFFNESS = 1.0f;  // Normal nipples
+    private static final float MAX_NIPPLE_STIFFNESS = 2.0f;  // Very erect nipples
+    private static final float STIFFNESS_TRANSITION_SPEED = 0.05f;
 
     private int size;
     private int perkiness;
@@ -46,6 +53,10 @@ public class BoobModel implements Runnable {
     private boolean isJiggling = false;
     private int framesSinceJiggleStart = 0;
     private float jiggleOffset = 0;
+    
+    // Temperature-based nipple stiffness (1.0 = normal, 2.0 = very erect)
+    private float currentNippleStiffness = MIN_NIPPLE_STIFFNESS;
+    private int coldCheckCounter = 0;
 
     public BoobModel(Player owner, int size, int perkiness) {
         this.owner = owner;
@@ -82,7 +93,75 @@ public class BoobModel implements Runnable {
         if (isJiggling) {
             animateJiggle();
         }
+        
+        // Check temperature and update nipple stiffness every 20 ticks (1 second)
+        coldCheckCounter++;
+        if (coldCheckCounter >= 20) {
+            coldCheckCounter = 0;
+            updateNippleStiffness();
+        }
+        
         updatePosition();
+    }
+    
+    /**
+     * Check if player is in a cold area and update nipple stiffness accordingly.
+     * Cold areas cause nipples to become stiffer (more erect).
+     */
+    private void updateNippleStiffness() {
+        boolean isCold = isPlayerInCold();
+        float targetStiffness = isCold ? MAX_NIPPLE_STIFFNESS : MIN_NIPPLE_STIFFNESS;
+        
+        // Gradually transition stiffness
+        if (Math.abs(currentNippleStiffness - targetStiffness) > 0.01f) {
+            if (currentNippleStiffness < targetStiffness) {
+                currentNippleStiffness = Math.min(currentNippleStiffness + STIFFNESS_TRANSITION_SPEED, targetStiffness);
+            } else {
+                currentNippleStiffness = Math.max(currentNippleStiffness - STIFFNESS_TRANSITION_SPEED, targetStiffness);
+            }
+            
+            // Update nipple transformations with new stiffness
+            updateTransformations();
+        }
+    }
+    
+    /**
+     * Check if player is in a cold environment (snowy biome or cold weather).
+     */
+    private boolean isPlayerInCold() {
+        Location loc = owner.getLocation();
+        World world = loc.getWorld();
+        
+        // Check biome
+        Biome biome = loc.getBlock().getBiome();
+        String biomeName = biome.name().toLowerCase();
+        
+        boolean coldBiome = biomeName.contains("snow") || 
+                           biomeName.contains("ice") || 
+                           biomeName.contains("frozen") || 
+                           biomeName.contains("cold") ||
+                           biomeName.contains("taiga") ||
+                           biomeName.contains("grove") ||
+                           biomeName.contains("peaks");
+        
+        // Check if it's snowing/raining in a cold biome
+        boolean coldWeather = world.hasStorm() && loc.getBlock().getTemperature() < 0.15;
+        
+        return coldBiome || coldWeather;
+    }
+    
+    /**
+     * Get current nipple stiffness modifier (for external use).
+     */
+    public float getNippleStiffness() {
+        return currentNippleStiffness;
+    }
+    
+    /**
+     * Check if the nipples are currently affected by cold (erect).
+     */
+    public boolean areNipplesErect() {
+        return currentNippleStiffness > MIN_NIPPLE_STIFFNESS + 0.1f;
     }
 
     public void discard() {
@@ -221,11 +300,17 @@ public class BoobModel implements Runnable {
         if (leftBoob != null) leftBoob.setTransformation(boobTransform);
         if (rightBoob != null) rightBoob.setTransformation(boobTransform);
         
-        // Nipple transformations - perkiness affects nipple size slightly
-        float nippleSize = 0.015f + (perkiness * 0.002f);
-        float nippleYScale = nippleSize * (0.8f + jiggleOffset * 2);
+        // Nipple transformations - perkiness and stiffness affect nipple size
+        // Stiffness makes nipples larger/more prominent when cold
+        float nippleBaseSize = 0.015f + (perkiness * 0.002f);
+        float stiffnessBonus = (currentNippleStiffness - 1.0f) * 0.01f; // Extra size when cold
+        float nippleSize = nippleBaseSize + stiffnessBonus;
         
-        Vector3f nippleScale = new Vector3f(nippleSize, nippleYScale, nippleSize * 1.2f);
+        // Z scale (length) increases more with stiffness for that erect look
+        float nippleYScale = nippleSize * (0.8f + jiggleOffset * 2);
+        float nippleZScale = nippleSize * (1.2f + (currentNippleStiffness - 1.0f) * 0.8f);
+        
+        Vector3f nippleScale = new Vector3f(nippleSize, nippleYScale, nippleZScale);
         Vector3f nippleTranslation = new Vector3f(-nippleScale.x * 0.5f, -nippleScale.y * 0.5f, 0f);
         
         Transformation nippleTransform = new Transformation(nippleTranslation, rotation, nippleScale, rotation);
