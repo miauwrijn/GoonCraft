@@ -20,14 +20,16 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 💊 Craftable Viagra for *temporary enhancements*
 - 👆 The legendary **Buttfinger** command
 - ✨ Real-time 3D models using Block Displays
-- 🏆 **27 Achievements** to unlock
+- 🏆 **33 Achievements** to unlock (including 6 hidden!)
 - 📈 **Statistics tracking** for all your... activities
 - 🖥️ **Beautiful GUI menus** for stats, achievements & leaderboards
 - 🏅 **Leaderboards** with interactive GUI
 - 🚻 **Gender System** - Choose male, female, or *other*
-- 🍈 **Boob models** for the ladies (or others!)
+- 🍈 **Boob models** with size & perkiness stats!
 - 🎖️ **Ranking System** - From "Innocent Virgin" to "Ultimate Degenerate"
 - 💨 **Bodily Functions** - /fart, /poop, /piss commands
+- 🐑 **Easter Eggs** - Hidden achievements with animals!
+- 🔄 **Auto-updating config** - New options merge automatically
 
 ---
 
@@ -48,10 +50,13 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 
 ## 🎮 Commands
 
+Use `/gc` or `/gooncraft` to see all available commands!
+
 ### Main Commands
 
 | Command | Alias | Description |
 |---------|-------|-------------|
+| `/gooncraft` | `/gc` | Show help menu with all commands |
 | `/gooncraft stats [player]` | `/gc stats` | Open stats GUI |
 | `/gooncraft achievements [player]` | `/gc achievements` | Open achievements GUI |
 | `/gooncraft leaderboard` | `/gc lb` | Open leaderboard GUI |
@@ -64,7 +69,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 | `/gender` | - | View your current gender |
 | `/gender change` | - | Open gender selection GUI |
 | `/boobs size` | `/tits size` | Check your boob size |
-| `/boobs size <player>` | `/tits size` | Check someone else's size |
+| `/boobs perkiness` | `/tits perk` | Check your boob perkiness |
 | `/boobs toggle` | `/tits toggle` | Flash your boobs / Cover up |
 | `/boobs jiggle` | `/tits jiggle` | *Jiggle jiggle* 🍈 |
 
@@ -86,7 +91,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 |---------|-------------|
 | `/fart` | 💨 Let one rip |
 | `/poop` | 💩 Drop a deuce |
-| `/piss` | 💦 Take a leak (requires penis toggle) |
+| `/piss` | 💛 Take a leak (requires penis toggle) |
 
 ### Other Commands
 
@@ -103,6 +108,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 | `/penis girth set <player> <girth>` | Set someone's girth (5-15cm) |
 | `/penis bbc set <player> <true/false>` | Assign BBC status |
 | `/boobs size set <player> <size>` | Set someone's boob size (1-10) |
+| `/boobs perkiness set <player> <value>` | Set someone's boob perkiness (1-10) |
 
 ---
 
@@ -113,12 +119,16 @@ When players join for the first time, they're prompted to select their gender:
 | Gender | What You Get | Icon |
 |--------|-------------|------|
 | **Male** | Penis | ⚔️ |
-| **Female** | Boobs | 🌸 |
+| **Female** | Boobs (with nipples!) | 🌸 |
 | **Other** | **BOTH!** | 🌈 |
 
 The "Other" option features a **rainbow animated button** because why not?
 
 Use `/gender change` anytime to switch!
+
+### Boob Stats
+- **Size** (1-10) - How big they are
+- **Perkiness** (1-10) - How perky/high they sit, affects nipple positioning
 
 ---
 
@@ -126,20 +136,22 @@ Use `/gender change` anytime to switch!
 
 Earn ranks by unlocking achievements! Each achievement brings you closer to the next rank.
 
-| Achievements | Rank | Icon |
-|-------------|------|------|
-| 0 | Innocent Virgin | 👶 |
-| 1 | Curious Toucher | 🤔 |
-| 3 | Amateur Stroker | ✋ |
-| 5 | Goon Enthusiast | 🔥 |
-| 8 | Dedicated Degenerate | 💦 |
-| 11 | Advanced Coomer | 🍆 |
-| 14 | Professional Gooner | 👑 |
-| 17 | Master Bater | 🎓 |
-| 20 | Elite Exhibitionist | ⭐ |
-| 23 | Legendary Pervert | 🏆 |
-| 26 | Golden Gooner | ✨ |
-| 27 | **✦ ULTIMATE DEGENERATE ✦** | 🌟 |
+**Higher rank = more frequent ejaculation!** 🎉
+
+| Achievements | Rank | Ejaculation Chance |
+|-------------|------|-------------------|
+| 0 | 👶 Innocent Virgin | 1 in 50 (2%) |
+| 1 | 🤔 Curious Toucher | 1 in 46 |
+| 3 | ✋ Amateur Stroker | 1 in 42 |
+| 5 | 🔥 Goon Enthusiast | 1 in 38 |
+| 8 | 💦 Dedicated Degenerate | 1 in 34 |
+| 11 | 🍆 Advanced Coomer | 1 in 30 |
+| 14 | 👑 Professional Gooner | 1 in 26 |
+| 17 | 🎓 Master Bater | 1 in 22 |
+| 20 | ⭐ Elite Exhibitionist | 1 in 18 |
+| 23 | 🏆 Legendary Pervert | 1 in 14 |
+| 26 | ✨ Golden Gooner | 1 in 10 |
+| 33 | 🌟 **✦ ULTIMATE DEGENERATE ✦** | 1 in 5 (20%) |
 
 Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 
@@ -163,10 +175,11 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 | 💦 Cumming | 4 | Oops! → Bukakke Master (1-100) |
 | 😵 Got Cummed | 3 | Victim → Cum Magnet (1-50) |
 | ⏱️ Exposure | 4 | Quick Flash → Public Menace (1min-10hrs) |
-| 👆 Buttfinger | 3 | Probing → Master Fingerer (1-50) |
+| 👆 Buttfinger | 5 | Probing → Loose (1-50) |
 | 💊 Viagra | 3 | Performance Issues → Pharmacist's Best Friend (1-50) |
+| 🐑 Hidden | 6 | ???... 🤫 |
 
-**Total: 27 achievements to unlock!**
+**Total: 33 achievements to unlock!** (27 regular + 6 hidden easter eggs)
 
 ### Leaderboard GUI
 
@@ -191,7 +204,7 @@ Click on any player to view their detailed stats!
 | `gooncraft.size.set` | Allows setting player sizes | OP |
 | `gooncraft.girth.set` | Allows setting player girths | OP |
 | `gooncraft.bbc.set` | Allows assigning BBC status | OP |
-| `gooncraft.boobs.set` | Allows setting player boob sizes | OP |
+| `gooncraft.boobs.set` | Allows setting player boob sizes/perkiness | OP |
 | `gooncraft.viagra` | Allows spawning Viagra pills | OP |
 
 ---
@@ -212,14 +225,53 @@ Click on any player to view their detailed stats!
 
 ---
 
-## 🎭 Hidden Features
+## 🎭 Hidden Features & Easter Eggs
 
 - **Sneaking + Swinging** while toggled on triggers a... *special animation*
 - Get close to other players during the animation for a surprise message
-- There's a 1/50 chance for an *extra special* moment 😏
-- All activities are tracked for stats and achievements!
-- **Boobs jiggle** when you use the jiggle command 🍈
-- **/piss** creates a realistic arc with sine wave particles!
+- **Higher ranks ejaculate more often!** (2% at rank 0 → 20% at max rank)
+- Cum particles only appear during actual ejaculation 💦
+- **Boobs have nipples** that move with perkiness!
+- **/piss** creates a realistic yellow arc with sine wave particles!
+- 🐑🐔 **Secret animal interactions** - Try doing bodily functions near sheep or chickens...
+  - Piss near them for a golden surprise
+  - Poop near them for a brown makeover
+  - Ejaculate near them for a white coating
+  - **6 hidden achievements** to discover!
+
+---
+
+## ⚙️ Configuration
+
+### Auto-Updating Config
+When you update the plugin, new config options are **automatically merged** into your existing config while preserving your customizations!
+
+```
+[GoonCraft] Updating config from version 1 to 2
+[GoonCraft]   + Added new config option: messages.boobs.perkiness-set
+[GoonCraft] Config updated successfully!
+```
+
+### Player Data
+All player data is stored in a single file per player: `plugins/GoonCraft/players/<uuid>.yml`
+
+```yaml
+Penis:
+  Size: 15
+  Girth: 8
+  BBC: false
+Gender: OTHER
+Boobs:
+  Size: 7
+  Perkiness: 5
+Stats:
+  FapCount: 42
+  CumOnOthersCount: 10
+  # ... more stats
+Achievements:
+  FIRST_FAP: true
+  # ... more achievements
+```
 
 ---
 
@@ -328,27 +380,27 @@ com.miauwrijn.gooncraft/
 │   ├── GUIListener.java     # Click event handler
 │   ├── ItemBuilder.java     # Fluent item builder
 │   ├── StatsGUI.java        # Statistics menu
-│   ├── AchievementsGUI.java # Achievements menu
+│   ├── AchievementsGUI.java # Achievements menu (with hidden ???)
 │   ├── LeaderboardGUI.java  # Leaderboard menu
 │   └── GenderSelectionGUI.java # Gender picker (rainbow!)
 ├── handlers/
-│   ├── BodilyFunctionsHandler.java
+│   ├── BodilyFunctionsHandler.java # Fart/poop/piss + animal easter eggs
 │   ├── BoobsCommandHandler.java
 │   ├── ButtFingerCommandHandler.java
 │   ├── GenderCommandHandler.java
 │   ├── PenisCommandHandler.java
 │   └── StatsCommandHandler.java
 ├── managers/
-│   ├── AchievementManager.java
-│   ├── ConfigManager.java
+│   ├── AchievementManager.java # 33 achievements (6 hidden)
+│   ├── ConfigManager.java      # Auto-merging config
 │   ├── CooldownManager.java
 │   ├── GenderManager.java
 │   ├── PenisStatisticManager.java
 │   ├── PillManager.java
-│   ├── RankManager.java
+│   ├── RankManager.java        # 12 ranks with perks
 │   └── StatisticsManager.java
 └── models/
-    ├── BoobModel.java       # 3D boob display model
+    ├── BoobModel.java       # 3D boob display with nipples
     └── PenisModel.java      # 3D penis display model
 ```
 
