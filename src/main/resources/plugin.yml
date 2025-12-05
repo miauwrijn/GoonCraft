@@ -1,0 +1,23 @@
+name: gooncraft
+main: com.miauwrijn.gooncraft.Plugin
+version: 0.0.3
+api-version: 1.20
+authors: ["Miauwrijn"]
+description: GoonCraft plugin
+commands:
+  kontvinger:
+    description: Kontvingeren command
+    usage: /<command>
+    aliases:
+      - kv
+    permission-message: You do not have permission to use this command
+  penis:
+    description: Penis command
+    usage: /<command>
+    aliases:
+      - pp
+    permission-message: You do not have permission to use this command
+  viagra:
+    description: Viagra command
+    usage: /<command>
+    permission-message: You do not have permission to use this command
