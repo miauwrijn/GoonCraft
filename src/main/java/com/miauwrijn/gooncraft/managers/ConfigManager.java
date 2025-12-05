@@ -1,21 +1,103 @@
 package com.miauwrijn.gooncraft.managers;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.miauwrijn.gooncraft.Plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class ConfigManager {
 
     private static FileConfiguration config;
+    private static final String CONFIG_VERSION_KEY = "config-version";
+    private static final int CURRENT_CONFIG_VERSION = 2; // Increment when config structure changes
 
     public static void load() {
-        Plugin.instance.saveDefaultConfig();
+        File configFile = new File(Plugin.instance.getDataFolder(), "config.yml");
+        
+        if (configFile.exists()) {
+            // Load existing config and check for updates
+            config = YamlConfiguration.loadConfiguration(configFile);
+            
+            // Get default config from JAR
+            InputStream defaultStream = Plugin.instance.getResource("config.yml");
+            if (defaultStream != null) {
+                YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(
+                    new InputStreamReader(defaultStream));
+                
+                int existingVersion = config.getInt(CONFIG_VERSION_KEY, 1);
+                int defaultVersion = defaultConfig.getInt(CONFIG_VERSION_KEY, CURRENT_CONFIG_VERSION);
+                
+                if (existingVersion < defaultVersion) {
+                    // Merge configs - add missing keys from default
+                    Plugin.instance.getLogger().info("Updating config from version " + existingVersion + " to " + defaultVersion);
+                    mergeConfigs(config, defaultConfig);
+                    config.set(CONFIG_VERSION_KEY, defaultVersion);
+                    
+                    try {
+                        config.save(configFile);
+                        Plugin.instance.getLogger().info("Config updated successfully! New options have been added.");
+                    } catch (IOException e) {
+                        Plugin.instance.getLogger().log(Level.WARNING, "Failed to save merged config", e);
+                    }
+                }
+            }
+        } else {
+            // No config exists, save default
+            Plugin.instance.saveDefaultConfig();
+            config = Plugin.instance.getConfig();
+        }
+        
         Plugin.instance.reloadConfig();
         config = Plugin.instance.getConfig();
+    }
+
+    /**
+     * Merges missing keys from defaultConfig into existingConfig.
+     * Preserves existing user values, only adds new keys.
+     */
+    private static void mergeConfigs(FileConfiguration existing, FileConfiguration defaults) {
+        mergeSection(existing, defaults, "");
+    }
+
+    private static void mergeSection(FileConfiguration existing, FileConfiguration defaults, String path) {
+        ConfigurationSection defaultSection = path.isEmpty() ? defaults : defaults.getConfigurationSection(path);
+        if (defaultSection == null) return;
+        
+        Set<String> keys = defaultSection.getKeys(false);
+        
+        for (String key : keys) {
+            String fullPath = path.isEmpty() ? key : path + "." + key;
+            
+            // Skip the version key - we handle that separately
+            if (fullPath.equals(CONFIG_VERSION_KEY)) continue;
+            
+            if (defaults.isConfigurationSection(fullPath)) {
+                // Recurse into sections
+                if (!existing.isConfigurationSection(fullPath)) {
+                    // Section doesn't exist in existing config, copy entire section
+                    existing.createSection(fullPath);
+                }
+                mergeSection(existing, defaults, fullPath);
+            } else {
+                // It's a value - only add if missing in existing config
+                if (!existing.contains(fullPath)) {
+                    Object defaultValue = defaults.get(fullPath);
+                    existing.set(fullPath, defaultValue);
+                    Plugin.instance.getLogger().info("  + Added new config option: " + fullPath);
+                }
+            }
+        }
     }
 
     public static void reload() {

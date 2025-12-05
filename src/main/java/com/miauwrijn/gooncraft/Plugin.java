@@ -114,14 +114,29 @@ public class Plugin extends JavaPlugin {
     
     private void showHelp(CommandSender sender) {
         sender.sendMessage("");
-        sender.sendMessage("§6§lGoonCraft §7v" + getDescription().getVersion());
+        sender.sendMessage("§6§l══════ GoonCraft v" + getDescription().getVersion() + " ══════");
         sender.sendMessage("");
-        sender.sendMessage("§e/gooncraft stats §7[player] §8- View goon statistics");
-        sender.sendMessage("§e/gooncraft achievements §7[player] §8- View achievements");
-        sender.sendMessage("§e/gooncraft leaderboard §7[category] §8- View leaderboard");
-        sender.sendMessage("§e/gooncraft reload §8- Reload config (OP)");
+        sender.sendMessage("§e§lMain Commands:");
+        sender.sendMessage("§e/gc stats §7[player] §8- View goon statistics");
+        sender.sendMessage("§e/gc achievements §7[player] §8- View achievements");
+        sender.sendMessage("§e/gc leaderboard §8- View leaderboard GUI");
+        sender.sendMessage("§e/gc reload §8- Reload config §c(OP)");
         sender.sendMessage("");
-        sender.sendMessage("§7Other commands: §e/penis§7, §e/buttfinger§7, §e/viagra");
+        sender.sendMessage("§d§lGender & Body:");
+        sender.sendMessage("§d/gender §7[change] §8- View/change gender");
+        sender.sendMessage("§d/boobs §7<size|perkiness|toggle|jiggle> §8- Boob commands");
+        sender.sendMessage("§d/penis §7<size|girth|bbc|toggle> §8- Penis commands");
         sender.sendMessage("");
+        sender.sendMessage("§b§lActions:");
+        sender.sendMessage("§b/buttfinger §7<player> §8- Buttfinger someone");
+        sender.sendMessage("§b/viagra §8- Get a Viagra pill §c(OP)");
+        sender.sendMessage("");
+        sender.sendMessage("§a§lBodily Functions:");
+        sender.sendMessage("§a/fart §8- Let one rip");
+        sender.sendMessage("§a/poop §8- Drop a deuce");
+        sender.sendMessage("§a/piss §8- Take a leak §7(requires toggle)");
+        sender.sendMessage("");
+        sender.sendMessage("§7§oUse §e/gc help §7§ofor this menu");
+        sender.sendMessage("§6§l═══════════════════════════");
     }
 }

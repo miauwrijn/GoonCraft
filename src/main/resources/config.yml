@@ -4,6 +4,9 @@
 # Use color codes with § or & (e.g., &6 for gold, &c for red)
 # Available placeholders: {player}, {target}, {value}, {min}, {max}
 
+# DO NOT MODIFY - Used for automatic config migration
+config-version: 2
+
 messages:
   # General
   only-players: "&cOnly players can use this command"
