@@ -31,13 +31,13 @@ import com.miauwrijn.gooncraft.data.PlayerStats;
 public class AchievementManager implements Listener {
 
     public enum Achievement {
-        // ===== FAP ACHIEVEMENTS (6) =====
-        FIRST_FAP("First Timer", "Fap for the first time", "fap", 1),
-        FAP_10("Getting Started", "Fap 10 times", "fap", 10),
-        FAP_50("Chronic Masturbator", "Fap 50 times", "fap", 50),
-        FAP_100("Coomer", "Fap 100 times", "fap", 100),
-        FAP_500("Professional Gooner", "Fap 500 times", "fap", 500),
-        FAP_1000("Legendary Gooner", "Fap 1000 times", "fap", 1000),
+        // ===== GOON ACHIEVEMENTS (6) - Gender Neutral =====
+        FIRST_GOON("First Timer", "Goon for the first time", "goon", 1),
+        GOON_10("Getting Started", "Goon 10 times", "goon", 10),
+        GOON_50("Chronic Masturbator", "Goon 50 times", "goon", 50),
+        GOON_100("Coomer", "Goon 100 times", "goon", 100),
+        GOON_500("Professional Gooner", "Goon 500 times", "goon", 500),
+        GOON_1000("Legendary Gooner", "Goon 1000 times", "goon", 1000),
         
         // ===== CUM ON OTHERS ACHIEVEMENTS (4) =====
         CUM_ON_1("Oops!", "Cum on someone for the first time", "cum_on", 1),
@@ -50,12 +50,12 @@ public class AchievementManager implements Listener {
         GOT_CUMMED_10("Easy Target", "Get cummed on 10 times", "got_cummed", 10),
         GOT_CUMMED_50("Cum Magnet", "Get cummed on 50 times", "got_cummed", 50),
         
-        // ===== EXPOSURE TIME ACHIEVEMENTS (5) =====
-        TIME_OUT_60("Quick Flash", "Have your penis out for 1 minute total", "time_out", 60),
-        TIME_OUT_600("Exhibitionist", "Have your penis out for 10 minutes total", "time_out", 600),
-        TIME_OUT_3600("Nudist", "Have your penis out for 1 hour total", "time_out", 3600),
-        TIME_OUT_36000("Public Menace", "Have your penis out for 10 hours total", "time_out", 36000),
-        TIME_OUT_360000("Exhibitionist Prime", "Have your penis out for 100 hours total", "time_out", 360000),
+        // ===== EXPOSURE TIME ACHIEVEMENTS (5) - Gender Neutral =====
+        TIME_OUT_60("Quick Flash", "Be exposed for 1 minute total", "time_out", 60),
+        TIME_OUT_600("Exhibitionist", "Be exposed for 10 minutes total", "time_out", 600),
+        TIME_OUT_3600("Nudist", "Be exposed for 1 hour total", "time_out", 3600),
+        TIME_OUT_36000("Public Menace", "Be exposed for 10 hours total", "time_out", 36000),
+        TIME_OUT_360000("Exhibitionist Prime", "Be exposed for 100 hours total", "time_out", 360000),
         
         // ===== BUTTFINGER ACHIEVEMENTS (5) =====
         BUTTFINGER_1("Probing", "Buttfinger someone for the first time", "bf_given", 1),
@@ -95,19 +95,19 @@ public class AchievementManager implements Listener {
         GENDER_CHANGE_5("Identity Crisis", "Can't decide - change gender 5 times", "gender_changes", 5),
         GENDER_CHANGE_20("Fluid", "Go with the flow - change gender 20 times", "gender_changes", 20),
         
-        // ===== LOCATION ACHIEVEMENTS (6) =====
-        FAP_NETHER("Hot & Bothered", "Fap in the Nether", "location", 1, false, "nether"),
-        FAP_END("End Game", "Beat the dragon... differently", "location", 1, false, "end"),
-        FAP_UNDERWATER("Deep Diver", "Aquatic activities", "location", 1, false, "underwater"),
-        FAP_DESERT("Dry Rub", "Sandy situation", "location", 1, false, "desert"),
-        FAP_SNOW("Shrinkage", "It's cold!", "location", 1, false, "snow"),
-        FAP_HIGH("Mile High Club", "Get freaky above Y=200", "location", 1, false, "high"),
+        // ===== LOCATION ACHIEVEMENTS (6) - Gender Neutral =====
+        GOON_NETHER("Hot & Bothered", "Goon in the Nether", "location", 1, false, "nether"),
+        GOON_END("End Game", "Beat the dragon... differently", "location", 1, false, "end"),
+        GOON_UNDERWATER("Deep Diver", "Aquatic activities", "location", 1, false, "underwater"),
+        GOON_DESERT("Dry Rub", "Sandy situation", "location", 1, false, "desert"),
+        GOON_SNOW("Shrinkage", "It's cold!", "location", 1, false, "snow"),
+        GOON_HIGH("Mile High Club", "Get freaky above Y=200", "location", 1, false, "high"),
         
-        // ===== DANGER ACHIEVEMENTS (5) =====
-        DAMAGE_WHILE_FAP("Caught Red-Handed", "Take damage while fapping", "damage_fap", 1),
+        // ===== DANGER ACHIEVEMENTS (5) - Gender Neutral =====
+        DAMAGE_WHILE_GOON("Caught Red-Handed", "Take damage while gooning", "damage_goon", 1),
         DEATH_EXPOSED("Didn't See That Coming", "Die while exposed", "death_exposed", 1),
-        FAP_ON_FIRE("Too Hot To Handle", "Fap while on fire", "fap_fire", 1),
-        FAP_FALLING("Terminal Velocity", "Falling with style", "fap_falling", 1),
+        GOON_ON_FIRE("Too Hot To Handle", "Goon while on fire", "goon_fire", 1),
+        GOON_FALLING("Terminal Velocity", "Falling with style", "goon_falling", 1),
         CREEPER_DEATH("Creeper's Delight", "Get blown up while exposed", "creeper_death", 1),
         
         // ===== SOCIAL ACHIEVEMENTS (6) =====
@@ -117,9 +117,9 @@ public class AchievementManager implements Listener {
         FART_VARIETY_10("Stink Bomb", "Fart near 10 different players", "unique_fart", 10),
         BF_VARIETY_10("Explorer", "Buttfinger 10 different players", "unique_bf", 10),
         
-        // ===== SPEED ACHIEVEMENTS (3) =====
-        SPEED_FAP_10("Speed Runner", "Fap 10 times in 60 seconds", "speed_fap", 10),
-        RAPID_FIRE_3("Rapid Fire", "Ejaculate 3 times in 30 seconds", "rapid_fire", 3),
+        // ===== SPEED ACHIEVEMENTS (2) - Gender Neutral =====
+        SPEED_GOON_10("Speed Runner", "Goon 10 times in 60 seconds", "speed_goon", 10),
+        RAPID_FIRE_3("Rapid Fire", "Finish 3 times in 30 seconds", "rapid_fire", 3),
         
         // ===== ANIMAL EASTER EGGS - SHEEP (3 hidden) =====
         YELLOW_SHEEP("Golden Fleece", "Dye a sheep yellow in an... unconventional way", "hidden", 1, true),
@@ -198,7 +198,7 @@ public class AchievementManager implements Listener {
 
     private static long getStatForCategory(PlayerStats stats, String category) {
         return switch (category) {
-            case "fap" -> stats.fapCount;
+            case "goon" -> stats.goonCount;
             case "cum_on" -> stats.cumOnOthersCount;
             case "got_cummed" -> stats.gotCummedOnCount;
             case "time_out" -> stats.getCurrentTotalTime();
@@ -217,12 +217,12 @@ public class AchievementManager implements Listener {
             case "unique_piss" -> stats.uniquePlayersPissedNear.size();
             case "unique_fart" -> stats.uniquePlayersFartedNear.size();
             case "unique_bf" -> stats.uniquePlayersButtfingered.size();
-            case "damage_fap" -> stats.damageWhileFapping;
+            case "damage_goon" -> stats.damageWhileGooning;
             case "death_exposed" -> stats.deathsWhileExposed;
-            case "fap_fire" -> stats.fapsWhileOnFire;
-            case "fap_falling" -> stats.fapsWhileFalling;
+            case "goon_fire" -> stats.goonsWhileOnFire;
+            case "goon_falling" -> stats.goonsWhileFalling;
             case "creeper_death" -> stats.creeperDeathsWhileExposed;
-            case "speed_fap" -> stats.maxFapsInMinute;
+            case "speed_goon" -> stats.maxGoonsInMinute;
             case "rapid_fire" -> stats.ejaculationsIn30Seconds;
             default -> 0;
         };
@@ -234,23 +234,23 @@ public class AchievementManager implements Listener {
     public static void checkLocationAchievements(Player player, PlayerStats stats) {
         Set<Achievement> unlocked = getUnlocked(player);
         
-        if (stats.fappedInNether && !unlocked.contains(Achievement.FAP_NETHER)) {
-            unlockAchievement(player, Achievement.FAP_NETHER);
+        if (stats.goonedInNether && !unlocked.contains(Achievement.GOON_NETHER)) {
+            unlockAchievement(player, Achievement.GOON_NETHER);
         }
-        if (stats.fappedInEnd && !unlocked.contains(Achievement.FAP_END)) {
-            unlockAchievement(player, Achievement.FAP_END);
+        if (stats.goonedInEnd && !unlocked.contains(Achievement.GOON_END)) {
+            unlockAchievement(player, Achievement.GOON_END);
         }
-        if (stats.fappedUnderwater && !unlocked.contains(Achievement.FAP_UNDERWATER)) {
-            unlockAchievement(player, Achievement.FAP_UNDERWATER);
+        if (stats.goonedUnderwater && !unlocked.contains(Achievement.GOON_UNDERWATER)) {
+            unlockAchievement(player, Achievement.GOON_UNDERWATER);
         }
-        if (stats.fappedInDesert && !unlocked.contains(Achievement.FAP_DESERT)) {
-            unlockAchievement(player, Achievement.FAP_DESERT);
+        if (stats.goonedInDesert && !unlocked.contains(Achievement.GOON_DESERT)) {
+            unlockAchievement(player, Achievement.GOON_DESERT);
         }
-        if (stats.fappedInSnow && !unlocked.contains(Achievement.FAP_SNOW)) {
-            unlockAchievement(player, Achievement.FAP_SNOW);
+        if (stats.goonedInSnow && !unlocked.contains(Achievement.GOON_SNOW)) {
+            unlockAchievement(player, Achievement.GOON_SNOW);
         }
-        if (stats.fappedHighAltitude && !unlocked.contains(Achievement.FAP_HIGH)) {
-            unlockAchievement(player, Achievement.FAP_HIGH);
+        if (stats.goonedHighAltitude && !unlocked.contains(Achievement.GOON_HIGH)) {
+            unlockAchievement(player, Achievement.GOON_HIGH);
         }
     }
 

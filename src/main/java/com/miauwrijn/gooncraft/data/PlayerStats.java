@@ -6,14 +6,15 @@ import java.util.UUID;
 
 /**
  * Tracks player statistics for achievements and scoreboards.
+ * Uses gender-neutral terminology (goon = masturbate for any gender).
  */
 public class PlayerStats {
     
-    // Original stats
-    public int fapCount;
-    public int cumOnOthersCount;
-    public int gotCummedOnCount;
-    public long totalTimeWithPenisOut; // in seconds
+    // Core stats (gender neutral)
+    public int goonCount; // Masturbation count (was fapCount)
+    public int cumOnOthersCount; // Also counts squirting for females
+    public int gotCummedOnCount; // Also counts getting squirted on
+    public long totalExposureTime; // in seconds (was totalTimeWithPenisOut)
     public int buttfingersGiven;
     public int buttfingersReceived;
     public int viagraUsed;
@@ -37,23 +38,23 @@ public class PlayerStats {
     public Set<UUID> uniquePlayersPissedNear;
     public Set<UUID> uniquePlayersFartedNear;
     
-    // Danger stats
+    // Danger stats (gender neutral)
     public int deathsWhileExposed;
-    public int damageWhileFapping;
-    public int fapsWhileFalling;
-    public int fapsWhileOnFire;
+    public int damageWhileGooning; // was damageWhileFapping
+    public int goonsWhileFalling; // was fapsWhileFalling
+    public int goonsWhileOnFire; // was fapsWhileOnFire
     public int creeperDeathsWhileExposed;
     
-    // Location stats
-    public boolean fappedInNether;
-    public boolean fappedInEnd;
-    public boolean fappedUnderwater;
-    public boolean fappedInDesert;
-    public boolean fappedInSnow;
-    public boolean fappedHighAltitude;
+    // Location stats (gender neutral)
+    public boolean goonedInNether;
+    public boolean goonedInEnd;
+    public boolean goonedUnderwater;
+    public boolean goonedInDesert;
+    public boolean goonedInSnow;
+    public boolean goonedHighAltitude;
     
     // Combo/Speed stats
-    public int maxFapsInMinute;
+    public int maxGoonsInMinute; // was maxFapsInMinute
     public int ejaculationsIn30Seconds;
     public long lastEjaculationTime;
     public int currentEjaculationStreak;
@@ -65,16 +66,16 @@ public class PlayerStats {
     public int catsAffected;
     
     // Session tracking (not persisted)
-    public transient long penisOutStartTime;
-    public transient boolean isPenisOut;
-    public transient int fapsThisMinute;
+    public transient long exposureStartTime;
+    public transient boolean isExposed;
+    public transient int goonsThisMinute;
     public transient long minuteStartTime;
 
     public PlayerStats() {
-        this.fapCount = 0;
+        this.goonCount = 0;
         this.cumOnOthersCount = 0;
         this.gotCummedOnCount = 0;
-        this.totalTimeWithPenisOut = 0;
+        this.totalExposureTime = 0;
         this.buttfingersGiven = 0;
         this.buttfingersReceived = 0;
         this.viagraUsed = 0;
@@ -90,17 +91,17 @@ public class PlayerStats {
         this.uniquePlayersPissedNear = new HashSet<>();
         this.uniquePlayersFartedNear = new HashSet<>();
         this.deathsWhileExposed = 0;
-        this.damageWhileFapping = 0;
-        this.fapsWhileFalling = 0;
-        this.fapsWhileOnFire = 0;
+        this.damageWhileGooning = 0;
+        this.goonsWhileFalling = 0;
+        this.goonsWhileOnFire = 0;
         this.creeperDeathsWhileExposed = 0;
-        this.fappedInNether = false;
-        this.fappedInEnd = false;
-        this.fappedUnderwater = false;
-        this.fappedInDesert = false;
-        this.fappedInSnow = false;
-        this.fappedHighAltitude = false;
-        this.maxFapsInMinute = 0;
+        this.goonedInNether = false;
+        this.goonedInEnd = false;
+        this.goonedUnderwater = false;
+        this.goonedInDesert = false;
+        this.goonedInSnow = false;
+        this.goonedHighAltitude = false;
+        this.maxGoonsInMinute = 0;
         this.ejaculationsIn30Seconds = 0;
         this.lastEjaculationTime = 0;
         this.currentEjaculationStreak = 0;
@@ -108,61 +109,79 @@ public class PlayerStats {
         this.cowsAffected = 0;
         this.wolvesAffected = 0;
         this.catsAffected = 0;
-        this.penisOutStartTime = 0;
-        this.isPenisOut = false;
-        this.fapsThisMinute = 0;
+        this.exposureStartTime = 0;
+        this.isExposed = false;
+        this.goonsThisMinute = 0;
         this.minuteStartTime = 0;
     }
 
-    public void startPenisOutTimer() {
-        if (!isPenisOut) {
-            penisOutStartTime = System.currentTimeMillis();
-            isPenisOut = true;
+    public void startExposureTimer() {
+        if (!isExposed) {
+            exposureStartTime = System.currentTimeMillis();
+            isExposed = true;
         }
     }
 
-    public void stopPenisOutTimer() {
-        if (isPenisOut) {
-            long elapsed = (System.currentTimeMillis() - penisOutStartTime) / 1000;
-            totalTimeWithPenisOut += elapsed;
-            isPenisOut = false;
-            penisOutStartTime = 0;
+    public void stopExposureTimer() {
+        if (isExposed) {
+            long elapsed = (System.currentTimeMillis() - exposureStartTime) / 1000;
+            totalExposureTime += elapsed;
+            isExposed = false;
+            exposureStartTime = 0;
         }
+    }
+
+    /** @deprecated Use startExposureTimer instead */
+    @Deprecated
+    public void startPenisOutTimer() {
+        startExposureTimer();
+    }
+
+    /** @deprecated Use stopExposureTimer instead */
+    @Deprecated
+    public void stopPenisOutTimer() {
+        stopExposureTimer();
     }
 
     public long getCurrentTotalTime() {
-        if (isPenisOut) {
-            long elapsed = (System.currentTimeMillis() - penisOutStartTime) / 1000;
-            return totalTimeWithPenisOut + elapsed;
+        if (isExposed) {
+            long elapsed = (System.currentTimeMillis() - exposureStartTime) / 1000;
+            return totalExposureTime + elapsed;
         }
-        return totalTimeWithPenisOut;
+        return totalExposureTime;
     }
 
     /**
-     * Track fap for speed achievements.
-     * @return the current faps in the current minute
+     * Track goon for speed achievements.
+     * @return the current goons in the current minute
      */
-    public int trackFapSpeed() {
+    public int trackGoonSpeed() {
         long now = System.currentTimeMillis();
         
         // Reset if more than a minute has passed
         if (now - minuteStartTime > 60000) {
             // Update max if current streak was higher
-            if (fapsThisMinute > maxFapsInMinute) {
-                maxFapsInMinute = fapsThisMinute;
+            if (goonsThisMinute > maxGoonsInMinute) {
+                maxGoonsInMinute = goonsThisMinute;
             }
-            fapsThisMinute = 0;
+            goonsThisMinute = 0;
             minuteStartTime = now;
         }
         
-        fapsThisMinute++;
+        goonsThisMinute++;
         
         // Update max in real-time too
-        if (fapsThisMinute > maxFapsInMinute) {
-            maxFapsInMinute = fapsThisMinute;
+        if (goonsThisMinute > maxGoonsInMinute) {
+            maxGoonsInMinute = goonsThisMinute;
         }
         
-        return fapsThisMinute;
+        return goonsThisMinute;
+    }
+
+    /** @deprecated Use trackGoonSpeed instead */
+    @Deprecated
+    public int trackFapSpeed() {
+        return trackGoonSpeed();
     }
 
     /**

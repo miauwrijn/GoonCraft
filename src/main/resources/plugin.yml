@@ -1,6 +1,6 @@
 name: GoonCraft
 main: com.miauwrijn.gooncraft.Plugin
-version: 0.2.0
+version: 0.3.0
 api-version: '1.21'
 authors: ["Miauwrijn"]
 description: The Minecraft plugin your server never knew it needed
@@ -16,10 +16,16 @@ commands:
     aliases:
       - bf
   penis:
-    description: Penis commands
-    usage: /<command> <size|girth|bbc|toggle>
+    description: Penis stat commands
+    usage: /<command> <size|girth|bbc>
     aliases:
       - pp
+  genitals:
+    description: Toggle your genitals visibility (gender-aware)
+    usage: /<command> [toggle]
+    aliases:
+      - geni
+      - expose
   viagra:
     description: Get a viagra pill
     usage: /<command>
@@ -31,14 +37,14 @@ commands:
     description: Drop a deuce
     usage: /<command>
   piss:
-    description: Take a leak (requires penis toggle)
+    description: Take a leak (requires genitals toggle)
     usage: /<command>
   gender:
     description: View or change your gender
     usage: /<command> [change]
   boobs:
-    description: Boob commands
-    usage: /<command> <size|toggle|jiggle>
+    description: Boob stat commands
+    usage: /<command> <size|perkiness|jiggle>
     aliases:
       - tits
       - breasts

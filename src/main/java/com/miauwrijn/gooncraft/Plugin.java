@@ -12,6 +12,7 @@ import com.miauwrijn.gooncraft.handlers.BodilyFunctionsHandler;
 import com.miauwrijn.gooncraft.handlers.BoobsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.ButtFingerCommandHandler;
 import com.miauwrijn.gooncraft.handlers.GenderCommandHandler;
+import com.miauwrijn.gooncraft.handlers.GenitalsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.PenisCommandHandler;
 import com.miauwrijn.gooncraft.handlers.StatsCommandHandler;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
@@ -61,9 +62,10 @@ public class Plugin extends JavaPlugin {
         getCommand("poop").setExecutor(bodilyHandler);
         getCommand("piss").setExecutor(bodilyHandler);
         
-        // Gender and boobs
+        // Gender, boobs, and genitals
         getCommand("gender").setExecutor(new GenderCommandHandler());
         getCommand("boobs").setExecutor(new BoobsCommandHandler());
+        getCommand("genitals").setExecutor(new GenitalsCommandHandler());
 
         LOGGER.info("GoonCraft enabled! Time to get weird.");
     }
@@ -73,6 +75,7 @@ public class Plugin extends JavaPlugin {
         // Clean up all floating models
         PenisStatisticManager.clearAllActivePenises();
         GenderManager.clearAllActiveBoobModels();
+        GenderManager.clearAllActiveVaginaModels();
         LOGGER.info("GoonCraft disabled. Put your pants back on.");
     }
 
@@ -124,8 +127,9 @@ public class Plugin extends JavaPlugin {
         sender.sendMessage("");
         sender.sendMessage("§d§lGender & Body:");
         sender.sendMessage("§d/gender §7[change] §8- View/change gender");
-        sender.sendMessage("§d/boobs §7<size|perkiness|toggle|jiggle> §8- Boob commands");
-        sender.sendMessage("§d/penis §7<size|girth|bbc|toggle> §8- Penis commands");
+        sender.sendMessage("§d/genitals §8- Toggle your genitals (gender-aware!)");
+        sender.sendMessage("§d/boobs §7<size|perkiness|jiggle> §8- Boob stats/actions");
+        sender.sendMessage("§d/penis §7<size|girth|bbc> §8- Penis stats");
         sender.sendMessage("");
         sender.sendMessage("§b§lActions:");
         sender.sendMessage("§b/buttfinger §7<player> §8- Buttfinger someone");
@@ -134,7 +138,7 @@ public class Plugin extends JavaPlugin {
         sender.sendMessage("§a§lBodily Functions:");
         sender.sendMessage("§a/fart §8- Let one rip");
         sender.sendMessage("§a/poop §8- Drop a deuce");
-        sender.sendMessage("§a/piss §8- Take a leak §7(requires toggle)");
+        sender.sendMessage("§a/piss §8- Take a leak §7(requires /genitals)");
         sender.sendMessage("");
         sender.sendMessage("§7§oUse §e/gc help §7§ofor this menu");
         sender.sendMessage("§6§l═══════════════════════════");

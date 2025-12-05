@@ -223,14 +223,14 @@ public class LeaderboardGUI extends GUI {
         if (stats == null) return 0;
         
         return switch (category) {
-            case "faps", "fap" -> stats.fapCount;
+            case "goons", "goon", "faps", "fap" -> stats.goonCount;
             case "cumon", "cum" -> stats.cumOnOthersCount;
             case "cummed" -> stats.gotCummedOnCount;
             case "time", "exposure" -> stats.getCurrentTotalTime();
             case "bf", "buttfinger" -> stats.buttfingersGiven;
             case "rank" -> RankManager.getRank(player).ordinal();
             case "achievements" -> AchievementManager.getUnlockedCount(player);
-            default -> stats.fapCount;
+            default -> stats.goonCount;
         };
     }
 

@@ -25,11 +25,14 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 🖥️ **Beautiful GUI menus** for stats, achievements & leaderboards
 - 🏅 **Leaderboards** with interactive GUI
 - 🚻 **Gender System** - Choose male, female, or *other*
+- 🍆 **Penis models** with size & girth!
+- 🍑 **Vagina models** for females!
 - 🍈 **Boob models** with size & perkiness stats!
 - 🎖️ **12 Ranks** - From "Innocent Virgin" to "Ultimate Degenerate"
 - 💨 **Bodily Functions** - /fart, /poop, /piss commands
 - 🐑 **Easter Eggs** - Hidden achievements with 6 different animals!
 - 🔄 **Auto-updating config** - New options merge automatically
+- 🔀 **Gender-neutral "Goon"** - Works for all genders!
 
 ---
 
@@ -68,9 +71,9 @@ Use `/gc` or `/gooncraft` to see all available commands!
 |---------|-------|-------------|
 | `/gender` | - | View your current gender |
 | `/gender change` | - | Open gender selection GUI |
+| `/genitals` | `/geni`, `/expose` | **Toggle your genitals** (gender-aware!) |
 | `/boobs size` | `/tits size` | Check your boob size |
 | `/boobs perkiness` | `/tits perk` | Check your boob perkiness |
-| `/boobs toggle` | `/tits toggle` | Flash your boobs / Cover up |
 | `/boobs jiggle` | `/tits jiggle` | *Jiggle jiggle* 🍈 |
 
 ### Penis Commands
@@ -83,7 +86,6 @@ Use `/gc` or `/gooncraft` to see all available commands!
 | `/penis girth <player>` | `/pp girth` | Check someone else's girth |
 | `/penis bbc` | `/pp bbc` | Check your BBC status |
 | `/penis bbc <player>` | `/pp bbc` | Check someone else's BBC status |
-| `/penis toggle` | `/pp toggle` | Whip it out / Put it away |
 
 ### Bodily Functions
 
@@ -91,7 +93,7 @@ Use `/gc` or `/gooncraft` to see all available commands!
 |---------|-------------|
 | `/fart` | 💨 Let one rip |
 | `/poop` | 💩 Drop a deuce |
-| `/piss` | 💛 Take a leak (requires penis toggle) |
+| `/piss` | 💛 Take a leak (requires `/genitals` toggle) |
 
 ### Other Commands
 
@@ -107,7 +109,7 @@ Use `/gc` or `/gooncraft` to see all available commands!
 | `/penis size set <player> <size>` | Set someone's size (5-30cm) |
 | `/penis girth set <player> <girth>` | Set someone's girth (5-15cm) |
 | `/penis bbc set <player> <true/false>` | Assign BBC status |
-| `/boobs size set <player> <size>` | Set someone's boob size (1-10) |
+| `/boobs size set <player> <size>` | Set someone's boob size (AA-H or 1-10) |
 | `/boobs perkiness set <player> <value>` | Set someone's boob perkiness (1-10) |
 
 ---
@@ -119,15 +121,25 @@ When players join for the first time, they're prompted to select their gender:
 | Gender | What You Get | Icon |
 |--------|-------------|------|
 | **Male** | Penis | ⚔️ |
-| **Female** | Boobs (with nipples!) | 🌸 |
-| **Other** | **BOTH!** | 🌈 |
+| **Female** | Vagina + Boobs (with nipples!) | 🌸 |
+| **Other** | Penis + Boobs (**BOTH!**) | 🌈 |
 
 The "Other" option features a **rainbow animated button** because why not?
 
 Use `/gender change` anytime to switch!
 
+### Unified Genitals Command
+
+Use `/genitals` to toggle your parts visibility - it automatically shows the right models for your gender:
+- **Male**: Shows penis
+- **Female**: Shows vagina + boobs
+- **Other**: Shows penis + boobs
+
+All genders can "goon" (masturbate) when their genitals are toggled on!
+
 ### Boob Stats
-- **Size** (1-10) - How big they are
+- **Size** (AA to H cup) - How big they are
+  - AA → A → B → C → D → DD → E → F → G → H
 - **Perkiness** (1-10) - How perky/high they sit, affects nipple positioning
 
 ---
@@ -160,9 +172,9 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 ## 📊 Statistics & Achievements
 
 ### Tracked Statistics
-- **Fap Count** - Total times you've... expressed yourself
-- **Cummed on Others** - Times you've hit nearby players
-- **Got Cummed On** - Times you've been a victim
+- **Goon Count** - Total times you've... expressed yourself (works for all genders!)
+- **Cummed/Squirted on Others** - Times you've hit nearby players
+- **Got Cummed/Squirted On** - Times you've been a victim
 - **Exposure Time** - Total time with your equipment out
 - **Buttfingers Given/Received** - Self-explanatory
 - **Viagra Used** - Pills consumed
@@ -175,8 +187,8 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| 🦴 **Fapping** | 6 | First Timer → Legendary Gooner (1-1000 faps) |
-| 💦 **Cumming** | 4 | Oops! → Bukakke Master (1-100) |
+| 🦴 **Gooning** | 6 | First Timer → Legendary Gooner (1-1000 goons) |
+| 💦 **Cumming/Squirting** | 4 | Oops! → Bukakke Master (1-100) |
 | 😵 **Got Cummed On** | 3 | Victim → Cum Magnet (1-50) |
 | ⏱️ **Exposure** | 5 | Quick Flash → Exhibitionist Prime (1min-100hrs) |
 | 👆 **Buttfinger** | 5 | Probing → Loose (1-50) |
@@ -225,20 +237,20 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 #### 🌍 Location Achievements
 | Achievement | Description | Requirement |
 |-------------|-------------|-------------|
-| Mile High Club | Get freaky above Y=200 | Fap at high altitude |
-| Deep Diver | Aquatic activities | Fap underwater |
-| Hot & Bothered | Fap in the Nether | Fap in Nether |
-| End Game | Beat the dragon... differently | Fap in The End |
-| Dry Rub | Sandy situation | Fap in desert biome |
-| Shrinkage | It's cold! | Fap in snow biome |
+| Mile High Club | Get freaky above Y=200 | Goon at high altitude |
+| Deep Diver | Aquatic activities | Goon underwater |
+| Hot & Bothered | Goon in the Nether | Goon in Nether |
+| End Game | Beat the dragon... differently | Goon in The End |
+| Dry Rub | Sandy situation | Goon in desert biome |
+| Shrinkage | It's cold! | Goon in snow biome |
 
 #### ⚠️ Danger Achievements
 | Achievement | Description | Requirement |
 |-------------|-------------|-------------|
-| Caught Red-Handed | Take damage while fapping | Get hit while fapping |
+| Caught Red-Handed | Take damage while gooning | Get hit while gooning |
 | Didn't See That Coming | Die while exposed | Die with toggle on |
-| Too Hot To Handle | Fap while on fire | Fap while burning |
-| Terminal Velocity | Falling with style | Fap while falling |
+| Too Hot To Handle | Goon while on fire | Goon while burning |
+| Terminal Velocity | Falling with style | Goon while falling |
 | Creeper's Delight | Worst timing ever | Get blown up while exposed |
 
 #### 👥 Social Achievements
@@ -253,8 +265,8 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 #### 🏃 Speed Achievements
 | Achievement | Description | Requirement |
 |-------------|-------------|-------------|
-| Speed Runner | Fap 10 times in 60 seconds | Fast hands |
-| Rapid Fire | Ejaculate 3 times in 30 seconds | Lucky streak |
+| Speed Runner | Goon 10 times in 60 seconds | Fast hands |
+| Rapid Fire | Finish 3 times in 30 seconds | Lucky streak |
 
 #### 🐑 Hidden Animal Easter Eggs (11)
 Discover these by... interacting with animals in creative ways! 🤫
@@ -270,9 +282,9 @@ Discover these by... interacting with animals in creative ways! 🤫
 ### Leaderboard GUI
 
 The interactive leaderboard GUI shows rankings across multiple categories:
-- **Faps** - Total fap count
-- **Cummed On Others** - Times cummed on others
-- **Got Cummed On** - Times got cummed on
+- **Goons** - Total goon count (gender-neutral!)
+- **Cummed On Others** - Times cummed/squirted on others
+- **Got Cummed On** - Times got cummed/squirted on
 - **Exposure Time** - Time with genitals out
 - **Buttfingers** - Buttfingers given
 - **Rank** - Player rank based on achievements
@@ -352,8 +364,9 @@ Boobs:
   Size: 7
   Perkiness: 5
 Stats:
-  FapCount: 42
+  GoonCount: 42        # Renamed from FapCount - works for all genders!
   CumOnOthersCount: 10
+  TotalExposureTime: 3600  # Renamed from TotalTimeWithPenisOut
   FartCount: 25
   PoopCount: 12
   PissCount: 8
@@ -361,7 +374,7 @@ Stats:
   GenderChanges: 3
   # ... more stats
 Achievements:
-  FIRST_FAP: true
+  FIRST_GOON: true     # Renamed from FIRST_FAP
   FART_1: true
   # ... more achievements
 ```
@@ -467,7 +480,7 @@ com.miauwrijn.gooncraft/
 ├── Plugin.java              # Main plugin class
 ├── data/
 │   ├── PenisStatistics.java # Penis data model
-│   └── PlayerStats.java     # Player statistics (67 tracked fields!)
+│   └── PlayerStats.java     # Player statistics (gender-neutral!)
 ├── gui/
 │   ├── GUI.java             # Base GUI class
 │   ├── GUIListener.java     # Click event handler
@@ -481,20 +494,22 @@ com.miauwrijn.gooncraft/
 │   ├── BoobsCommandHandler.java
 │   ├── ButtFingerCommandHandler.java
 │   ├── GenderCommandHandler.java
+│   ├── GenitalsCommandHandler.java # Unified toggle for all genders!
 │   ├── PenisCommandHandler.java
 │   └── StatsCommandHandler.java
 ├── managers/
 │   ├── AchievementManager.java # 67 achievements (11 hidden)
 │   ├── ConfigManager.java      # Auto-merging config
 │   ├── CooldownManager.java
-│   ├── GenderManager.java
+│   ├── GenderManager.java      # Handles all genital models
 │   ├── PenisStatisticManager.java
 │   ├── PillManager.java
 │   ├── RankManager.java        # 12 ranks with perks
 │   └── StatisticsManager.java  # Tracks everything!
 └── models/
     ├── BoobModel.java       # 3D boob display with nipples
-    └── PenisModel.java      # 3D penis display model
+    ├── PenisModel.java      # 3D penis display model
+    └── VaginaModel.java     # 3D vagina display model (NEW!)
 ```
 
 ---

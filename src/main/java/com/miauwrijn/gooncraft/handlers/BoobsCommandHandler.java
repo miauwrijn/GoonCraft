@@ -44,7 +44,11 @@ public class BoobsCommandHandler implements CommandExecutor {
         return switch (subCommand) {
             case "size" -> handleSizeCommand(player, args);
             case "perkiness", "perk" -> handlePerkinessCommand(player, args);
-            case "toggle" -> handleToggleCommand(player);
+            case "toggle" -> {
+                // Redirect to /genitals command
+                sender.sendMessage("§eUse §d/genitals §efor toggling visibility!");
+                yield true;
+            }
             case "jiggle" -> handleJiggleCommand(player);
             default -> {
                 sender.sendMessage(ConfigManager.getMessage("boobs.unknown-subcommand"));
@@ -56,7 +60,8 @@ public class BoobsCommandHandler implements CommandExecutor {
     private boolean handleSizeCommand(Player player, String[] args) {
         if (args.length == 1) {
             int size = GenderManager.getBoobSize(player);
-            player.sendMessage(ConfigManager.getMessage("boobs.your-size", "{value}", String.valueOf(size)));
+            String cupSize = BoobModel.getCupSize(size);
+            player.sendMessage(ConfigManager.getMessage("boobs.your-size", "{value}", cupSize + " cup"));
             return true;
         }
 
@@ -81,21 +86,26 @@ public class BoobsCommandHandler implements CommandExecutor {
             try {
                 value = Integer.parseInt(args[3]);
             } catch (NumberFormatException e) {
-                player.sendMessage(ConfigManager.getMessage("boobs.usage"));
-                return true;
+                // Try parsing as cup size
+                value = parseCupSize(args[3]);
+                if (value == -1) {
+                    player.sendMessage(ConfigManager.getMessage("boobs.usage"));
+                    return true;
+                }
             }
 
             if (value < BoobModel.minSize || value > BoobModel.maxSize) {
                 player.sendMessage(ConfigManager.getMessage("boobs.size-range",
-                    "{min}", String.valueOf(BoobModel.minSize),
-                    "{max}", String.valueOf(BoobModel.maxSize)));
+                    "{min}", "AA",
+                    "{max}", "H"));
                 return true;
             }
 
             GenderManager.setBoobSize(target, value);
+            String cupSize = BoobModel.getCupSize(value);
             player.sendMessage(ConfigManager.getMessage("boobs.size-set",
                 "{player}", target.getName(),
-                "{value}", String.valueOf(value)));
+                "{value}", cupSize + " cup"));
             return true;
         }
 
@@ -112,10 +122,31 @@ public class BoobsCommandHandler implements CommandExecutor {
         }
 
         int size = GenderManager.getBoobSize(target);
+        String cupSize = BoobModel.getCupSize(size);
         player.sendMessage(ConfigManager.getMessage("boobs.player-size",
             "{player}", target.getName(),
-            "{value}", String.valueOf(size)));
+            "{value}", cupSize + " cup"));
         return true;
+    }
+
+    /**
+     * Parse cup size string to numeric value.
+     * @return numeric value (1-10) or -1 if invalid
+     */
+    private int parseCupSize(String input) {
+        return switch (input.toUpperCase()) {
+            case "AA" -> 1;
+            case "A" -> 2;
+            case "B" -> 3;
+            case "C" -> 4;
+            case "D" -> 5;
+            case "DD", "E" -> 6;
+            case "DDD", "F" -> 7;
+            case "G" -> 8;
+            case "H" -> 9;
+            case "HH", "I" -> 10;
+            default -> -1;
+        };
     }
 
     private boolean handlePerkinessCommand(Player player, String[] args) {

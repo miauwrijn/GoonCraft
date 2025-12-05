@@ -252,7 +252,7 @@ public class AchievementsGUI extends GUI {
 
     private long getStatForCategory(PlayerStats stats, String category) {
         return switch (category) {
-            case "fap" -> stats.fapCount;
+            case "goon" -> stats.goonCount;
             case "cum_on" -> stats.cumOnOthersCount;
             case "got_cummed" -> stats.gotCummedOnCount;
             case "time_out" -> stats.getCurrentTotalTime();

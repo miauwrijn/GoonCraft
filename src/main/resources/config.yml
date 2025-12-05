@@ -5,7 +5,7 @@
 # Available placeholders: {player}, {target}, {value}, {min}, {max}
 
 # DO NOT MODIFY - Used for automatic config migration
-config-version: 2
+config-version: 3
 
 messages:
   # General
@@ -16,8 +16,8 @@ messages:
 
   # Penis commands
   penis:
-    usage: "&6Usage: /penis <size|girth|bbc|toggle> [player]"
-    unknown-subcommand: "&cUnknown subcommand. Use: size, girth, bbc, or toggle"
+    usage: "&6Usage: /penis <size|girth|bbc> [player]"
+    unknown-subcommand: "&cUnknown subcommand. Use: size, girth, or bbc"
     
     # Size
     your-size: "&6Your penis size is &e{value}cm"
@@ -40,11 +40,18 @@ messages:
     bbc-set-false: "&aSet {player}'s penis to a regular penis"
     invalid-boolean: "&cValue must be true or false"
     
-    # Toggle
+    # Toggle (deprecated - use /genitals)
     need-penis: "&cYou need to have a penis to use this command"
     no-penis: "&cYou don't have a penis! Use &e/gender change &cto get one."
     whipped-out: "&aYou whipped it out!"
     put-away: "&aYou put it away."
+
+  # Genitals command (unified for all genders)
+  genitals:
+    usage: "&6Usage: /genitals [toggle]"
+    no-gender: "&cYou need to select a gender first! Use &e/gender change"
+    shown: "&aYou exposed yourself!"
+    hidden: "&aYou covered up."
 
   # Buttfinger command
   buttfinger:
@@ -57,14 +64,21 @@ messages:
 
   # Viagra
   viagra:
-    need-toggle: "&cYou need to have your dick out to use this Viagra!"
-    success: "&aNice cock bro! Your dick temporarily grew {value}cm!"
+    need-toggle: "&cYou need to have your genitals out to use this Viagra!"
+    success: "&aNice! Your size temporarily grew {value}cm!"
     given: "&aYou've been given a Viagra pill!"
 
-  # Cum messages
+  # Goon messages (gender neutral - works for penis and vagina)
+  goon:
+    goon: "&7*goon*..."
+    orgasm: "&7Hmmfff.. *finishes*"
+    cummed-on: "&6You have been cummed on by &a&l{player}"
+    squirted-on: "&6You have been squirted on by &a&l{player}"
+
+  # Legacy cum messages (deprecated - use goon)
   cum:
-    fap: "&7Fap..."
-    ejaculate: "&7Hmmfff.. *ejaculates*"
+    fap: "&7*goon*..."
+    ejaculate: "&7Hmmfff.. *finishes*"
     cummed-on: "&6You have been cummed on by &a&l{player}"
 
   # Gender messages
@@ -72,32 +86,32 @@ messages:
     current: "&7Your current gender is: {gender}"
     change-hint: "&7Use &e/gender change &7to change it"
     selected-male: "&bYou selected Male! &7You have been given a penis."
-    selected-female: "&dYou selected Female! &7You have been given boobs."
-    selected-other: "&c&lO&6&lt&e&lh&a&le&b&lr&d&l! &7You have been given BOTH!"
+    selected-female: "&dYou selected Female! &7You have been given boobs and a vagina."
+    selected-other: "&c&lO&6&lt&e&lh&a&le&b&lr&d&l! &7You have been given BOTH penis and boobs!"
 
   # Boobs messages
   boobs:
-    usage: "&6Usage: /boobs <size|perkiness|toggle|jiggle>"
-    unknown-subcommand: "&cUnknown subcommand. Use: size, perkiness, toggle, or jiggle"
+    usage: "&6Usage: /boobs <size|perkiness|jiggle>"
+    unknown-subcommand: "&cUnknown subcommand. Use: size, perkiness, or jiggle"
     no-boobs: "&cYou don't have boobs! Use &e/gender change &cto get some."
     your-size: "&dYour boob size is &e{value}"
     player-size: "&d{player}'s boob size is &e{value}"
     player-no-boobs: "&c{player} doesn't have boobs!"
     size-set: "&aSet {player}'s boob size to {value}"
-    size-range: "&cSize must be between {min} and {max}"
+    size-range: "&cCup size must be between {min} and {max}"
     your-perkiness: "&dYour boob perkiness is &e{value}"
     player-perkiness: "&d{player}'s boob perkiness is &e{value}"
     perkiness-set: "&aSet {player}'s boob perkiness to {value}"
     perkiness-range: "&cPerkiness must be between {min} and {max}"
     whipped-out: "&dYou flashed your boobs!"
     put-away: "&dYou covered up."
-    need-toggle: "&cYou need to have your boobs out first! Use &e/boobs toggle"
+    need-toggle: "&cYou need to have your boobs out first! Use &e/genitals"
     jiggle: "&d*jiggle jiggle*"
 
   # Bodily function messages
   bodily:
     cooldown: "&cYou need to wait before doing that again!"
-    piss-need-toggle: "&cYou need to have your penis out to piss!"
+    piss-need-toggle: "&cYou need to have your genitals out to piss!"
     fart: "&e{player} &7let one rip... &8*pffrrrt*"
     poop: "&6{player} &7just dropped a deuce... &8*plop*"
     piss: "&e{player} &7is taking a leak..."
@@ -105,10 +119,10 @@ messages:
   # Statistics
   stats:
     header: "&6&l═══ {player}'s Goon Stats ═══"
-    fap-count: "&7Faps: &e{value}"
+    goon-count: "&7Goon count: &e{value}"
     cum-on-others: "&7Cummed on others: &e{value}"
     got-cummed-on: "&7Got cummed on: &e{value}"
-    time-with-penis-out: "&7Time with penis out: &e{value}"
+    time-exposed: "&7Time exposed: &e{value}"
     buttfingers-given: "&7Buttfingers given: &e{value}"
     buttfingers-received: "&7Buttfingers received: &e{value}"
     viagra-used: "&7Viagra used: &e{value}"
@@ -142,9 +156,9 @@ cooldowns:
 
 # Chat message settings
 chat:
-  # Show "Fap..." messages to nearby players
-  show-fap-messages: true
-  # Show "*ejaculates*" messages to nearby players
+  # Show "*goon*" messages to nearby players
+  show-goon-messages: true
+  # Show "*finishes*" messages to nearby players
   show-ejaculate-messages: true
   # Show "You have been cummed on" messages
   show-cummed-on-messages: true

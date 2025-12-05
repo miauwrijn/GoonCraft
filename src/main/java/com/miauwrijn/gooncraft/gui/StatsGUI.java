@@ -53,7 +53,7 @@ public class StatsGUI extends GUI {
         setItem(slot(2, 1), new ItemBuilder(Material.BONE)
                 .name("§d§lFap Count")
                 .lore(
-                    "§7Total faps: §e" + stats.fapCount,
+                    "§7Total goons: §e" + stats.goonCount,
                     "",
                     "§8Crouch + swing to fap"
                 )

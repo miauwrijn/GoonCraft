@@ -22,12 +22,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import com.miauwrijn.gooncraft.Plugin;
-import com.miauwrijn.gooncraft.data.PenisStatistics;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.CooldownManager;
-import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
+import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
@@ -158,9 +157,8 @@ public class BodilyFunctionsHandler implements CommandExecutor {
     }
 
     private boolean handlePiss(Player player) {
-        // Check if penis is out
-        PenisStatistics stats = PenisStatisticManager.getStatistics(player);
-        if (stats == null || stats.penisModel == null) {
+        // Check if genitals are out (penis for males/other, vagina for females)
+        if (!GenderManager.hasActiveGenitals(player)) {
             player.sendMessage(ConfigManager.getMessage("bodily.piss-need-toggle"));
             return true;
         }

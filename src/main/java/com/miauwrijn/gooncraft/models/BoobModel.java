@@ -27,6 +27,11 @@ public class BoobModel implements Runnable {
     public static final int minPerkiness = 1;
     public static final int maxPerkiness = 10;
 
+    // Cup size names for display
+    private static final String[] CUP_SIZES = {
+        "AA", "A", "B", "C", "D", "DD", "E", "F", "G", "H"
+    };
+
     private static final int JIGGLE_DURATION = 15;
 
     private int size;
@@ -55,6 +60,14 @@ public class BoobModel implements Runnable {
 
     public static int getRandomPerkiness() {
         return ThreadLocalRandom.current().nextInt(minPerkiness, maxPerkiness + 1);
+    }
+
+    /**
+     * Convert numeric size (1-10) to cup size string (AA-H).
+     */
+    public static String getCupSize(int size) {
+        int index = clamp(size, minSize, maxSize) - 1;
+        return CUP_SIZES[index];
     }
 
     public void reload(int newSize, int newPerkiness) {
@@ -116,12 +129,17 @@ public class BoobModel implements Runnable {
     private void updatePosition() {
         Location location = owner.getLocation();
         
+        // Only use yaw (horizontal rotation), ignore pitch (head up/down)
+        float yaw = location.getYaw();
+        
         float heightOffset = owner.isSneaking() ? 1.1f : 1.2f;
         // Perkiness affects vertical position (higher perkiness = higher boobs)
         float perkinessOffset = (perkiness - 5) * 0.008f;
         Location center = location.clone().add(0, heightOffset + perkinessOffset, 0);
-        Vector direction = center.getDirection();
-        direction.setY(0).normalize();
+        
+        // Calculate direction from yaw only (no pitch)
+        double yawRad = Math.toRadians(yaw);
+        Vector direction = new Vector(-Math.sin(yawRad), 0, Math.cos(yawRad)).normalize();
 
         // Position in front of chest
         Vector perpVector = new Vector(-direction.getZ(), 0, direction.getX()).normalize();
@@ -131,6 +149,10 @@ public class BoobModel implements Runnable {
         
         Location leftBoobPos = chestCenter.clone().add(perpVector.clone().multiply(boobSpacing));
         Location rightBoobPos = chestCenter.clone().subtract(perpVector.clone().multiply(boobSpacing));
+        
+        // Set the yaw for proper rotation (face the direction player is looking)
+        leftBoobPos.setYaw(yaw);
+        rightBoobPos.setYaw(yaw);
         
         leftBoob.teleport(leftBoobPos);
         rightBoob.teleport(rightBoobPos);
@@ -146,6 +168,9 @@ public class BoobModel implements Runnable {
         Location rightNipplePos = rightBoobPos.clone()
             .add(direction.clone().multiply(nippleOffset))
             .add(0, nippleVerticalOffset, 0);
+        
+        leftNipplePos.setYaw(yaw);
+        rightNipplePos.setYaw(yaw);
         
         leftNipple.teleport(leftNipplePos);
         rightNipple.teleport(rightNipplePos);

@@ -100,15 +100,15 @@ public class PenisModel implements Runnable {
         }
 
         int cooldown = ThreadLocalRandom.current().nextInt(2);
-        if (CooldownManager.hasCooldown(owner, "cum", cooldown)) {
+        if (CooldownManager.hasCooldown(owner, "goon", cooldown)) {
             return;
         }
 
         isCumming = true;
-        CooldownManager.setCooldown(owner, "cum");
+        CooldownManager.setCooldown(owner, "goon");
 
-        // Track fap statistic
-        StatisticsManager.incrementFapCount(owner);
+        // Track goon statistic
+        StatisticsManager.incrementGoonCount(owner);
 
         Location location = owner.getLocation();
         World world = location.getWorld();

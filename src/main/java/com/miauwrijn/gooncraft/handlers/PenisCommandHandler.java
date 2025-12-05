@@ -34,7 +34,11 @@ public class PenisCommandHandler implements CommandExecutor {
             case "size" -> handleSizeCommand(sender, args);
             case "girth" -> handleGirthCommand(sender, args);
             case "bbc" -> handleBbcCommand(sender, args);
-            case "toggle" -> handleToggleCommand(sender);
+            case "toggle" -> {
+                // Redirect to /genitals command
+                sender.sendMessage("§eUse §6/genitals §efor toggling visibility!");
+                yield true;
+            }
             default -> {
                 sender.sendMessage(ConfigManager.getMessage("penis.unknown-subcommand"));
                 yield true;

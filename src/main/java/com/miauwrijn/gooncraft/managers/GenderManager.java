@@ -20,17 +20,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.gui.GenderSelectionGUI;
 import com.miauwrijn.gooncraft.models.BoobModel;
+import com.miauwrijn.gooncraft.models.VaginaModel;
 
 /**
- * Manages player gender selection and boob models.
+ * Manages player gender selection, boob models, and vagina models.
  * Data is stored in the players folder alongside penis stats.
  */
 public class GenderManager implements Listener {
 
     public enum Gender {
         MALE,      // Has penis
-        FEMALE,    // Has boobs
-        OTHER      // Has both!
+        FEMALE,    // Has boobs + vagina
+        OTHER      // Has penis + boobs
     }
 
     private static final Map<UUID, Gender> playerGenders = new ConcurrentHashMap<>();
@@ -38,6 +39,8 @@ public class GenderManager implements Listener {
     private static final Map<UUID, Integer> boobPerkiness = new ConcurrentHashMap<>();
     private static final Map<UUID, BoobModel> activeBoobModels = new ConcurrentHashMap<>();
     private static final Map<UUID, Integer> boobTaskIds = new ConcurrentHashMap<>();
+    private static final Map<UUID, VaginaModel> activeVaginaModels = new ConcurrentHashMap<>();
+    private static final Map<UUID, Integer> vaginaTaskIds = new ConcurrentHashMap<>();
     private static File dataFolder;
 
     public GenderManager() {
@@ -112,6 +115,11 @@ public class GenderManager implements Listener {
         return gender == Gender.MALE || gender == Gender.OTHER || gender == null;
     }
 
+    public static boolean hasVagina(Player player) {
+        Gender gender = getGender(player);
+        return gender == Gender.FEMALE;
+    }
+
     // ===== Boob Model Management =====
 
     public static BoobModel getActiveBoobModel(Player player) {
@@ -139,6 +147,44 @@ public class GenderManager implements Listener {
         for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
             clearActiveBoobModel(player);
         }
+    }
+
+    // ===== Vagina Model Management =====
+
+    public static VaginaModel getActiveVaginaModel(Player player) {
+        return activeVaginaModels.get(player.getUniqueId());
+    }
+
+    public static void setActiveVaginaModel(Player player, VaginaModel model, int taskId) {
+        activeVaginaModels.put(player.getUniqueId(), model);
+        vaginaTaskIds.put(player.getUniqueId(), taskId);
+    }
+
+    public static void clearActiveVaginaModel(Player player) {
+        VaginaModel model = activeVaginaModels.remove(player.getUniqueId());
+        Integer taskId = vaginaTaskIds.remove(player.getUniqueId());
+        
+        if (model != null) {
+            model.discard();
+        }
+        if (taskId != null) {
+            Bukkit.getScheduler().cancelTask(taskId);
+        }
+    }
+
+    public static void clearAllActiveVaginaModels() {
+        for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
+            clearActiveVaginaModel(player);
+        }
+    }
+
+    // ===== Check if any genital model is active =====
+
+    public static boolean hasActiveGenitals(Player player) {
+        return activeBoobModels.containsKey(player.getUniqueId()) ||
+               activeVaginaModels.containsKey(player.getUniqueId()) ||
+               PenisStatisticManager.getStatistics(player) != null && 
+               PenisStatisticManager.getStatistics(player).penisModel != null;
     }
 
     // ===== Persistence =====
@@ -227,5 +273,6 @@ public class GenderManager implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         clearActiveBoobModel(event.getPlayer());
+        clearActiveVaginaModel(event.getPlayer());
     }
 }
