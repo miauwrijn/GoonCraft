@@ -1,4 +1,4 @@
-package com.miauwrijn.gooncraft;
+package com.miauwrijn.gooncraft.managers;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
 import com.miauwrijn.gooncraft.models.PenisModel;
 

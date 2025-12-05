@@ -6,6 +6,9 @@ server-data/
 *.iml
 .vscode/
 
+# Environment (contains personal settings)
+dev/.env
+
 # OS
 .DS_Store
 Thumbs.db

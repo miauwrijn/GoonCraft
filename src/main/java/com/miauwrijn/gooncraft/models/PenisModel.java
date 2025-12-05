@@ -1,7 +1,6 @@
 package com.miauwrijn.gooncraft.models;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.bukkit.Location;
@@ -18,10 +17,10 @@ import org.bukkit.util.Vector;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
-import com.miauwrijn.gooncraft.CooldownManager;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
-
-import net.md_5.bungee.api.ChatColor;
+import com.miauwrijn.gooncraft.managers.ConfigManager;
+import com.miauwrijn.gooncraft.managers.CooldownManager;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 public class PenisModel implements Runnable {
 
@@ -98,18 +97,21 @@ public class PenisModel implements Runnable {
             return;
         }
 
-        Random random = ThreadLocalRandom.current();
-        if (CooldownManager.hasCooldown(owner, "cum", random.nextInt(2))) {
+        int cooldown = ThreadLocalRandom.current().nextInt(2);
+        if (CooldownManager.hasCooldown(owner, "cum", cooldown)) {
             return;
         }
 
         isCumming = true;
         CooldownManager.setCooldown(owner, "cum");
 
+        // Track fap statistic
+        StatisticsManager.incrementFapCount(owner);
+
         Location location = owner.getLocation();
         World world = location.getWorld();
         List<Player> nearbyPlayers = world.getPlayers();
-        int ejaculateRoll = random.nextInt(EJACULATE_CHANCE);
+        int ejaculateRoll = ThreadLocalRandom.current().nextInt(EJACULATE_CHANCE);
 
         for (Player player : nearbyPlayers) {
             double distance = player.getLocation().distance(location);
@@ -215,12 +217,20 @@ public class PenisModel implements Runnable {
 
     private void sendCumMessage(Player player, double distance, boolean isEjaculating) {
         if (isEjaculating) {
-            player.sendMessage("<" + owner.getName() + "> " + ChatColor.GRAY + "Hmmfff.. *ejaculates*");
+            if (ConfigManager.showEjaculateMessages()) {
+                player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("cum.ejaculate"));
+            }
         } else if (distance < 2 && player != owner) {
-            player.sendMessage(ChatColor.GOLD + "You have been cummed on by " + 
-                             ChatColor.GREEN + ChatColor.BOLD + owner.getName());
+            if (ConfigManager.showCummedOnMessages()) {
+                player.sendMessage(ConfigManager.getMessage("cum.cummed-on", "{player}", owner.getName()));
+            }
+            // Track statistic for getting cummed on
+            StatisticsManager.incrementGotCummedOn(player);
+            StatisticsManager.incrementCumOnOthers(owner);
         } else {
-            player.sendMessage("<" + owner.getName() + "> " + ChatColor.GRAY + "Fap...");
+            if (ConfigManager.showFapMessages()) {
+                player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("cum.fap"));
+            }
         }
     }
 

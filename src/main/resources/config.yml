@@ -1,0 +1,111 @@
+# GoonCraft Configuration
+# =======================
+# Customize all plugin messages here!
+# Use color codes with § or & (e.g., &6 for gold, &c for red)
+# Available placeholders: {player}, {target}, {value}, {min}, {max}
+
+messages:
+  # General
+  only-players: "&cOnly players can use this command"
+  player-not-found: "&cPlayer not found"
+  no-permission: "&cYou don't have permission to do that"
+  no-stats: "&cNo stats found"
+
+  # Penis commands
+  penis:
+    usage: "&6Usage: /penis <size|girth|bbc|toggle> [player]"
+    unknown-subcommand: "&cUnknown subcommand. Use: size, girth, bbc, or toggle"
+    
+    # Size
+    your-size: "&6Your penis size is &e{value}cm"
+    player-size: "&6{player}'s penis size is &e{value}cm"
+    size-set: "&aSet {player}'s penis size to {value}cm"
+    size-range: "&cSize must be between {min} and {max}cm"
+    
+    # Girth
+    your-girth: "&6Your penis girth is &e{value}cm"
+    player-girth: "&6{player}'s penis girth is &e{value}cm"
+    girth-set: "&aSet {player}'s penis girth to {value}cm"
+    girth-range: "&cGirth must be between {min} and {max}cm"
+    
+    # BBC
+    you-have-bbc: "&aYes, you have a BBC"
+    you-no-bbc: "&cNo, you don't have a BBC"
+    player-has-bbc: "&a{player} has a BBC"
+    player-no-bbc: "&c{player} doesn't have a BBC"
+    bbc-set-true: "&aSet {player}'s penis to a BBC"
+    bbc-set-false: "&aSet {player}'s penis to a regular penis"
+    invalid-boolean: "&cValue must be true or false"
+    
+    # Toggle
+    need-penis: "&cYou need to have a penis to use this command"
+    whipped-out: "&aYou whipped it out!"
+    put-away: "&aYou put it away."
+
+  # Buttfinger command
+  buttfinger:
+    usage: "&cUsage: /buttfinger <player>"
+    cooldown: "&cYou can only buttfinger once every {value} seconds"
+    too-far: "&cPlayer is too far away to buttfinger!"
+    self: "&6You just buttfinger'd yourself! Kinky..."
+    victim: "&6You have been buttfinger'd by &e{player}&6!"
+    success: "&aYou buttfinger'd &e{target}&a!"
+
+  # Viagra
+  viagra:
+    need-toggle: "&cYou need to have your dick out to use this Viagra!"
+    success: "&aNice cock bro! Your dick temporarily grew {value}cm!"
+    given: "&aYou've been given a Viagra pill!"
+
+  # Cum messages
+  cum:
+    fap: "&7Fap..."
+    ejaculate: "&7Hmmfff.. *ejaculates*"
+    cummed-on: "&6You have been cummed on by &a&l{player}"
+
+  # Statistics
+  stats:
+    header: "&6&l═══ {player}'s Goon Stats ═══"
+    fap-count: "&7Faps: &e{value}"
+    cum-on-others: "&7Cummed on others: &e{value}"
+    got-cummed-on: "&7Got cummed on: &e{value}"
+    time-with-penis-out: "&7Time with penis out: &e{value}"
+    buttfingers-given: "&7Buttfingers given: &e{value}"
+    buttfingers-received: "&7Buttfingers received: &e{value}"
+    viagra-used: "&7Viagra used: &e{value}"
+    achievements: "&6Achievements: &e{unlocked}&7/&e{total}"
+
+  # Achievements
+  achievement:
+    unlocked-title: "&6&l★ ACHIEVEMENT UNLOCKED ★"
+    unlocked-name: "&e{name}"
+    unlocked-description: "&7{description}"
+    broadcast: "&6{player} &7unlocked the achievement &e{name}&7!"
+
+  achievements:
+    header: "&6&l═══ {player}'s Achievements ({unlocked}/{total}) ═══"
+
+  # Leaderboard
+  leaderboard:
+    header: "&6&l═══ Leaderboard: {category} ═══"
+
+# Viagra item settings
+viagra:
+  boost-amount: 5
+  item-name: "&dViagra"
+  item-lore:
+    - "&aCan't get it up or simply have a small ween?"
+    - "&aTake this for a temporary +{value}cm boost!"
+
+# Cooldowns (in seconds)
+cooldowns:
+  buttfinger: 5
+
+# Chat message settings
+chat:
+  # Show "Fap..." messages to nearby players
+  show-fap-messages: true
+  # Show "*ejaculates*" messages to nearby players
+  show-ejaculate-messages: true
+  # Show "You have been cummed on" messages
+  show-cummed-on-messages: true

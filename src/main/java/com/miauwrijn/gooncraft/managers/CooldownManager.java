@@ -1,4 +1,4 @@
-package com.miauwrijn.gooncraft;
+package com.miauwrijn.gooncraft.managers;
 
 import java.util.Map;
 import java.util.UUID;

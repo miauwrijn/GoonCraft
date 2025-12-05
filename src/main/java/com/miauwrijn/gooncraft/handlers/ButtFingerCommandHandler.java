@@ -1,18 +1,18 @@
 package com.miauwrijn.gooncraft.handlers;
 
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.miauwrijn.gooncraft.CooldownManager;
+import com.miauwrijn.gooncraft.managers.ConfigManager;
+import com.miauwrijn.gooncraft.managers.CooldownManager;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 public class ButtFingerCommandHandler implements CommandExecutor {
 
-    private static final int COOLDOWN_SECONDS = 5;
-    private static final int MAX_DISTANCE = 10;
+    private static final double MAX_DISTANCE = 5.0;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -21,61 +21,60 @@ public class ButtFingerCommandHandler implements CommandExecutor {
         }
 
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cOnly players can use this command");
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
             return true;
         }
 
         if (args.length == 0) {
-            player.sendMessage("§cUsage: /buttfinger <player>");
+            sender.sendMessage(ConfigManager.getMessage("buttfinger.usage"));
             return true;
         }
 
-        Player target = player.getServer().getPlayer(args[0]);
+        int cooldownSeconds = ConfigManager.getButtfingerCooldown();
+        if (CooldownManager.hasCooldown(player, "buttfinger", cooldownSeconds)) {
+            player.sendMessage(ConfigManager.getMessage("buttfinger.cooldown", 
+                "{value}", String.valueOf(cooldownSeconds)));
+            return true;
+        }
+
+        Player target = sender.getServer().getPlayer(args[0]);
         if (target == null) {
-            player.sendMessage("§cPlayer not found");
+            sender.sendMessage(ConfigManager.getMessage("player-not-found"));
             return true;
         }
 
-        if (CooldownManager.hasCooldown(player, "buttfinger", COOLDOWN_SECONDS)) {
-            player.sendMessage("§cYou can only buttfinger once every " + COOLDOWN_SECONDS + " seconds");
-            return true;
-        }
-
-        CooldownManager.setCooldown(player, "buttfinger");
-
-        if (target == player) {
-            player.sendMessage("§6You just buttfinger'd yourself! Kinky...");
-            performButtFinger(player);
+        if (target.equals(player)) {
+            buttfinger(player, player, true);
             return true;
         }
 
         if (player.getLocation().distance(target.getLocation()) > MAX_DISTANCE) {
-            player.sendMessage("§cPlayer is too far away to buttfinger!");
+            player.sendMessage(ConfigManager.getMessage("buttfinger.too-far"));
             return true;
         }
 
-        target.sendMessage("§6You have been buttfinger'd by §e" + player.getName() + "§6!");
-        player.sendMessage("§aYou buttfinger'd §e" + target.getName() + "§a!");
-        performButtFinger(target);
-
+        buttfinger(player, target, false);
         return true;
     }
 
-    private void performButtFinger(Player target) {
-        target.getWorld().playSound(
-            target.getLocation(), 
-            Sound.ENTITY_ITEM_FRAME_REMOVE_ITEM, 
-            1.0f, 
-            0.5f
-        );
-        
-        target.getWorld().spawnParticle(
-            Particle.BLOCK,
-            target.getLocation().add(0, 1, 0),
-            15,
-            0.3, 0.3, 0.3,
-            0.1,
-            org.bukkit.Material.BROWN_WOOL.createBlockData()
-        );
+    private void buttfinger(Player executor, Player target, boolean isSelf) {
+        CooldownManager.setCooldown(executor, "buttfinger");
+
+        // Track statistics
+        StatisticsManager.incrementButtfingersGiven(executor);
+        if (!isSelf) {
+            StatisticsManager.incrementButtfingersReceived(target);
+        }
+
+        if (isSelf) {
+            executor.sendMessage(ConfigManager.getMessage("buttfinger.self"));
+            executor.playSound(executor.getLocation(), Sound.BLOCK_SLIME_BLOCK_PLACE, 1.0f, 0.5f);
+        } else {
+            executor.sendMessage(ConfigManager.getMessage("buttfinger.success", 
+                "{target}", target.getName()));
+            target.sendMessage(ConfigManager.getMessage("buttfinger.victim", 
+                "{player}", executor.getName()));
+            target.playSound(target.getLocation(), Sound.BLOCK_SLIME_BLOCK_PLACE, 1.0f, 0.5f);
+        }
     }
 }

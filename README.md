@@ -2,7 +2,7 @@
 
 > *The Minecraft plugin your server never knew it needed (and probably doesn't).*
 
-![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-brightgreen)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.21-brightgreen)
 ![Spigot](https://img.shields.io/badge/Spigot-API-orange)
 ![Java](https://img.shields.io/badge/Java-21-blue)
 ![Maturity](https://img.shields.io/badge/Maturity-Questionable-red)
@@ -20,6 +20,10 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 💊 Craftable Viagra for *temporary enhancements*
 - 👆 The legendary **Buttfinger** command
 - ✨ Real-time 3D models using Block Displays
+- 🏆 **27 Achievements** to unlock
+- 📈 **Statistics tracking** for all your... activities
+- 🖥️ **Beautiful GUI menus** for stats & achievements
+- 🏅 **Leaderboards** to see who's the biggest gooner
 
 ---
 
@@ -32,7 +36,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 5. Have fun!
 
 **Requirements:**
-- Minecraft 1.21.1+
+- Minecraft 1.21+
 - Java 21+
 - Spigot/Paper server
 
@@ -40,21 +44,33 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 
 ## 🎮 Commands
 
-| Command | Description |
-|---------|-------------|
-| `/penis size` | Check your size |
-| `/penis size <player>` | Check someone else's size |
-| `/penis girth` | Check your girth |
-| `/penis girth <player>` | Check someone else's girth |
-| `/penis bbc` | Check your BBC status |
-| `/penis bbc <player>` | Check someone else's BBC status |
-| `/penis toggle` | Whip it out / Put it away |
-| `/buttfinger <player>` | 👆 *You know what this does* |
-| `/viagra` | Spawn a Viagra pill (requires permission) |
+### Main Commands
 
-### Command Aliases
-- `/penis` → `/pp`
-- `/buttfinger` → `/bf`
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `/gooncraft stats [player]` | `/gc stats` | Open stats GUI |
+| `/gooncraft achievements [player]` | `/gc achievements` | Open achievements GUI |
+| `/gooncraft leaderboard [category]` | `/gc lb` | View leaderboards |
+| `/gooncraft reload` | `/gc reload` | Reload config (OP) |
+
+### Penis Commands
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `/penis size` | `/pp size` | Check your size |
+| `/penis size <player>` | `/pp size` | Check someone else's size |
+| `/penis girth` | `/pp girth` | Check your girth |
+| `/penis girth <player>` | `/pp girth` | Check someone else's girth |
+| `/penis bbc` | `/pp bbc` | Check your BBC status |
+| `/penis bbc <player>` | `/pp bbc` | Check someone else's BBC status |
+| `/penis toggle` | `/pp toggle` | Whip it out / Put it away |
+
+### Other Commands
+
+| Command | Alias | Description |
+|---------|-------|-------------|
+| `/buttfinger <player>` | `/bf` | 👆 *You know what this does* |
+| `/viagra` | - | Spawn a Viagra pill (requires permission) |
 
 ### Admin Commands
 
@@ -66,14 +82,43 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 
 ---
 
+## 📊 Statistics & Achievements
+
+### Tracked Statistics
+- **Fap Count** - Total times you've... expressed yourself
+- **Cummed on Others** - Times you've hit nearby players
+- **Got Cummed On** - Times you've been a victim
+- **Exposure Time** - Total time with your equipment out
+- **Buttfingers Given/Received** - Self-explanatory
+- **Viagra Used** - Pills consumed
+
+### Achievement Categories
+
+| Category | Achievements | Examples |
+|----------|-------------|----------|
+| 🦴 Fapping | 6 | First Timer → Legendary Gooner (1-1000 faps) |
+| 💦 Cumming | 4 | Oops! → Bukakke Master (1-100) |
+| 😵 Got Cummed | 3 | Victim → Cum Magnet (1-50) |
+| ⏱️ Exposure | 4 | Quick Flash → Public Menace (1min-10hrs) |
+| 👆 Buttfinger | 3 | Probing → Master Fingerer (1-50) |
+| 💊 Viagra | 3 | Performance Issues → Pharmacist's Best Friend (1-50) |
+
+**Total: 27 achievements to unlock!**
+
+### Leaderboard Categories
+Use `/gc lb <category>` with: `faps`, `cumon`, `cummed`, `time`, `bf`
+
+---
+
 ## 🔑 Permissions
 
-| Permission | Description |
-|------------|-------------|
-| `gooncraft.size.set` | Allows setting player sizes |
-| `gooncraft.girth.set` | Allows setting player girths |
-| `gooncraft.bbc.set` | Allows assigning BBC status |
-| `gooncraft.viagra` | Allows spawning Viagra pills |
+| Permission | Description | Default |
+|------------|-------------|---------|
+| `gooncraft.reload` | Allows reloading the config | OP |
+| `gooncraft.size.set` | Allows setting player sizes | OP |
+| `gooncraft.girth.set` | Allows setting player girths | OP |
+| `gooncraft.bbc.set` | Allows assigning BBC status | OP |
+| `gooncraft.viagra` | Allows spawning Viagra pills | OP |
 
 ---
 
@@ -98,6 +143,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - **Sneaking + Swinging** while toggled on triggers a... *special animation*
 - Get close to other players during the animation for a surprise message
 - There's a 1/50 chance for an *extra special* moment 😏
+- All activities are tracked for stats and achievements!
 
 ---
 
@@ -143,7 +189,25 @@ make -C dev start       # Make
 make -C dev dev         # Make
 ```
 
-### All Commands
+### Environment Configuration
+
+Copy `dev/.env.example` to `dev/.env` and configure:
+
+```env
+# Your Minecraft username (for OP)
+OPS=YourUsername
+
+# Server memory allocation
+MEMORY=2G
+```
+
+Then apply OPs after server starts:
+```bash
+./dev/dev.sh op         # Linux/macOS
+.\dev\dev.ps1 op        # Windows PowerShell
+```
+
+### All Dev Commands
 
 | Command | Description |
 |---------|-------------|
@@ -155,11 +219,12 @@ make -C dev dev         # Make
 | `logs` | View server logs |
 | `console` | Attach to server console |
 | `setup` | First time setup |
+| `op` | Apply OPs from .env file |
 
 ### Server Details
 - **Address**: `localhost:25565`
 - **RCON Port**: `25575` (password: `gooncraft`)
-- **Version**: Paper 1.21.1
+- **Version**: Paper 1.21
 - **Mode**: Creative (for testing)
 
 ### Manual Build (without Docker)
@@ -171,6 +236,37 @@ mvn clean package -DskipTests
 **Requirements for manual build:**
 - Maven 3.6+
 - JDK 21+
+
+---
+
+## 📁 Project Structure
+
+```
+com.miauwrijn.gooncraft/
+├── Plugin.java              # Main plugin class
+├── data/
+│   ├── PenisStatistics.java # Penis data model
+│   └── PlayerStats.java     # Player statistics
+├── gui/
+│   ├── GUI.java             # Base GUI class
+│   ├── GUIListener.java     # Click event handler
+│   ├── ItemBuilder.java     # Fluent item builder
+│   ├── StatsGUI.java        # Statistics menu
+│   └── AchievementsGUI.java # Achievements menu
+├── handlers/
+│   ├── ButtFingerCommandHandler.java
+│   ├── PenisCommandHandler.java
+│   └── StatsCommandHandler.java
+├── managers/
+│   ├── AchievementManager.java
+│   ├── ConfigManager.java
+│   ├── CooldownManager.java
+│   ├── PenisStatisticManager.java
+│   ├── PillManager.java
+│   └── StatisticsManager.java
+└── models/
+    └── PenisModel.java      # 3D block display model
+```
 
 ---
 
