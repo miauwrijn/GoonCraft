@@ -28,6 +28,10 @@ public class StatAchievement extends BaseAchievement {
         return getStatForCategory(stats, statCategory);
     }
     
+    public String getStatCategory() {
+        return statCategory;
+    }
+    
     private long getStatForCategory(PlayerStats stats, String category) {
         return switch (category) {
             case "goon" -> stats.goonCount;

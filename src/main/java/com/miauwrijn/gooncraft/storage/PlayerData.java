@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.miauwrijn.gooncraft.data.PlayerStats;
-import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.GenderManager.Gender;
 
 /**
@@ -33,7 +32,7 @@ public class PlayerData {
     public PlayerStats stats;
 
     // ===== Achievements =====
-    public Set<Achievement> unlockedAchievements;
+    public Set<String> unlockedAchievements; // Achievement IDs as strings from YAML
     
     // ===== Perk Management =====
     public Set<String> disabledPerks; // Rank perks that are disabled

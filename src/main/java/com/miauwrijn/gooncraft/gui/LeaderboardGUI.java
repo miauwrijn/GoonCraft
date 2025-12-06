@@ -131,7 +131,7 @@ public class LeaderboardGUI extends GUI {
             PlayerStats stats = StatisticsManager.getStats(player);
             com.miauwrijn.gooncraft.ranks.BaseRank playerRank = RankManager.getRank(player);
             int achievements = AchievementManager.getUnlockedCount(player);
-            int totalAchievements = AchievementManager.Achievement.values().length;
+            int totalAchievements = AchievementManager.getTotalAchievements();
             
             long statValue = getStatValue(player, currentCategory);
             String valueStr = currentCategory.equals("time") ? 

@@ -18,7 +18,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PlayerStats;
-import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.GenderManager.Gender;
 import com.miauwrijn.gooncraft.models.BoobModel;
 import com.miauwrijn.gooncraft.models.PenisModel;
@@ -319,22 +318,15 @@ public class FileStorageProvider implements StorageProvider {
         return set;
     }
 
-    private Set<Achievement> loadAchievements(FileConfiguration config) {
-        Set<Achievement> unlocked = EnumSet.noneOf(Achievement.class);
+    private Set<String> loadAchievements(FileConfiguration config) {
+        Set<String> unlocked = new HashSet<>();
         
         // Try new format first (list of achievement IDs)
         if (config.isList("Achievements")) {
             // New format: list of achievement IDs
             List<String> achievementIds = config.getStringList("Achievements");
             for (String id : achievementIds) {
-                try {
-                    // Convert lowercase ID to enum name (uppercase with underscores)
-                    String enumName = id.toUpperCase().replace("-", "_");
-                    Achievement achievement = Achievement.valueOf(enumName);
-                    unlocked.add(achievement);
-                } catch (IllegalArgumentException ignored) {
-                    // Achievement ID not found in enum, skip it
-                }
+                unlocked.add(id.toLowerCase()); // Store in lowercase for consistency
             }
         } else {
             // Old format: boolean map - migrate from old format
@@ -342,12 +334,7 @@ public class FileStorageProvider implements StorageProvider {
             if (achievementsSection != null) {
                 for (String key : achievementsSection.getKeys(false)) {
                     if (achievementsSection.getBoolean(key, false)) {
-                        try {
-                            Achievement achievement = Achievement.valueOf(key.toUpperCase());
-                            unlocked.add(achievement);
-                        } catch (IllegalArgumentException ignored) {
-                            // Invalid achievement name, skip it
-                        }
+                        unlocked.add(key.toLowerCase()); // Store in lowercase
                     }
                 }
             }
@@ -356,13 +343,13 @@ public class FileStorageProvider implements StorageProvider {
         return unlocked;
     }
 
-    private void saveAchievements(FileConfiguration config, Set<Achievement> achievements) {
+    private void saveAchievements(FileConfiguration config, Set<String> achievements) {
         if (achievements == null) return;
         
-        // Save as simple list of achievement IDs (enum names in lowercase)
+        // Save as simple list of achievement IDs
         List<String> achievementIds = new ArrayList<>();
-        for (Achievement achievement : achievements) {
-            achievementIds.add(achievement.name().toLowerCase());
+        for (String achievementId : achievements) {
+            achievementIds.add(achievementId);
         }
         
         config.set("Achievements", achievementIds);

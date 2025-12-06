@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PlayerStats;
-import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.GenderManager.Gender;
 import com.miauwrijn.gooncraft.models.BoobModel;
 import com.miauwrijn.gooncraft.models.PenisModel;
@@ -496,26 +494,22 @@ public class DatabaseStorageProvider implements StorageProvider {
         return set;
     }
 
-    private String serializeAchievements(Set<Achievement> achievements) {
+    private String serializeAchievements(Set<String> achievements) {
         if (achievements == null || achievements.isEmpty()) return "";
         // Store as lowercase achievement IDs (matching file format)
         return achievements.stream()
-            .map(a -> a.name().toLowerCase())
+            .map(String::toLowerCase)
             .collect(Collectors.joining(","));
     }
 
-    private Set<Achievement> parseAchievements(String str) {
-        Set<Achievement> set = EnumSet.noneOf(Achievement.class);
+    private Set<String> parseAchievements(String str) {
+        Set<String> set = new HashSet<>();
         if (str == null || str.isEmpty()) return set;
         
         for (String id : str.split(",")) {
-            try {
-                // Support both old format (uppercase enum names) and new format (lowercase IDs)
-                String trimmed = id.trim();
-                String enumName = trimmed.toUpperCase();
-                set.add(Achievement.valueOf(enumName));
-            } catch (IllegalArgumentException ignored) {
-                // Invalid achievement ID, skip it
+            String trimmed = id.trim().toLowerCase();
+            if (!trimmed.isEmpty()) {
+                set.add(trimmed);
             }
         }
         return set;

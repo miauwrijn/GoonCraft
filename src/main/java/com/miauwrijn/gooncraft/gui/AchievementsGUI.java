@@ -7,9 +7,10 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import com.miauwrijn.gooncraft.achievements.BaseAchievement;
+import com.miauwrijn.gooncraft.achievements.StatAchievement;
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
-import com.miauwrijn.gooncraft.managers.AchievementManager.Achievement;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
@@ -31,14 +32,14 @@ public class AchievementsGUI extends GUI {
         inventory.clear();
         clickHandlers.clear();
         
-        Set<Achievement> unlocked = AchievementManager.getUnlocked(target);
+        Set<String> unlocked = AchievementManager.getUnlocked(target);
         PlayerStats stats = StatisticsManager.getStats(target);
         
         // Top border with category filters
         fillBorder(ItemBuilder.filler(Material.PURPLE_STAINED_GLASS_PANE));
         
         // Category filter buttons
-        setCategoryButton(slot(0, 1), "fap", "§d§lFapping", Material.BONE, unlocked);
+        setCategoryButton(slot(0, 1), "goon", "§d§lGooning", Material.BONE, unlocked);
         setCategoryButton(slot(0, 2), "cum_on", "§f§lCumming", Material.GHAST_TEAR, unlocked);
         setCategoryButton(slot(0, 3), "got_cummed", "§a§lGot Cummed", Material.SLIME_BALL, unlocked);
         setCategoryButton(slot(0, 4), "time_out", "§e§lExposure", Material.CLOCK, unlocked);
@@ -46,25 +47,30 @@ public class AchievementsGUI extends GUI {
         setCategoryButton(slot(0, 6), "bf_received", "§c§lGot BF'd", Material.GOLDEN_CARROT, unlocked);
         setCategoryButton(slot(0, 7), "hidden", "§5§l???", Material.ENDER_EYE, unlocked);
         
-        // Get filtered achievements
-        List<Achievement> achievements = new ArrayList<>();
-        for (Achievement achievement : Achievement.values()) {
-            if (categoryFilter == null || achievement.category.equals(categoryFilter)) {
-                achievements.add(achievement);
-            }
-        }
+        // Get filtered achievements from YAML
+        List<BaseAchievement> achievements = AchievementManager.getAchievementsByCategory(categoryFilter);
         
         // Display achievements (28 per page - 4 rows of 7)
         int startIndex = page * 28;
         int slot = 10;
         
         for (int i = startIndex; i < Math.min(startIndex + 28, achievements.size()); i++) {
-            Achievement achievement = achievements.get(i);
-            boolean isUnlocked = unlocked.contains(achievement);
+            BaseAchievement achievement = achievements.get(i);
+            String achievementId = achievement.getId().toLowerCase();
+            boolean isUnlocked = unlocked.contains(achievementId);
             
-            long currentValue = getStatForCategory(stats, achievement.category);
-            long threshold = achievement.threshold;
-            int progress = (int) Math.min(100, (currentValue * 100) / threshold);
+            long currentValue = 0;
+            long threshold = achievement.getThreshold();
+            
+            // Get progress for stat-based achievements
+            if (achievement instanceof StatAchievement statAchievement) {
+                currentValue = getStatForCategory(stats, statAchievement.getStatCategory());
+            } else {
+                // For non-stat achievements, use getCurrentProgress
+                currentValue = achievement.getCurrentProgress(target, stats);
+            }
+            
+            int progress = threshold > 0 ? (int) Math.min(100, (currentValue * 100) / threshold) : 0;
             
             setItem(slot, createAchievementItem(achievement, isUnlocked, progress, currentValue));
             
@@ -113,7 +119,7 @@ public class AchievementsGUI extends GUI {
                 .name("§6§lPage " + (page + 1) + "/" + Math.max(1, totalPages))
                 .lore(
                     "",
-                    "§7Unlocked: §e" + unlocked.size() + "§7/§e" + Achievement.values().length,
+                    "§7Unlocked: §e" + unlocked.size() + "§7/§e" + AchievementManager.getTotalAchievements(),
                     "",
                     categoryFilter != null ? "§7Filter: §e" + getCategoryName(categoryFilter) : "§7Showing all"
                 )
@@ -152,16 +158,15 @@ public class AchievementsGUI extends GUI {
                 event -> viewer.closeInventory());
     }
 
-    private void setCategoryButton(int slot, String category, String name, Material material, Set<Achievement> unlocked) {
-        int total = 0;
+    private void setCategoryButton(int slot, String category, String name, Material material, Set<String> unlocked) {
+        List<BaseAchievement> categoryAchievements = AchievementManager.getAchievementsByCategory(category);
+        int total = categoryAchievements.size();
         int unlockedCount = 0;
         
-        for (Achievement achievement : Achievement.values()) {
-            if (achievement.category.equals(category)) {
-                total++;
-                if (unlocked.contains(achievement)) {
-                    unlockedCount++;
-                }
+        for (BaseAchievement achievement : categoryAchievements) {
+            String achievementId = achievement.getId().toLowerCase();
+            if (unlocked.contains(achievementId)) {
+                unlockedCount++;
             }
         }
         
@@ -191,9 +196,9 @@ public class AchievementsGUI extends GUI {
         });
     }
 
-    private org.bukkit.inventory.ItemStack createAchievementItem(Achievement achievement, boolean isUnlocked, int progress, long currentValue) {
+    private org.bukkit.inventory.ItemStack createAchievementItem(BaseAchievement achievement, boolean isUnlocked, int progress, long currentValue) {
         // Hidden achievements show as ??? until unlocked
-        boolean isHidden = achievement.hidden && !isUnlocked;
+        boolean isHidden = achievement.isHidden() && !isUnlocked;
         
         Material material;
         if (isUnlocked) {
@@ -204,8 +209,8 @@ public class AchievementsGUI extends GUI {
             material = Material.GRAY_DYE;
         }
         
-        String displayName = isHidden ? "§5§k???" : achievement.name;
-        String displayDesc = isHidden ? "§5§oDiscover this secret..." : achievement.description;
+        String displayName = isHidden ? "§5§k???" : achievement.getName();
+        String displayDesc = isHidden ? "§5§oDiscover this secret..." : achievement.getDescription();
         String status = isUnlocked ? "§a§lUNLOCKED" : (isHidden ? "§5§lHIDDEN" : "§c§lLOCKED");
         
         List<String> lore = new ArrayList<>();
@@ -214,9 +219,9 @@ public class AchievementsGUI extends GUI {
         lore.add("");
         lore.add(status);
         
-        if (!isUnlocked && !isHidden) {
+        if (!isUnlocked && !isHidden && achievement.getThreshold() > 0) {
             lore.add("");
-            lore.add("§7Progress: §e" + currentValue + "§7/§e" + achievement.threshold);
+            lore.add("§7Progress: §e" + currentValue + "§7/§e" + achievement.getThreshold());
             lore.add(createProgressBar(progress));
         } else if (isHidden) {
             lore.add("");
@@ -265,7 +270,7 @@ public class AchievementsGUI extends GUI {
 
     private String getCategoryName(String category) {
         return switch (category) {
-            case "fap" -> "Fapping";
+            case "goon" -> "Gooning";
             case "cum_on" -> "Cumming";
             case "got_cummed" -> "Got Cummed";
             case "time_out" -> "Exposure";

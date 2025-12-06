@@ -202,7 +202,7 @@ public class StatisticsManager implements Listener {
         // Check for shart achievement (fart within 5 seconds before poop)
         Long lastFart = lastFartTime.get(player.getUniqueId());
         if (lastFart != null && System.currentTimeMillis() - lastFart < 5000) {
-            AchievementManager.tryUnlock(player, AchievementManager.Achievement.SHART);
+            AchievementManager.tryUnlockById(player, "shart");
         }
         
         AchievementManager.checkAchievements(player, stats);
@@ -241,7 +241,7 @@ public class StatisticsManager implements Listener {
     }
 
     public static void unlockGenderOther(Player player) {
-        AchievementManager.tryUnlock(player, AchievementManager.Achievement.GENDER_OTHER);
+        AchievementManager.tryUnlockById(player, "gender_other");
     }
 
     // ===== Danger Stats =====
@@ -267,7 +267,7 @@ public class StatisticsManager implements Listener {
     public static void incrementCreeperDeathWhileExposed(Player player) {
         PlayerStats stats = getStats(player);
         stats.creeperDeathsWhileExposed++;
-        AchievementManager.tryUnlock(player, AchievementManager.Achievement.CREEPER_DEATH);
+        AchievementManager.tryUnlockById(player, "creeper_death");
     }
 
     // ===== Animal Stats =====
@@ -342,13 +342,13 @@ public class StatisticsManager implements Listener {
         // Check if on fire
         if (player.getFireTicks() > 0) {
             stats.goonsWhileOnFire++;
-            AchievementManager.tryUnlock(player, AchievementManager.Achievement.GOON_ON_FIRE);
+            AchievementManager.tryUnlockById(player, "goon_on_fire");
         }
         
         // Check if falling (velocity Y is negative and not on ground)
         if (!player.isOnGround() && player.getVelocity().getY() < -0.5) {
             stats.goonsWhileFalling++;
-            AchievementManager.tryUnlock(player, AchievementManager.Achievement.GOON_FALLING);
+            AchievementManager.tryUnlockById(player, "goon_falling");
         }
     }
 

@@ -20,7 +20,7 @@ public class ConfigManager {
 
     private static FileConfiguration config;
     private static final String CONFIG_VERSION_KEY = "config-version";
-    private static final int CURRENT_CONFIG_VERSION = 5; // Increment when config structure changes
+    private static final int CURRENT_CONFIG_VERSION = 6; // Increment when config structure changes
 
     public static void load() {
         File configFile = new File(Plugin.instance.getDataFolder(), "config.yml");
@@ -180,7 +180,17 @@ public class ConfigManager {
         return config.getBoolean("chat.show-piss-messages", true);
     }
 
-    private static String colorize(String message) {
+    /**
+     * Get the FileConfiguration object (for accessing config sections).
+     */
+    public static FileConfiguration getConfig() {
+        return config;
+    }
+
+    /**
+     * Colorize a string (expose for use in other classes).
+     */
+    public static String colorize(String message) {
         if (message == null) return "";
         return ChatColor.translateAlternateColorCodes('&', message);
     }

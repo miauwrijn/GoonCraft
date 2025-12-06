@@ -5,7 +5,7 @@
 # Available placeholders: {player}, {target}, {value}, {min}, {max}
 
 # DO NOT MODIFY - Used for automatic config migration
-config-version: 5
+config-version: 6
 
 # ===== Storage Configuration =====
 # Choose between 'file', 'mysql', or 'postgresql'
@@ -171,3 +171,342 @@ chat:
   show-poop-messages: true
   # Show piss messages to nearby players
   show-piss-messages: true
+
+# Animal/Mob interaction configuration
+# Customize how animals react when gooned on, pooped on, or pissed on
+animals:
+  # Whether sheep should change color when affected
+  change-sheep-color: true
+  
+  # Mob configurations
+  # Available colors: "white" (gooned on), "brown" (pooped on), "yellow" (pissed on)
+  # Leave name empty ("") to disable that interaction type
+  mobs:
+    # Passive mobs
+    chicken:
+      white: "§f§lCreamed Chicken"
+      brown: "§6§lChocolate Nugget"
+      yellow: "§e§lLemon Chicken"
+    
+    cow:
+      white: "§f§lCream Cow"
+      brown: ""
+      yellow: ""
+    
+    pig:
+      white: "§f§lGlazed Ham"
+      brown: ""
+      yellow: ""
+    
+    sheep:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    horse:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    donkey:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    mule:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    llama:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    wolf:
+      white: ""
+      brown: ""
+      yellow: "§e§lGolden Retriever"
+    
+    cat:
+      white: "§f§lCream Puff"
+      brown: ""
+      yellow: ""
+    
+    ocelot:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    fox:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    panda:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    rabbit:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    polar_bear:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    turtle:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    dolphin:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    squid:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    glow_squid:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    cod:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    salmon:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    pufferfish:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    tropical_fish:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    axolotl:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    frog:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    goat:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    allay:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    bat:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    parrot:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    mooshroom:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    sniffer:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    # Villagers
+    villager:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    wandering_trader:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    # Golems
+    iron_golem:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    snow_golem:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    # Hostile mobs
+    zombie:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    zombie_villager:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    husk:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    drowned:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    zombified_piglin:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    skeleton:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    stray:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    wither_skeleton:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    creeper:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    spider:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    cave_spider:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    enderman:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    endermite:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    shulker:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    blaze:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    ghast:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    slime:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    magma_cube:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    witch:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    evoker:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    vindicator:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    pillager:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    ravager:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    phantom:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    vex:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    guardian:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    elder_guardian:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    hoglin:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    strider:
+      white: ""
+      brown: ""
+      yellow: ""
+    
+    warden:
+      white: ""
+      brown: ""
+      yellow: ""

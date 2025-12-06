@@ -59,7 +59,8 @@ public class AchievementBuilder {
                 BaseAchievement achievement = buildAchievement(key, achievementSection);
                 if (achievement != null) {
                     achievements.add(achievement);
-                    achievementsById.put(achievement.getId(), achievement);
+                    // Store with lowercase ID for consistency
+                    achievementsById.put(achievement.getId().toLowerCase(), achievement);
                 }
             }
         }
@@ -72,7 +73,12 @@ public class AchievementBuilder {
      * Get an achievement by ID.
      */
     public static BaseAchievement getAchievementById(String id) {
-        return achievementsById.get(id);
+        if (id == null) return null;
+        // Try exact match first
+        BaseAchievement achievement = achievementsById.get(id);
+        if (achievement != null) return achievement;
+        // Try lowercase
+        return achievementsById.get(id.toLowerCase());
     }
     
     /**

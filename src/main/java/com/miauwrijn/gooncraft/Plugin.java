@@ -46,6 +46,10 @@ public class Plugin extends JavaPlugin {
         // Initialize managers
         new PenisStatisticManager();
         new StatisticsManager();
+        
+        // Load achievements from YAML (must be before AchievementManager)
+        com.miauwrijn.gooncraft.achievements.AchievementBuilder.loadAchievements();
+        
         new AchievementManager();
         new GenderManager();
         new GUIListener();
@@ -122,6 +126,9 @@ public class Plugin extends JavaPlugin {
             return true;
         }
         ConfigManager.reload();
+        
+        // Reload achievements from YAML
+        com.miauwrijn.gooncraft.achievements.AchievementBuilder.loadAchievements();
         
         // Reload storage if config changed
         if (storageManager != null) {
