@@ -164,10 +164,14 @@ public class RankBuilder {
                 
                 case "cockmaster":
                     return new CockmasterPerk(rarity);
-                
+
                 case "pussy_magnet":
                     return new PussyMagnetPerk(rarity);
-                
+
+                case "villager_discount":
+                    int discountLevel = getInt(perkMap, "value", 1);
+                    return new com.miauwrijn.gooncraft.perks.VillagerDiscountPerk(discountLevel, rarity);
+
                 default:
                     Plugin.instance.getLogger().warning("Unknown perk type: " + type);
                     return null;

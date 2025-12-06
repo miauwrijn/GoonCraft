@@ -76,6 +76,15 @@ public class PlayerStats {
     // Detailed goon stats
     public int totalEjaculations; // Total times finished/orgasmed
     
+    // Special achievement stats
+    public int selfButtfingers; // Buttfingered yourself
+    public int blocksMinedWhileExposed; // Blocks mined while genitals out
+    public boolean ejaculatedInOcean; // Ejaculated in ocean biome
+    public int goonsNearBabyVillagers; // Goons near baby villagers
+    
+    // Group gooning stats (for threesome, orgy, gangbang achievements)
+    public int maxNearbyGooners; // Max number of other players gooning nearby (in one session)
+    
     // Goon streak stats (consecutive Minecraft days)
     public int currentGoonStreak; // Current consecutive MC days
     public int longestGoonStreak; // Best streak ever
@@ -128,6 +137,11 @@ public class PlayerStats {
         this.wolvesAffected = 0;
         this.catsAffected = 0;
         this.totalEjaculations = 0;
+        this.selfButtfingers = 0;
+        this.blocksMinedWhileExposed = 0;
+        this.ejaculatedInOcean = false;
+        this.goonsNearBabyVillagers = 0;
+        this.maxNearbyGooners = 0;
         this.currentGoonStreak = 0;
         this.longestGoonStreak = 0;
         this.lastGoonMinecraftDay = 0;

@@ -234,10 +234,23 @@ public class PenisModel implements Runnable {
             spawnCumParticles();
             // Easter egg: Check for nearby sheep/chickens to cover in white
             AnimalInteractionHandler.checkForAnimals(owner, "white");
-            
+
             // Track solo ejaculation if we didn't cum on anyone
             if (!cummedOnSomeone) {
                 StatisticsManager.trackSoloEjaculation(owner);
+            }
+
+            // Check for ocean biome ejaculation (SeaMen achievement)
+            String biomeName = owner.getLocation().getBlock().getBiome().name().toLowerCase();
+            if (biomeName.contains("ocean") || biomeName.contains("beach")) {
+                StatisticsManager.setEjaculatedInOcean(owner);
+            }
+            
+            // Check for nearby villagers (Villager Charmer perk)
+            for (org.bukkit.entity.Entity entity : owner.getNearbyEntities(3, 3, 3)) {
+                if (entity instanceof org.bukkit.entity.Villager villager) {
+                    StatisticsManager.cumOnVillager(owner, villager);
+                }
             }
         }
     }

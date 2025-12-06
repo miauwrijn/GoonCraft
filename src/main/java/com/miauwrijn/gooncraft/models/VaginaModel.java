@@ -110,10 +110,23 @@ public class VaginaModel implements Runnable {
             spawnOrgasmParticles();
             // Easter egg: Check for nearby animals
             AnimalInteractionHandler.checkForAnimals(owner, "white");
-            
+
             // Track solo orgasm if we didn't squirt on anyone
             if (!squirtedOnSomeone) {
                 StatisticsManager.trackSoloEjaculation(owner);
+            }
+            
+            // Check for ocean biome ejaculation (SeaMen achievement)
+            String biomeName = owner.getLocation().getBlock().getBiome().name().toLowerCase();
+            if (biomeName.contains("ocean") || biomeName.contains("beach")) {
+                StatisticsManager.setEjaculatedInOcean(owner);
+            }
+            
+            // Check for nearby villagers (Villager Charmer perk)
+            for (org.bukkit.entity.Entity entity : owner.getNearbyEntities(3, 3, 3)) {
+                if (entity instanceof org.bukkit.entity.Villager villager) {
+                    StatisticsManager.cumOnVillager(owner, villager);
+                }
             }
         }
     }

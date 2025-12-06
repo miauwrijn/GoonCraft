@@ -118,6 +118,9 @@ ranks:
     color: "§5"
     icon: "👑"
     description: "Professional status! You could charge for this expertise."
+    perks:
+      - type: villager_discount
+        value: 1
   elite:
     required_xp: 9000
     display_name: "§3Elite Exhibitionist"
@@ -188,6 +191,9 @@ ranks:
     color: "§d"
     icon: "🌌"
     description: "Cosmic proportions! Your reach spans galaxies."
+    perks:
+      - type: villager_discount
+        value: 3
   infinite:
     required_xp: 110000
     display_name: "§dInfinite Gooner"

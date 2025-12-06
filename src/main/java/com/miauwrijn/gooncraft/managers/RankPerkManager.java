@@ -125,7 +125,7 @@ public class RankPerkManager {
         double multiplier = 1.0;
         Set<BaseRank> active = activeRankPerks.get(player.getUniqueId());
         if (active == null) return 1.0;
-        
+
         for (BaseRank rank : active) {
             for (BasePerk perk : rank.getPerks()) {
                 if (perk instanceof FapSpeedPerk) {
@@ -133,8 +133,28 @@ public class RankPerkManager {
                 }
             }
         }
-        
+
         return Math.min(2.0, multiplier); // Cap at 2x speed
+    }
+    
+    /**
+     * Get villager discount level from active rank perks.
+     * Returns 0 if player doesn't have the perk, 1-5 otherwise.
+     */
+    public static int getVillagerDiscountLevel(Player player) {
+        int level = 0;
+        Set<BaseRank> active = activeRankPerks.get(player.getUniqueId());
+        if (active == null) return 0;
+
+        for (BaseRank rank : active) {
+            for (BasePerk perk : rank.getPerks()) {
+                if (perk.isVillagerDiscountPerk()) {
+                    level = Math.max(level, perk.getVillagerDiscountLevel());
+                }
+            }
+        }
+
+        return Math.min(5, level); // Cap at level 5
     }
     
     /**

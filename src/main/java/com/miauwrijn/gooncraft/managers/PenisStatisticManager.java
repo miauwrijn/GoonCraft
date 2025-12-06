@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -291,6 +292,15 @@ public class PenisStatisticManager implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         clearActivePenis(event.getPlayer());
         runtimeStats.remove(event.getPlayer().getUniqueId());
+    }
+    
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        // Check if player has genitals exposed
+        if (GenderManager.hasActiveGenitals(player)) {
+            StatisticsManager.incrementBlocksMinedWhileExposed(player);
+        }
     }
 
     @EventHandler
