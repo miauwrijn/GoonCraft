@@ -187,22 +187,28 @@ public class RankPerkManager {
         // Remove invalid chickens
         animals.removeIf(entity -> !(entity instanceof Chicken) || entity.isDead() || !entity.isValid());
         
-        // Find nearby chickens (within 32 blocks)
-        player.getWorld().getNearbyEntities(player.getLocation(), 32, 32, 32, entity -> 
+        // Find nearby chickens (within 16 blocks)
+        player.getWorld().getNearbyEntities(player.getLocation(), 16, 16, 16, entity -> 
             entity instanceof Chicken && !animals.contains(entity)
         ).forEach(entity -> {
             Chicken chicken = (Chicken) entity;
             animals.add(chicken);
         });
         
-        // Continuously make chickens follow (targets can reset)
+        // Make chickens walk towards player using pathfinder
         animals.stream()
-            .filter(entity -> entity instanceof Chicken)
+            .filter(entity -> entity instanceof Chicken && entity.isValid() && !entity.isDead())
             .forEach(entity -> {
                 Chicken chicken = (Chicken) entity;
-                // Always set target to ensure they keep following
-                if (chicken.getTarget() != player) {
-                    chicken.setTarget(player);
+                double distance = chicken.getLocation().distance(player.getLocation());
+                
+                // Only pathfind if chicken is more than 3 blocks away but within 20 blocks
+                if (distance > 3 && distance < 20) {
+                    // Use pathfinder to walk to player
+                    chicken.getPathfinder().moveTo(player.getLocation(), 1.2);
+                } else if (distance >= 20) {
+                    // Too far - remove from tracking
+                    animals.remove(chicken);
                 }
             });
     }
@@ -217,22 +223,32 @@ public class RankPerkManager {
         // Remove invalid cats
         animals.removeIf(entity -> !(entity instanceof Cat) || entity.isDead() || !entity.isValid());
         
-        // Find nearby cats (within 32 blocks)
-        player.getWorld().getNearbyEntities(player.getLocation(), 32, 32, 32, entity -> 
+        // Find nearby cats (within 16 blocks)
+        player.getWorld().getNearbyEntities(player.getLocation(), 16, 16, 16, entity -> 
             entity instanceof Cat && !animals.contains(entity)
         ).forEach(entity -> {
             Cat cat = (Cat) entity;
+            // Don't affect tamed cats that belong to someone else
+            if (cat.isTamed() && cat.getOwner() != null && !cat.getOwner().equals(player)) {
+                return;
+            }
             animals.add(cat);
         });
         
-        // Continuously make cats follow (targets can reset)
+        // Make cats walk towards player using pathfinder
         animals.stream()
-            .filter(entity -> entity instanceof Cat)
+            .filter(entity -> entity instanceof Cat && entity.isValid() && !entity.isDead())
             .forEach(entity -> {
                 Cat cat = (Cat) entity;
-                // Always set target to ensure they keep following
-                if (cat.getTarget() != player) {
-                    cat.setTarget(player);
+                double distance = cat.getLocation().distance(player.getLocation());
+                
+                // Only pathfind if cat is more than 3 blocks away but within 20 blocks
+                if (distance > 3 && distance < 20) {
+                    // Use pathfinder to walk to player
+                    cat.getPathfinder().moveTo(player.getLocation(), 1.3);
+                } else if (distance >= 20) {
+                    // Too far - remove from tracking
+                    animals.remove(cat);
                 }
             });
     }

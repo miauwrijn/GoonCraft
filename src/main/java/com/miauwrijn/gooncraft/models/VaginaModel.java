@@ -93,10 +93,15 @@ public class VaginaModel implements Runnable {
         int orgasmRoll = ThreadLocalRandom.current().nextInt(orgasmChance);
         boolean isOrgasming = orgasmRoll == 0;
 
+        boolean squirtedOnSomeone = false;
         for (Player player : nearbyPlayers) {
             double distance = player.getLocation().distance(location);
             if (distance < 10) {
                 sendGoonMessage(player, distance, isOrgasming);
+                // Track if we squirted on someone (within 2 blocks)
+                if (isOrgasming && distance < 2 && player != owner) {
+                    squirtedOnSomeone = true;
+                }
             }
         }
 
@@ -105,6 +110,11 @@ public class VaginaModel implements Runnable {
             spawnOrgasmParticles();
             // Easter egg: Check for nearby animals
             AnimalInteractionHandler.checkForAnimals(owner, "white");
+            
+            // Track solo orgasm if we didn't squirt on anyone
+            if (!squirtedOnSomeone) {
+                StatisticsManager.trackSoloEjaculation(owner);
+            }
         }
     }
 

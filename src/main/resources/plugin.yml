@@ -4,6 +4,7 @@ version: 0.3.0
 api-version: '1.21'
 authors: ["Miauwrijn"]
 description: The Minecraft plugin your server never knew it needed
+softdepend: [PlaceholderAPI]
 commands:
   gooncraft:
     description: GoonCraft main command

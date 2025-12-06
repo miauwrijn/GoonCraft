@@ -32,6 +32,7 @@ public class Plugin extends JavaPlugin {
     
     private StatsCommandHandler statsHandler;
     private StorageManager storageManager;
+    private boolean placeholderAPIEnabled = false;
 
     @Override
     public void onEnable() {
@@ -75,7 +76,21 @@ public class Plugin extends JavaPlugin {
         getCommand("boobs").setExecutor(new BoobsCommandHandler());
         getCommand("genitals").setExecutor(new GenitalsCommandHandler());
 
+        // Register PlaceholderAPI expansion if available
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new com.miauwrijn.gooncraft.hooks.PlaceholderAPIExpansion(this).register();
+            placeholderAPIEnabled = true;
+            LOGGER.info("PlaceholderAPI found! Placeholders registered.");
+        }
+
         LOGGER.info("GoonCraft enabled! Time to get weird.");
+    }
+    
+    /**
+     * Check if PlaceholderAPI integration is enabled.
+     */
+    public boolean isPlaceholderAPIEnabled() {
+        return placeholderAPIEnabled;
     }
 
     @Override

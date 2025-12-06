@@ -71,6 +71,10 @@ public class StatisticsManager implements Listener {
         PlayerStats stats = getStats(player);
         stats.goonCount++;
         
+        // Track streak and strokes (using Minecraft day)
+        long currentMcDay = player.getWorld().getFullTime() / 24000L;
+        stats.trackGoonStreak(currentMcDay);
+        
         // Award XP and show progress
         awardXpWithProgress(player, stats, 1, "Gooning");
         
@@ -101,8 +105,9 @@ public class StatisticsManager implements Listener {
         stats.cumOnOthersCount++;
         stats.uniquePlayersCummedOn.add(target.getUniqueId());
         
-        // Track ejaculation speed
+        // Track ejaculation speed and total ejaculations
         stats.trackEjaculationSpeed();
+        stats.trackEjaculation();
         
         AchievementManager.checkAchievements(player, stats);
     }
@@ -111,6 +116,7 @@ public class StatisticsManager implements Listener {
         PlayerStats stats = getStats(player);
         stats.cumOnOthersCount++;
         stats.trackEjaculationSpeed();
+        stats.trackEjaculation();
         AchievementManager.checkAchievements(player, stats);
     }
 
@@ -121,6 +127,16 @@ public class StatisticsManager implements Listener {
     
     public static void incrementSquirtOnOthers(Player player) {
         incrementCumOnOthers(player);
+    }
+    
+    /**
+     * Track a solo ejaculation (when not cumming on anyone).
+     * This is called when the player finishes without someone nearby.
+     */
+    public static void trackSoloEjaculation(Player player) {
+        PlayerStats stats = getStats(player);
+        stats.trackEjaculationSpeed();
+        stats.trackEjaculation();
     }
 
     public static void incrementGotCummedOn(Player player, Player source) {

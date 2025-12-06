@@ -217,10 +217,15 @@ public class PenisModel implements Runnable {
         int ejaculateRoll = ThreadLocalRandom.current().nextInt(ejaculateChance);
         boolean isEjaculating = ejaculateRoll == 0;
 
+        boolean cummedOnSomeone = false;
         for (Player player : nearbyPlayers) {
             double distance = player.getLocation().distance(location);
             if (distance < 10) {
                 sendCumMessage(player, distance, isEjaculating);
+                // Track if we cummed on someone (within 2 blocks)
+                if (isEjaculating && distance < 2 && player != owner) {
+                    cummedOnSomeone = true;
+                }
             }
         }
 
@@ -229,6 +234,11 @@ public class PenisModel implements Runnable {
             spawnCumParticles();
             // Easter egg: Check for nearby sheep/chickens to cover in white
             AnimalInteractionHandler.checkForAnimals(owner, "white");
+            
+            // Track solo ejaculation if we didn't cum on anyone
+            if (!cummedOnSomeone) {
+                StatisticsManager.trackSoloEjaculation(owner);
+            }
         }
     }
 

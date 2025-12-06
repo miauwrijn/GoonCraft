@@ -73,6 +73,15 @@ public class PlayerStats {
     public int wolvesAffected;
     public int catsAffected;
     
+    // Detailed goon stats
+    public int totalEjaculations; // Total times finished/orgasmed
+    public long totalStrokes; // Total arm swings while gooning (each goon attempt)
+    
+    // Goon streak stats (consecutive Minecraft days)
+    public int currentGoonStreak; // Current consecutive MC days
+    public int longestGoonStreak; // Best streak ever
+    public long lastGoonMinecraftDay; // Last MC day number they gooned
+    
     // Session tracking (not persisted)
     public transient long exposureStartTime;
     public transient boolean isExposed;
@@ -119,6 +128,11 @@ public class PlayerStats {
         this.cowsAffected = 0;
         this.wolvesAffected = 0;
         this.catsAffected = 0;
+        this.totalEjaculations = 0;
+        this.totalStrokes = 0;
+        this.currentGoonStreak = 0;
+        this.longestGoonStreak = 0;
+        this.lastGoonMinecraftDay = 0;
         this.exposureStartTime = 0;
         this.isExposed = false;
         this.goonsThisMinute = 0;
@@ -255,6 +269,56 @@ public class PlayerStats {
             long hours = seconds / 3600;
             long minutes = (seconds % 3600) / 60;
             return hours + "h " + minutes + "m";
+        }
+    }
+    
+    /**
+     * Track a goon/stroke and update streak.
+     * Call this every time the player attempts to goon (arm swing while exposed).
+     * @param currentMinecraftDay The current Minecraft day (world.getFullTime() / 24000)
+     */
+    public void trackGoonStreak(long currentMinecraftDay) {
+        // Increment stroke count
+        totalStrokes++;
+        
+        // Check streak
+        if (lastGoonMinecraftDay == 0) {
+            // First time gooning
+            currentGoonStreak = 1;
+            longestGoonStreak = 1;
+        } else if (currentMinecraftDay == lastGoonMinecraftDay) {
+            // Same day - no streak change needed
+        } else if (currentMinecraftDay == lastGoonMinecraftDay + 1) {
+            // Consecutive day! Increase streak
+            currentGoonStreak++;
+            if (currentGoonStreak > longestGoonStreak) {
+                longestGoonStreak = currentGoonStreak;
+            }
+        } else {
+            // Streak broken - reset to 1 (today counts)
+            currentGoonStreak = 1;
+        }
+        
+        lastGoonMinecraftDay = currentMinecraftDay;
+    }
+    
+    /**
+     * Track an ejaculation/orgasm.
+     */
+    public void trackEjaculation() {
+        totalEjaculations++;
+    }
+    
+    /**
+     * Get display string for streak.
+     */
+    public String getStreakDisplay() {
+        if (currentGoonStreak <= 0) {
+            return "No streak";
+        } else if (currentGoonStreak == 1) {
+            return "1 day";
+        } else {
+            return currentGoonStreak + " days";
         }
     }
 }

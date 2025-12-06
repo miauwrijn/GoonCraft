@@ -60,36 +60,50 @@ public class StatsGUI extends GUI {
         
         // Fap count
         setItem(slot(2, 1), new ItemBuilder(Material.BONE)
-                .name("§d§lFap Count")
+                .name("§d§lGoon Count")
                 .lore(
-                    "§7Total goons: §e" + stats.goonCount,
+                    "§7Total goons: §e" + formatNumber(stats.goonCount),
+                    "§7Total strokes: §e" + formatNumber(stats.totalStrokes),
                     "",
                     "§8Crouch + swing to fap"
                 )
                 .glow()
                 .build());
         
-        // Cum on others
+        // Ejaculations / Orgasms
         setItem(slot(2, 2), new ItemBuilder(Material.GHAST_TEAR)
-                .name("§f§lCummed on Others")
+                .name("§f§lTotal Ejaculations")
                 .lore(
-                    "§7Times cummed on others: §e" + stats.cumOnOthersCount,
+                    "§7Total finishes: §e" + formatNumber(stats.totalEjaculations),
+                    "§7On others: §e" + formatNumber(stats.cumOnOthersCount),
                     "",
-                    "§8Get close to players when fapping"
+                    "§8Keep gooning to finish!"
                 )
                 .build());
         
-        // Got cummed on
-        setItem(slot(2, 3), new ItemBuilder(Material.SLIME_BALL)
+        // Goon streak
+        setItem(slot(2, 3), new ItemBuilder(Material.BLAZE_POWDER)
+                .name("§6§lGoon Streak")
+                .lore(
+                    "§7Current streak: §e" + stats.getStreakDisplay(),
+                    "§7Best streak: §e" + stats.longestGoonStreak + " days",
+                    "",
+                    "§8Goon every MC day to keep your streak!"
+                )
+                .glow(stats.currentGoonStreak >= 7) // Glow for 7+ day streaks
+                .build());
+        
+        // Got cummed on (slot 2,4)
+        setItem(slot(2, 4), new ItemBuilder(Material.SLIME_BALL)
                 .name("§a§lGot Cummed On")
                 .lore(
-                    "§7Times got cummed on: §e" + stats.gotCummedOnCount,
+                    "§7Times got cummed on: §e" + formatNumber(stats.gotCummedOnCount),
                     "",
                     "§8Stay close to fapping players"
                 )
                 .build());
         
-        // Time with penis out (this slot will be updated dynamically)
+        // Time with genitals out (this slot will be updated dynamically)
         updateExposureTimeItem();
         
         // Buttfingers given
@@ -211,5 +225,18 @@ public class StatsGUI extends GUI {
                 updateExposureTimeItem();
             }
         }.runTaskTimer(Plugin.instance, 20L, 20L); // Update every second (20 ticks)
+    }
+    
+    /**
+     * Format large numbers with comma separators or K/M suffixes.
+     */
+    private String formatNumber(long number) {
+        if (number >= 1_000_000) {
+            return String.format("%.1fM", number / 1_000_000.0);
+        } else if (number >= 10_000) {
+            return String.format("%.1fK", number / 1_000.0);
+        } else {
+            return String.format("%,d", number);
+        }
     }
 }

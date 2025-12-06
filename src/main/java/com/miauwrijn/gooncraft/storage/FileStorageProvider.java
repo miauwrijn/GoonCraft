@@ -253,6 +253,15 @@ public class FileStorageProvider implements StorageProvider {
         stats.wolvesAffected = config.getInt("Stats.WolvesAffected", 0);
         stats.catsAffected = config.getInt("Stats.CatsAffected", 0);
         
+        // Detailed goon stats
+        stats.totalEjaculations = config.getInt("Stats.TotalEjaculations", 0);
+        stats.totalStrokes = config.getLong("Stats.TotalStrokes", 0);
+        
+        // Streak stats
+        stats.currentGoonStreak = config.getInt("Stats.CurrentGoonStreak", 0);
+        stats.longestGoonStreak = config.getInt("Stats.LongestGoonStreak", 0);
+        stats.lastGoonMinecraftDay = config.getLong("Stats.LastGoonMinecraftDay", 0);
+        
         return stats;
     }
 
@@ -326,6 +335,15 @@ public class FileStorageProvider implements StorageProvider {
         config.set("Stats.CowsAffected", stats.cowsAffected);
         config.set("Stats.WolvesAffected", stats.wolvesAffected);
         config.set("Stats.CatsAffected", stats.catsAffected);
+        
+        // Detailed goon stats
+        config.set("Stats.TotalEjaculations", stats.totalEjaculations);
+        config.set("Stats.TotalStrokes", stats.totalStrokes);
+        
+        // Streak stats
+        config.set("Stats.CurrentGoonStreak", stats.currentGoonStreak);
+        config.set("Stats.LongestGoonStreak", stats.longestGoonStreak);
+        config.set("Stats.LastGoonMinecraftDay", stats.lastGoonMinecraftDay);
     }
 
     private Set<UUID> loadUUIDSet(FileConfiguration config, String path) {
