@@ -127,21 +127,23 @@ public class VaginaModel implements Runnable {
 
     private void updatePosition() {
         Location location = owner.getLocation();
-        
-        // Only use yaw (horizontal rotation), not pitch
-        float yaw = location.getYaw();
+        // Clamp pitch like penis model does
+        location.setPitch(clamp(location.getPitch(), -10f, 10f));
         
         float heightOffset = owner.isSneaking() ? 0.55f : 0.65f;
         Location center = location.clone().add(0, heightOffset, 0);
+        Vector direction = center.getDirection();
         
-        // Calculate direction from yaw only
-        double yawRad = Math.toRadians(yaw);
-        Vector direction = new Vector(-Math.sin(yawRad), 0, Math.cos(yawRad)).normalize();
-        Vector perpVector = new Vector(-direction.getZ(), 0, direction.getX()).normalize();
+        // Reposition when sneaking (same as penis model)
+        if (owner.isSneaking()) {
+            center = center.subtract(direction.clone().normalize().multiply(0.25));
+            direction = center.getDirection();
+        }
+        
+        Vector perpVector = new Vector(direction.getZ(), 0, -direction.getX()).normalize();
 
         // Position in front of crotch
         Location crotchCenter = center.clone().add(direction.clone().multiply(0.12));
-        crotchCenter.setYaw(yaw);
 
         float spacing = 0.025f;
         
@@ -149,16 +151,15 @@ public class VaginaModel implements Runnable {
         Location rightPos = crotchCenter.clone().subtract(perpVector.clone().multiply(spacing));
         Location innerPos = crotchCenter.clone();
         Location clitPos = crotchCenter.clone().add(0, 0.02, 0).add(direction.clone().multiply(0.01));
-        
-        leftPos.setYaw(yaw);
-        rightPos.setYaw(yaw);
-        innerPos.setYaw(yaw);
-        clitPos.setYaw(yaw);
 
         outerLeft.teleport(leftPos);
         outerRight.teleport(rightPos);
         inner.teleport(innerPos);
         clit.teleport(clitPos);
+    }
+    
+    private static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     private void buildModel() {

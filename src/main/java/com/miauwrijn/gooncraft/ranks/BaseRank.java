@@ -9,10 +9,11 @@ import com.miauwrijn.gooncraft.perks.BasePerk;
 
 /**
  * Rank class - created from YAML configuration.
+ * Ranks are now based on XP instead of achievement count.
  */
 public class BaseRank {
     
-    protected final int requiredAchievements;
+    protected final long requiredXp;
     protected final String displayName;
     protected final String color;
     protected final String icon;
@@ -20,9 +21,9 @@ public class BaseRank {
     protected final String rarity; // "common", "uncommon", "rare", "mythic", "legendary"
     protected final List<BasePerk> perks;
     
-    public BaseRank(int requiredAchievements, String displayName, String color, 
+    public BaseRank(long requiredXp, String displayName, String color, 
                     String icon, String description, String rarity, List<BasePerk> perks) {
-        this.requiredAchievements = requiredAchievements;
+        this.requiredXp = requiredXp;
         this.displayName = displayName;
         this.color = color;
         this.icon = icon;
@@ -37,7 +38,10 @@ public class BaseRank {
     }
     
     // Getters
-    public int getRequiredAchievements() { return requiredAchievements; }
+    public long getRequiredXp() { return requiredXp; }
+    /** @deprecated Use getRequiredXp() instead */
+    @Deprecated
+    public int getRequiredAchievements() { return (int) requiredXp; }
     public String getDisplayName() { return displayName; }
     public String getColor() { return color; }
     public String getIcon() { return icon; }

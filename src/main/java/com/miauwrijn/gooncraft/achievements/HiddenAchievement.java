@@ -14,6 +14,11 @@ public class HiddenAchievement extends BaseAchievement {
         super(id, name, description, category, threshold, true, rarity);
     }
     
+    public HiddenAchievement(String id, String name, String description, 
+                            String category, long threshold, String rarity, long xpReward) {
+        super(id, name, description, category, threshold, true, rarity, xpReward);
+    }
+    
     @Override
     public boolean checkCondition(Player player, PlayerStats stats) {
         // Hidden achievements are manually unlocked via tryUnlock()

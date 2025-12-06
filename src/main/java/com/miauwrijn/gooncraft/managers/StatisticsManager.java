@@ -14,11 +14,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PlayerStats;
+import com.miauwrijn.gooncraft.ranks.BaseRank;
 import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;
+
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * Manages player statistics tracking.
@@ -52,14 +57,22 @@ public class StatisticsManager implements Listener {
         return data != null ? data.stats : null;
     }
 
+    // Track active progress bar displays to avoid spam
+    private static final Map<UUID, Long> lastProgressBarTime = new ConcurrentHashMap<>();
+    private static final long PROGRESS_BAR_COOLDOWN = 500; // ms between progress bar updates
+
     // ===== Goon (Masturbation) Stats - Gender Neutral =====
 
     /**
      * Increment goon count - works for both penis fapping and vagina gooning.
+     * Awards 1 XP per goon and shows progress bar.
      */
     public static void incrementGoonCount(Player player) {
         PlayerStats stats = getStats(player);
         stats.goonCount++;
+        
+        // Award XP and show progress
+        awardXpWithProgress(player, stats, 1, "Gooning");
         
         // Track speed for speed achievement
         stats.trackGoonSpeed();
@@ -189,6 +202,9 @@ public class StatisticsManager implements Listener {
         stats.fartCount++;
         lastFartTime.put(player.getUniqueId(), System.currentTimeMillis());
         
+        // Award XP and show progress
+        awardXpWithProgress(player, stats, 1, "Farting");
+        
         // Track nearby players for social achievements
         trackNearbyPlayers(player, stats.uniquePlayersFartedNear);
         
@@ -198,6 +214,9 @@ public class StatisticsManager implements Listener {
     public static void incrementPoopCount(Player player) {
         PlayerStats stats = getStats(player);
         stats.poopCount++;
+        
+        // Award XP and show progress
+        awardXpWithProgress(player, stats, 1, "Pooping");
         
         // Check for shart achievement (fart within 5 seconds before poop)
         Long lastFart = lastFartTime.get(player.getUniqueId());
@@ -211,6 +230,9 @@ public class StatisticsManager implements Listener {
     public static void incrementPissCount(Player player) {
         PlayerStats stats = getStats(player);
         stats.pissCount++;
+        
+        // Award XP and show progress
+        awardXpWithProgress(player, stats, 1, "Pissing");
         
         // Track nearby players for social achievements
         trackNearbyPlayers(player, stats.uniquePlayersPissedNear);
@@ -290,6 +312,69 @@ public class StatisticsManager implements Listener {
     public static void incrementCatsAffected(Player player) {
         PlayerStats stats = getStats(player);
         stats.catsAffected++;
+    }
+
+    // ===== XP and Progress Bar Methods =====
+    
+    /**
+     * Award XP to a player and show progress bar briefly.
+     */
+    public static void awardXpWithProgress(Player player, PlayerStats stats, long amount, String action) {
+        long oldXp = stats.experience;
+        stats.addExperience(amount);
+        
+        // Show progress bar (with cooldown to avoid spam)
+        showProgressBar(player, stats, action);
+        
+        // Check for rank up
+        AchievementManager.checkRankUpAfterXp(player, oldXp);
+    }
+    
+    /**
+     * Show XP progress bar in action bar.
+     */
+    private static void showProgressBar(Player player, PlayerStats stats, String action) {
+        long now = System.currentTimeMillis();
+        Long lastTime = lastProgressBarTime.get(player.getUniqueId());
+        
+        // Rate limit progress bar updates
+        if (lastTime != null && now - lastTime < PROGRESS_BAR_COOLDOWN) {
+            return;
+        }
+        lastProgressBarTime.put(player.getUniqueId(), now);
+        
+        // Get current rank info
+        BaseRank currentRank = RankManager.getRank(player);
+        BaseRank nextRank = RankManager.getNextRank(currentRank);
+        double progress = RankManager.getProgressToNextRank(player);
+        long currentXp = stats.experience;
+        
+        // Build progress bar
+        String progressBar = RankManager.createColoredProgressBar(progress, 20);
+        
+        String message;
+        if (nextRank == null) {
+            // Max rank
+            message = currentRank.getColor() + currentRank.getIcon() + " " + currentRank.getDisplayName() + " §7| §6MAX RANK §7| §e" + currentXp + " XP";
+        } else {
+            long xpToNext = RankManager.getXpToNextRank(player);
+            message = currentRank.getColor() + currentRank.getIcon() + " " + progressBar + " §7" + xpToNext + " XP to " + nextRank.getDisplayName();
+        }
+        
+        // Send to action bar
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+        
+        // Schedule hiding the progress bar after 2 seconds
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Only clear if no new progress bar was shown
+                Long currentTime = lastProgressBarTime.get(player.getUniqueId());
+                if (currentTime != null && System.currentTimeMillis() - currentTime >= 2000) {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
+                }
+            }
+        }.runTaskLater(Plugin.instance, 40L); // 2 seconds = 40 ticks
     }
 
     // ===== Helper Methods =====

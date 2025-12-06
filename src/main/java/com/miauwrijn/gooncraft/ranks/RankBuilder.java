@@ -57,22 +57,24 @@ public class RankBuilder {
             return ranks;
         }
         
-        // Get all rank keys and sort by required achievements
-        Map<Integer, String> rankMap = new HashMap<>();
+        // Get all rank keys and sort by required XP
+        Map<Long, String> rankMap = new HashMap<>();
         for (String key : ranksSection.getKeys(false)) {
             ConfigurationSection rankSection = ranksSection.getConfigurationSection(key);
             if (rankSection != null) {
-                int required = rankSection.getInt("required_achievements", 0);
+                // Support both required_xp (new) and required_achievements (legacy)
+                long required = rankSection.getLong("required_xp", 
+                    rankSection.getInt("required_achievements", 0));
                 rankMap.put(required, key);
             }
         }
         
-        // Sort by required achievements and build ranks
-        List<Integer> sorted = new ArrayList<>(rankMap.keySet());
-        sorted.sort(Integer::compareTo);
+        // Sort by required XP and build ranks
+        List<Long> sorted = new ArrayList<>(rankMap.keySet());
+        sorted.sort(Long::compareTo);
         
         int ordinal = 0;
-        for (int required : sorted) {
+        for (long required : sorted) {
             String key = rankMap.get(required);
             ConfigurationSection rankSection = ranksSection.getConfigurationSection(key);
             
@@ -94,7 +96,9 @@ public class RankBuilder {
      */
     private static BaseRank buildRank(ConfigurationSection section, int ordinal) {
         try {
-            int requiredAchievements = section.getInt("required_achievements", 0);
+            // Support both required_xp (new) and required_achievements (legacy)
+            long requiredXp = section.getLong("required_xp", 
+                section.getInt("required_achievements", 0));
             String displayName = section.getString("display_name", "Unknown Rank");
             String color = section.getString("color", "§f");
             String icon = section.getString("icon", "⭐");
@@ -113,7 +117,7 @@ public class RankBuilder {
                 }
             }
             
-            BaseRank rank = new BaseRank(requiredAchievements, displayName, color, 
+            BaseRank rank = new BaseRank(requiredXp, displayName, color, 
                                         icon, description, rarity, perks);
             rank.setOrdinal(ordinal);
             return rank;

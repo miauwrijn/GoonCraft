@@ -1,6 +1,8 @@
 package com.miauwrijn.gooncraft.data;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,6 +11,9 @@ import java.util.UUID;
  * Uses gender-neutral terminology (goon = masturbate for any gender).
  */
 public class PlayerStats {
+    
+    // Experience points for ranking
+    public long experience;
     
     // Core stats (gender neutral)
     public int goonCount; // Masturbation count (was fapCount)
@@ -23,6 +28,9 @@ public class PlayerStats {
     public int fartCount;
     public int poopCount;
     public int pissCount;
+    
+    // Mob proximity goon tracking (mob_type -> count)
+    public Map<String, Integer> mobGoonCounts;
     
     // Boob stats
     public int jiggleCount;
@@ -72,6 +80,7 @@ public class PlayerStats {
     public transient long minuteStartTime;
 
     public PlayerStats() {
+        this.experience = 0;
         this.goonCount = 0;
         this.cumOnOthersCount = 0;
         this.gotCummedOnCount = 0;
@@ -85,6 +94,7 @@ public class PlayerStats {
         this.jiggleCount = 0;
         this.boobToggleCount = 0;
         this.genderChanges = 0;
+        this.mobGoonCounts = new HashMap<>();
         this.uniquePlayersCummedOn = new HashSet<>();
         this.uniquePlayersGotCummedBy = new HashSet<>();
         this.uniquePlayersButtfingered = new HashSet<>();
@@ -113,6 +123,35 @@ public class PlayerStats {
         this.isExposed = false;
         this.goonsThisMinute = 0;
         this.minuteStartTime = 0;
+    }
+    
+    /**
+     * Increment goon count near a specific mob type.
+     */
+    public int incrementMobGoonCount(String mobType) {
+        if (mobGoonCounts == null) {
+            mobGoonCounts = new HashMap<>();
+        }
+        int current = mobGoonCounts.getOrDefault(mobType, 0);
+        mobGoonCounts.put(mobType, current + 1);
+        return current + 1;
+    }
+    
+    /**
+     * Get goon count near a specific mob type.
+     */
+    public int getMobGoonCount(String mobType) {
+        if (mobGoonCounts == null) {
+            return 0;
+        }
+        return mobGoonCounts.getOrDefault(mobType, 0);
+    }
+    
+    /**
+     * Add experience points.
+     */
+    public void addExperience(long amount) {
+        this.experience += amount;
     }
 
     public void startExposureTimer() {

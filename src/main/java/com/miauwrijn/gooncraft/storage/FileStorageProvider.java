@@ -189,6 +189,9 @@ public class FileStorageProvider implements StorageProvider {
     private PlayerStats loadStats(FileConfiguration config) {
         PlayerStats stats = new PlayerStats();
         
+        // Experience points
+        stats.experience = config.getLong("Stats.Experience", 0);
+        
         // Core stats
         stats.goonCount = config.getInt("Stats.GoonCount", 0);
         stats.cumOnOthersCount = config.getInt("Stats.CumOnOthersCount", 0);
@@ -202,6 +205,14 @@ public class FileStorageProvider implements StorageProvider {
         stats.fartCount = config.getInt("Stats.FartCount", 0);
         stats.poopCount = config.getInt("Stats.PoopCount", 0);
         stats.pissCount = config.getInt("Stats.PissCount", 0);
+        
+        // Mob goon counts
+        ConfigurationSection mobSection = config.getConfigurationSection("Stats.MobGoonCounts");
+        if (mobSection != null) {
+            for (String mobType : mobSection.getKeys(false)) {
+                stats.mobGoonCounts.put(mobType, mobSection.getInt(mobType, 0));
+            }
+        }
         
         // Boob stats
         stats.jiggleCount = config.getInt("Stats.JiggleCount", 0);
@@ -253,6 +264,9 @@ public class FileStorageProvider implements StorageProvider {
             stats.stopExposureTimer();
         }
         
+        // Experience points
+        config.set("Stats.Experience", stats.experience);
+        
         // Core stats
         config.set("Stats.GoonCount", stats.goonCount);
         config.set("Stats.CumOnOthersCount", stats.cumOnOthersCount);
@@ -266,6 +280,13 @@ public class FileStorageProvider implements StorageProvider {
         config.set("Stats.FartCount", stats.fartCount);
         config.set("Stats.PoopCount", stats.poopCount);
         config.set("Stats.PissCount", stats.pissCount);
+        
+        // Mob goon counts
+        if (stats.mobGoonCounts != null && !stats.mobGoonCounts.isEmpty()) {
+            for (var entry : stats.mobGoonCounts.entrySet()) {
+                config.set("Stats.MobGoonCounts." + entry.getKey(), entry.getValue());
+            }
+        }
         
         // Boob stats
         config.set("Stats.JiggleCount", stats.jiggleCount);

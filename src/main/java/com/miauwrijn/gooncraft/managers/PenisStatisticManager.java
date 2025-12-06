@@ -186,9 +186,17 @@ public class PenisStatisticManager implements Listener {
             return;
         }
         
+        // Check for penis model
         PenisStatistics stats = runtimeStats.get(player.getUniqueId());
         if (stats != null && stats.penisModel != null) {
             stats.penisModel.cum();
+            return; // Only one genital can goon at a time
+        }
+        
+        // Check for vagina model
+        com.miauwrijn.gooncraft.models.VaginaModel vaginaModel = GenderManager.getActiveVaginaModel(player);
+        if (vaginaModel != null) {
+            vaginaModel.goon();
         }
     }
 }

@@ -1,0 +1,454 @@
+# ===== TIERED MOB ACHIEVEMENTS =====
+# Progressive achievements for gooning near mobs multiple times
+
+achievements:
+  # ===== TIERED MOB ACHIEVEMENTS - ZOMBIE =====
+  goon_near_zombie_10:
+    name: "Zombie Enthusiast"
+    description: "Goon near zombies 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_zombie"
+    xp_reward: 100
+  
+  goon_near_zombie_20:
+    name: "Zombie Lover"
+    description: "Goon near zombies 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_zombie"
+    xp_reward: 300
+  
+  goon_near_zombie_50:
+    name: "Zombie Fanatic"
+    description: "Goon near zombies 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_zombie"
+    xp_reward: 750
+  
+  goon_near_zombie_100:
+    name: "Zombie Obsessed"
+    description: "Goon near zombies 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_zombie"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - SKELETON =====
+  goon_near_skeleton_10:
+    name: "Bone Collector"
+    description: "Goon near skeletons 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_skeleton"
+    xp_reward: 100
+  
+  goon_near_skeleton_20:
+    name: "Bone Lover"
+    description: "Goon near skeletons 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_skeleton"
+    xp_reward: 300
+  
+  goon_near_skeleton_50:
+    name: "Bone Fanatic"
+    description: "Goon near skeletons 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_skeleton"
+    xp_reward: 750
+  
+  goon_near_skeleton_100:
+    name: "Bone Master"
+    description: "Goon near skeletons 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_skeleton"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - CREEPER =====
+  goon_near_creeper_10:
+    name: "Creeper Chaser"
+    description: "Goon near creepers 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "uncommon"
+    stat_category: "mob_goon_creeper"
+    xp_reward: 150
+  
+  goon_near_creeper_20:
+    name: "Creeper Lover"
+    description: "Goon near creepers 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "rare"
+    stat_category: "mob_goon_creeper"
+    xp_reward: 400
+  
+  goon_near_creeper_50:
+    name: "Creeper Fanatic"
+    description: "Goon near creepers 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_creeper"
+    xp_reward: 1000
+  
+  goon_near_creeper_100:
+    name: "Explosion Lover"
+    description: "Goon near creepers 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_creeper"
+    xp_reward: 2000
+
+  # ===== TIERED MOB ACHIEVEMENTS - ENDERMAN =====
+  goon_near_enderman_10:
+    name: "Ender Watcher"
+    description: "Goon near endermen 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "uncommon"
+    stat_category: "mob_goon_enderman"
+    xp_reward: 150
+  
+  goon_near_enderman_20:
+    name: "Ender Lover"
+    description: "Goon near endermen 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "rare"
+    stat_category: "mob_goon_enderman"
+    xp_reward: 400
+  
+  goon_near_enderman_50:
+    name: "Ender Fanatic"
+    description: "Goon near endermen 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_enderman"
+    xp_reward: 1000
+  
+  goon_near_enderman_100:
+    name: "Ender Obsessed"
+    description: "Goon near endermen 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_enderman"
+    xp_reward: 2000
+
+  # ===== TIERED MOB ACHIEVEMENTS - PIG =====
+  goon_near_pig_10:
+    name: "Pig Pal"
+    description: "Goon near pigs 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_pig"
+    xp_reward: 100
+  
+  goon_near_pig_20:
+    name: "Pig Lover"
+    description: "Goon near pigs 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_pig"
+    xp_reward: 300
+  
+  goon_near_pig_50:
+    name: "Pig Fanatic"
+    description: "Goon near pigs 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_pig"
+    xp_reward: 750
+  
+  goon_near_pig_100:
+    name: "Pig Obsessed"
+    description: "Goon near pigs 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_pig"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - COW =====
+  goon_near_cow_10:
+    name: "Cow Companion"
+    description: "Goon near cows 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_cow"
+    xp_reward: 100
+  
+  goon_near_cow_20:
+    name: "Cow Lover"
+    description: "Goon near cows 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_cow"
+    xp_reward: 300
+  
+  goon_near_cow_50:
+    name: "Cow Fanatic"
+    description: "Goon near cows 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_cow"
+    xp_reward: 750
+  
+  goon_near_cow_100:
+    name: "Cow Obsessed"
+    description: "Goon near cows 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_cow"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - SHEEP =====
+  goon_near_sheep_10:
+    name: "Sheep Snuggler"
+    description: "Goon near sheep 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_sheep"
+    xp_reward: 100
+  
+  goon_near_sheep_20:
+    name: "Sheep Lover"
+    description: "Goon near sheep 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_sheep"
+    xp_reward: 300
+  
+  goon_near_sheep_50:
+    name: "Sheep Fanatic"
+    description: "Goon near sheep 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_sheep"
+    xp_reward: 750
+  
+  goon_near_sheep_100:
+    name: "Sheep Obsessed"
+    description: "Goon near sheep 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_sheep"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - CHICKEN =====
+  goon_near_chicken_10:
+    name: "Chicken Chum"
+    description: "Goon near chickens 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_chicken"
+    xp_reward: 100
+  
+  goon_near_chicken_20:
+    name: "Chicken Lover"
+    description: "Goon near chickens 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_chicken"
+    xp_reward: 300
+  
+  goon_near_chicken_50:
+    name: "Chicken Fanatic"
+    description: "Goon near chickens 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_chicken"
+    xp_reward: 750
+  
+  goon_near_chicken_100:
+    name: "Chicken Obsessed"
+    description: "Goon near chickens 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_chicken"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - WOLF =====
+  goon_near_wolf_10:
+    name: "Wolf Whisperer"
+    description: "Goon near wolves 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_wolf"
+    xp_reward: 100
+  
+  goon_near_wolf_20:
+    name: "Wolf Lover"
+    description: "Goon near wolves 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_wolf"
+    xp_reward: 300
+  
+  goon_near_wolf_50:
+    name: "Wolf Fanatic"
+    description: "Goon near wolves 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_wolf"
+    xp_reward: 750
+  
+  goon_near_wolf_100:
+    name: "Alpha Wolf"
+    description: "Goon near wolves 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_wolf"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - VILLAGER =====
+  goon_near_villager_10:
+    name: "Village Visitor"
+    description: "Goon near villagers 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "mob_goon_villager"
+    xp_reward: 100
+  
+  goon_near_villager_20:
+    name: "Villager Lover"
+    description: "Goon near villagers 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "mob_goon_villager"
+    xp_reward: 300
+  
+  goon_near_villager_50:
+    name: "Villager Fanatic"
+    description: "Goon near villagers 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "rare"
+    stat_category: "mob_goon_villager"
+    xp_reward: 750
+  
+  goon_near_villager_100:
+    name: "Village Pervert"
+    description: "Goon near villagers 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "mythic"
+    stat_category: "mob_goon_villager"
+    xp_reward: 1500
+
+  # ===== TIERED MOB ACHIEVEMENTS - WARDEN =====
+  goon_near_warden_10:
+    name: "Warden Watcher"
+    description: "Goon near wardens 10 times"
+    category: "location"
+    type: "stat"
+    threshold: 10
+    rarity: "rare"
+    stat_category: "mob_goon_warden"
+    xp_reward: 250
+  
+  goon_near_warden_20:
+    name: "Warden Lover"
+    description: "Goon near wardens 20 times"
+    category: "location"
+    type: "stat"
+    threshold: 20
+    rarity: "rare"
+    stat_category: "mob_goon_warden"
+    xp_reward: 600
+  
+  goon_near_warden_50:
+    name: "Warden Fanatic"
+    description: "Goon near wardens 50 times"
+    category: "location"
+    type: "stat"
+    threshold: 50
+    rarity: "mythic"
+    stat_category: "mob_goon_warden"
+    xp_reward: 1250
+  
+  goon_near_warden_100:
+    name: "Warden Whisperer"
+    description: "Goon near wardens 100 times"
+    category: "location"
+    type: "stat"
+    threshold: 100
+    rarity: "legendary"
+    stat_category: "mob_goon_warden"
+    xp_reward: 2500

@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 /**
  * Base GUI class that handles inventory creation and click events.
@@ -19,6 +20,7 @@ public class GUI implements InventoryHolder {
     protected final Inventory inventory;
     protected final Map<Integer, Consumer<InventoryClickEvent>> clickHandlers = new HashMap<>();
     protected final Player viewer;
+    protected BukkitTask updateTask;
 
     public GUI(Player viewer, String title, int rows) {
         this.viewer = viewer;
@@ -72,6 +74,17 @@ public class GUI implements InventoryHolder {
 
     public void close() {
         viewer.closeInventory();
+    }
+
+    /**
+     * Called when the inventory is closed.
+     * Override this method to clean up resources.
+     */
+    public void onClose() {
+        if (updateTask != null) {
+            updateTask.cancel();
+            updateTask = null;
+        }
     }
 
     @Override

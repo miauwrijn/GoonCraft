@@ -17,6 +17,12 @@ public class StatAchievement extends BaseAchievement {
         this.statCategory = statCategory;
     }
     
+    public StatAchievement(String id, String name, String description, 
+                          String category, long threshold, boolean hidden, String rarity, String statCategory, long xpReward) {
+        super(id, name, description, category, threshold, hidden, rarity, xpReward);
+        this.statCategory = statCategory;
+    }
+    
     @Override
     public boolean checkCondition(Player player, PlayerStats stats) {
         long currentValue = getStatForCategory(stats, statCategory);
@@ -33,6 +39,12 @@ public class StatAchievement extends BaseAchievement {
     }
     
     private long getStatForCategory(PlayerStats stats, String category) {
+        // Check for mob goon count categories (format: mob_goon_MOBTYPE)
+        if (category != null && category.startsWith("mob_goon_")) {
+            String mobType = category.substring("mob_goon_".length());
+            return stats.getMobGoonCount(mobType);
+        }
+        
         return switch (category) {
             case "goon" -> stats.goonCount;
             case "cum_on" -> stats.cumOnOthersCount;

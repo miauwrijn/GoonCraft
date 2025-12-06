@@ -2,7 +2,9 @@ package com.miauwrijn.gooncraft.gui;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
@@ -13,9 +15,13 @@ import com.miauwrijn.gooncraft.managers.StatisticsManager;
  */
 public class StatsGUI extends GUI {
 
+    private static final int EXPOSURE_TIME_SLOT = slot(2, 5);
+    private final Player target;
+
     public StatsGUI(Player viewer, Player target) {
         super(viewer, "§6§l" + target.getName() + "'s Goon Stats", 5);
         
+        this.target = target;
         PlayerStats stats = StatisticsManager.getStats(target);
         boolean isSelf = viewer.equals(target);
         
@@ -83,16 +89,8 @@ public class StatsGUI extends GUI {
                 )
                 .build());
         
-        // Time with penis out
-        setItem(slot(2, 5), new ItemBuilder(Material.CLOCK)
-                .name("§e§lExposure Time")
-                .lore(
-                    "§7Time with penis out: §e" + stats.formatTime(stats.getCurrentTotalTime()),
-                    "",
-                    "§8Use /penis toggle"
-                )
-                .glow()
-                .build());
+        // Time with penis out (this slot will be updated dynamically)
+        updateExposureTimeItem();
         
         // Buttfingers given
         setItem(slot(2, 6), new ItemBuilder(Material.CARROT)
@@ -175,5 +173,43 @@ public class StatsGUI extends GUI {
         
         // Fill remaining with glass
         fill(ItemBuilder.filler());
+        
+        // Start dynamic update task for exposure time
+        startExposureTimeUpdater();
+    }
+    
+    /**
+     * Updates the exposure time item with current value.
+     */
+    private void updateExposureTimeItem() {
+        PlayerStats stats = StatisticsManager.getStats(target);
+        setItem(EXPOSURE_TIME_SLOT, new ItemBuilder(Material.CLOCK)
+                .name("§e§lExposure Time")
+                .lore(
+                    "§7Time exposed: §e" + stats.formatTime(stats.getCurrentTotalTime()),
+                    "",
+                    "§8Use /penis toggle"
+                )
+                .glow()
+                .build());
+    }
+    
+    /**
+     * Starts a task that updates the exposure time every second.
+     */
+    private void startExposureTimeUpdater() {
+        updateTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Check if player is still online and inventory is still open
+                if (!viewer.isOnline() || !target.isOnline()) {
+                    cancel();
+                    return;
+                }
+                
+                // Update the exposure time item
+                updateExposureTimeItem();
+            }
+        }.runTaskTimer(Plugin.instance, 20L, 20L); // Update every second (20 ticks)
     }
 }

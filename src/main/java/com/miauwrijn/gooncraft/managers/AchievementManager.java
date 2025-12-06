@@ -20,6 +20,7 @@ import com.miauwrijn.gooncraft.achievements.LocationAchievement;
 import com.miauwrijn.gooncraft.achievements.MobProximityAchievement;
 import com.miauwrijn.gooncraft.achievements.StatAchievement;
 import com.miauwrijn.gooncraft.data.PlayerStats;
+import com.miauwrijn.gooncraft.ranks.BaseRank;
 import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;
 
@@ -150,11 +151,18 @@ public class AchievementManager {
         
         unlocked.add(achievementId);
         
+        // Award XP for the achievement
+        PlayerStats stats = StatisticsManager.getStats(player);
+        long xpReward = achievement.getXpReward();
+        long oldXp = stats.experience;
+        stats.addExperience(xpReward);
+        
         // Notify player
         player.sendMessage("");
         player.sendMessage(ConfigManager.getMessage("achievement.unlocked-title"));
         player.sendMessage(ConfigManager.getMessage("achievement.unlocked-name", "{name}", achievement.getName()));
         player.sendMessage(ConfigManager.getMessage("achievement.unlocked-description", "{description}", achievement.getDescription()));
+        player.sendMessage("§a+" + xpReward + " XP");
         player.sendMessage("");
         
         // Sound effect
@@ -170,17 +178,17 @@ public class AchievementManager {
         StorageManager.savePlayerData(player.getUniqueId());
         
         // Check for rank up
-        checkRankUp(player);
+        checkRankUp(player, oldXp);
     }
     
     /**
-     * Check if player ranked up.
+     * Check if player ranked up based on XP change.
      */
-    private static void checkRankUp(Player player) {
-        com.miauwrijn.gooncraft.ranks.BaseRank oldRank = RankManager.getRankForAchievements(getUnlockedCount(player) - 1);
-        com.miauwrijn.gooncraft.ranks.BaseRank newRank = RankManager.getRank(player);
+    private static void checkRankUp(Player player, long oldXp) {
+        BaseRank oldRank = RankManager.getRankForXp(oldXp);
+        BaseRank newRank = RankManager.getRank(player);
         
-        if (oldRank != newRank) {
+        if (oldRank != newRank && newRank.getOrdinal() > oldRank.getOrdinal()) {
             // Player ranked up!
             // Apply rank perks (they'll be applied by applyAllRankPerks which checks up to current rank)
             RankPerkManager.applyAllRankPerks(player);
@@ -199,7 +207,17 @@ public class AchievementManager {
                 }
             }
             player.sendMessage("");
+            
+            // Play rank up sound
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.5f);
         }
+    }
+    
+    /**
+     * Check for rank up after XP gain (public method for StatisticsManager).
+     */
+    public static void checkRankUpAfterXp(Player player, long oldXp) {
+        checkRankUp(player, oldXp);
     }
 
     public static int getUnlockedCount(Player player) {
@@ -284,6 +302,7 @@ public class AchievementManager {
     /**
      * Check for mob proximity achievements when player is gooning.
      * Checks all nearby entities and unlocks achievements if matching mob types are found.
+     * Also tracks mob goon counts for tiered achievements (10, 20, 50, 100).
      */
     public static void checkMobProximityAchievements(Player player) {
         if (player == null || !player.isOnline()) {
@@ -308,10 +327,22 @@ public class AchievementManager {
             return; // No nearby mobs
         }
         
+        // Get player stats for tracking mob goon counts
+        PlayerStats stats = StatisticsManager.getStats(player);
+        Set<String> unlocked = getUnlocked(player);
+        
+        // Increment mob goon counts for all nearby mobs
+        for (String mobType : nearbyMobTypes) {
+            int newCount = stats.incrementMobGoonCount(mobType);
+            
+            // Check tiered achievements for this mob type (10, 20, 50, 100)
+            checkTieredMobAchievement(player, mobType, newCount, unlocked);
+        }
+        
         // Get all achievements loaded from YAML
         Map<String, BaseAchievement> allAchievements = AchievementBuilder.getAllAchievementsById();
         
-        // Check each mob proximity achievement
+        // Check each mob proximity achievement (the original "goon once near X" achievements)
         for (BaseAchievement achievement : allAchievements.values()) {
             if (!(achievement instanceof MobProximityAchievement mobAchievement)) {
                 continue;
@@ -324,9 +355,34 @@ public class AchievementManager {
                 String achievementId = achievement.getId().toLowerCase();
                 
                 // Check if already unlocked
-                Set<String> unlocked = getUnlocked(player);
                 if (!unlocked.contains(achievementId)) {
                     unlockAchievementById(player, achievementId, achievement);
+                }
+            }
+        }
+        
+        // Also check stat-based achievements that use mob_goon_ category
+        checkAchievements(player, stats);
+    }
+    
+    /**
+     * Check for tiered mob achievements (10, 20, 50, 100 goons near a mob type).
+     */
+    private static void checkTieredMobAchievement(Player player, String mobType, int count, Set<String> unlocked) {
+        // Define the tiers
+        int[] tiers = {10, 20, 50, 100};
+        
+        for (int tier : tiers) {
+            if (count >= tier) {
+                // Check if there's an achievement for this tier
+                String achievementId = "goon_near_" + mobType + "_" + tier;
+                
+                if (!unlocked.contains(achievementId)) {
+                    // Try to find the achievement in YAML
+                    BaseAchievement achievement = AchievementBuilder.getAchievementById(achievementId);
+                    if (achievement != null) {
+                        unlockAchievementById(player, achievementId, achievement);
+                    }
                 }
             }
         }

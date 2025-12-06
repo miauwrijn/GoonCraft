@@ -17,6 +17,12 @@ public class LocationAchievement extends BaseAchievement {
         this.locationTag = locationTag;
     }
     
+    public LocationAchievement(String id, String name, String description, 
+                              String category, long threshold, boolean hidden, String rarity, String locationTag, long xpReward) {
+        super(id, name, description, category, threshold, hidden, rarity, xpReward);
+        this.locationTag = locationTag;
+    }
+    
     public String getLocationTag() {
         return locationTag;
     }

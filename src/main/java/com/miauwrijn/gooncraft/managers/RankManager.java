@@ -4,16 +4,13 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
+import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.ranks.BaseRank;
 import com.miauwrijn.gooncraft.ranks.RankBuilder;
 
 /**
- * Manages player ranks based on achievement count.
- * Each achievement = 1 level toward the next rank.
- * 
- * Total achievements: 67
- * - Regular: 56
- * - Hidden: 11
+ * Manages player ranks based on XP (experience points).
+ * XP is earned through actions (gooning, bodily functions) and achievements.
  */
 public class RankManager {
 
@@ -29,21 +26,29 @@ public class RankManager {
     }
 
     /**
-     * Gets the rank for a player based on their achievement count.
+     * Gets the rank for a player based on their XP.
      */
     public static BaseRank getRank(Player player) {
-        int achievementCount = AchievementManager.getUnlockedCount(player);
-        return getRankForAchievements(achievementCount);
+        long xp = getPlayerXp(player);
+        return getRankForXp(xp);
+    }
+    
+    /**
+     * Get the player's current XP.
+     */
+    public static long getPlayerXp(Player player) {
+        PlayerStats stats = StatisticsManager.getStats(player);
+        return stats != null ? stats.experience : 0;
     }
 
     /**
-     * Gets the rank for a specific achievement count.
+     * Gets the rank for a specific XP amount.
      */
-    public static BaseRank getRankForAchievements(int achievementCount) {
+    public static BaseRank getRankForXp(long xp) {
         BaseRank currentRank = RANKS[0]; // Innocent
         
         for (BaseRank rank : RANKS) {
-            if (achievementCount >= rank.getRequiredAchievements()) {
+            if (xp >= rank.getRequiredXp()) {
                 currentRank = rank;
             } else {
                 break;
@@ -51,6 +56,12 @@ public class RankManager {
         }
         
         return currentRank;
+    }
+    
+    /** @deprecated Use getRankForXp() instead */
+    @Deprecated
+    public static BaseRank getRankForAchievements(int achievementCount) {
+        return getRankForXp(achievementCount);
     }
     
     /**
@@ -86,35 +97,42 @@ public class RankManager {
      * Gets progress toward the next rank (0.0 to 1.0).
      */
     public static double getProgressToNextRank(Player player) {
-        int achievements = AchievementManager.getUnlockedCount(player);
-        BaseRank currentRank = getRankForAchievements(achievements);
+        long xp = getPlayerXp(player);
+        BaseRank currentRank = getRankForXp(xp);
         BaseRank nextRank = getNextRank(currentRank);
         
         if (nextRank == null) {
             return 1.0; // Max rank
         }
         
-        int currentThreshold = currentRank.getRequiredAchievements();
-        int nextThreshold = nextRank.getRequiredAchievements();
-        int range = nextThreshold - currentThreshold;
-        int progress = achievements - currentThreshold;
+        long currentThreshold = currentRank.getRequiredXp();
+        long nextThreshold = nextRank.getRequiredXp();
+        long range = nextThreshold - currentThreshold;
+        long progress = xp - currentThreshold;
         
+        if (range <= 0) return 1.0;
         return (double) progress / range;
     }
 
     /**
-     * Gets achievements needed for next rank.
+     * Gets XP needed for next rank.
      */
-    public static int getAchievementsToNextRank(Player player) {
-        int achievements = AchievementManager.getUnlockedCount(player);
-        BaseRank currentRank = getRankForAchievements(achievements);
+    public static long getXpToNextRank(Player player) {
+        long xp = getPlayerXp(player);
+        BaseRank currentRank = getRankForXp(xp);
         BaseRank nextRank = getNextRank(currentRank);
         
         if (nextRank == null) {
             return 0; // Max rank
         }
         
-        return nextRank.getRequiredAchievements() - achievements;
+        return nextRank.getRequiredXp() - xp;
+    }
+    
+    /** @deprecated Use getXpToNextRank() instead */
+    @Deprecated
+    public static int getAchievementsToNextRank(Player player) {
+        return (int) getXpToNextRank(player);
     }
 
     /**
@@ -133,6 +151,32 @@ public class RankManager {
         }
         
         bar.append("§7]");
+        return bar.toString();
+    }
+    
+    /**
+     * Creates a colored progress bar based on progress percentage.
+     */
+    public static String createColoredProgressBar(double progress, int length) {
+        int filled = (int) (progress * length);
+        StringBuilder bar = new StringBuilder("§8[");
+        
+        for (int i = 0; i < length; i++) {
+            if (i < filled) {
+                // Color gradient: red -> yellow -> green
+                if (progress < 0.33) {
+                    bar.append("§c█");
+                } else if (progress < 0.66) {
+                    bar.append("§e█");
+                } else {
+                    bar.append("§a█");
+                }
+            } else {
+                bar.append("§7░");
+            }
+        }
+        
+        bar.append("§8]");
         return bar.toString();
     }
 }

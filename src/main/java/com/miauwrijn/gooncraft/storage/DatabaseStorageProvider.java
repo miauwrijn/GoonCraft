@@ -205,6 +205,7 @@ public class DatabaseStorageProvider implements StorageProvider {
             
             // Stats
             PlayerStats stats = data.stats != null ? data.stats : new PlayerStats();
+            stmt.setLong(i++, stats.experience);
             stmt.setInt(i++, stats.goonCount);
             stmt.setInt(i++, stats.cumOnOthersCount);
             stmt.setInt(i++, stats.gotCummedOnCount);
@@ -242,6 +243,9 @@ public class DatabaseStorageProvider implements StorageProvider {
             stmt.setString(i++, serializeUUIDSet(stats.uniquePlayersButtfingered));
             stmt.setString(i++, serializeUUIDSet(stats.uniquePlayersPissedNear));
             stmt.setString(i++, serializeUUIDSet(stats.uniquePlayersFartedNear));
+            
+            // Mob goon counts
+            stmt.setString(i++, serializeMobGoonCounts(stats.mobGoonCounts));
             
             // Achievements
             stmt.setString(i++, serializeAchievements(data.unlockedAchievements));
@@ -311,6 +315,7 @@ public class DatabaseStorageProvider implements StorageProvider {
                 gender VARCHAR(10),
                 boob_size INT DEFAULT 5,
                 boob_perkiness INT DEFAULT 5,
+                experience BIGINT DEFAULT 0,
                 goon_count INT DEFAULT 0,
                 cum_on_others INT DEFAULT 0,
                 got_cummed_on INT DEFAULT 0,
@@ -346,6 +351,7 @@ public class DatabaseStorageProvider implements StorageProvider {
                 unique_buttfingered TEXT,
                 unique_pissed_near TEXT,
                 unique_farted_near TEXT,
+                mob_goon_counts TEXT,
                 achievements TEXT,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -355,25 +361,56 @@ public class DatabaseStorageProvider implements StorageProvider {
              PreparedStatement stmt = conn.prepareStatement(createTable)) {
             stmt.executeUpdate();
         }
+        
+        // Add new columns if they don't exist (for existing databases)
+        addColumnIfNotExists("experience", "BIGINT DEFAULT 0");
+        addColumnIfNotExists("mob_goon_counts", "TEXT");
+    }
+    
+    private void addColumnIfNotExists(String columnName, String columnDef) {
+        String checkSql;
+        if (type == DatabaseType.MYSQL) {
+            checkSql = "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '" + 
+                       tablePrefix + "players' AND column_name = '" + columnName + "'";
+        } else {
+            checkSql = "SELECT COUNT(*) FROM information_schema.columns WHERE table_name = '" + 
+                       tablePrefix + "players' AND column_name = '" + columnName + "'";
+        }
+        
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement checkStmt = conn.prepareStatement(checkSql);
+             ResultSet rs = checkStmt.executeQuery()) {
+            
+            if (rs.next() && rs.getInt(1) == 0) {
+                // Column doesn't exist, add it
+                String alterSql = "ALTER TABLE " + tablePrefix + "players ADD COLUMN " + columnName + " " + columnDef;
+                try (PreparedStatement alterStmt = conn.prepareStatement(alterSql)) {
+                    alterStmt.executeUpdate();
+                    Plugin.instance.getLogger().info("Added new column '" + columnName + "' to database.");
+                }
+            }
+        } catch (SQLException e) {
+            // Silently ignore - column might already exist
+        }
     }
 
     private String getMySQLUpsert() {
         return """
             INSERT INTO %splayers (
                 uuid, penis_size, penis_girth, bbc, viagra_boost, gender, boob_size, boob_perkiness,
-                goon_count, cum_on_others, got_cummed_on, exposure_time,
+                experience, goon_count, cum_on_others, got_cummed_on, exposure_time,
                 buttfingers_given, buttfingers_received, viagra_used,
                 fart_count, poop_count, piss_count, jiggle_count, boob_toggle_count, gender_changes,
                 deaths_exposed, damage_gooning, goons_falling, goons_on_fire, creeper_deaths,
                 gooned_nether, gooned_end, gooned_underwater, gooned_desert, gooned_snow, gooned_altitude,
                 max_goons_minute, max_ejaculations_30s, pigs_affected, cows_affected, wolves_affected, cats_affected,
                 unique_cummed_on, unique_got_cummed_by, unique_buttfingered, unique_pissed_near, unique_farted_near,
-                achievements
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mob_goon_counts, achievements
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 penis_size = VALUES(penis_size), penis_girth = VALUES(penis_girth), bbc = VALUES(bbc),
                 viagra_boost = VALUES(viagra_boost), gender = VALUES(gender), boob_size = VALUES(boob_size),
-                boob_perkiness = VALUES(boob_perkiness), goon_count = VALUES(goon_count),
+                boob_perkiness = VALUES(boob_perkiness), experience = VALUES(experience), goon_count = VALUES(goon_count),
                 cum_on_others = VALUES(cum_on_others), got_cummed_on = VALUES(got_cummed_on),
                 exposure_time = VALUES(exposure_time), buttfingers_given = VALUES(buttfingers_given),
                 buttfingers_received = VALUES(buttfingers_received), viagra_used = VALUES(viagra_used),
@@ -390,8 +427,8 @@ public class DatabaseStorageProvider implements StorageProvider {
                 wolves_affected = VALUES(wolves_affected), cats_affected = VALUES(cats_affected),
                 unique_cummed_on = VALUES(unique_cummed_on), unique_got_cummed_by = VALUES(unique_got_cummed_by),
                 unique_buttfingered = VALUES(unique_buttfingered), unique_pissed_near = VALUES(unique_pissed_near),
-                unique_farted_near = VALUES(unique_farted_near), achievements = VALUES(achievements),
-                updated_at = CURRENT_TIMESTAMP
+                unique_farted_near = VALUES(unique_farted_near), mob_goon_counts = VALUES(mob_goon_counts),
+                achievements = VALUES(achievements), updated_at = CURRENT_TIMESTAMP
             """.formatted(tablePrefix);
     }
 
@@ -399,19 +436,19 @@ public class DatabaseStorageProvider implements StorageProvider {
         return """
             INSERT INTO %splayers (
                 uuid, penis_size, penis_girth, bbc, viagra_boost, gender, boob_size, boob_perkiness,
-                goon_count, cum_on_others, got_cummed_on, exposure_time,
+                experience, goon_count, cum_on_others, got_cummed_on, exposure_time,
                 buttfingers_given, buttfingers_received, viagra_used,
                 fart_count, poop_count, piss_count, jiggle_count, boob_toggle_count, gender_changes,
                 deaths_exposed, damage_gooning, goons_falling, goons_on_fire, creeper_deaths,
                 gooned_nether, gooned_end, gooned_underwater, gooned_desert, gooned_snow, gooned_altitude,
                 max_goons_minute, max_ejaculations_30s, pigs_affected, cows_affected, wolves_affected, cats_affected,
                 unique_cummed_on, unique_got_cummed_by, unique_buttfingered, unique_pissed_near, unique_farted_near,
-                achievements
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                mob_goon_counts, achievements
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (uuid) DO UPDATE SET
                 penis_size = EXCLUDED.penis_size, penis_girth = EXCLUDED.penis_girth, bbc = EXCLUDED.bbc,
                 viagra_boost = EXCLUDED.viagra_boost, gender = EXCLUDED.gender, boob_size = EXCLUDED.boob_size,
-                boob_perkiness = EXCLUDED.boob_perkiness, goon_count = EXCLUDED.goon_count,
+                boob_perkiness = EXCLUDED.boob_perkiness, experience = EXCLUDED.experience, goon_count = EXCLUDED.goon_count,
                 cum_on_others = EXCLUDED.cum_on_others, got_cummed_on = EXCLUDED.got_cummed_on,
                 exposure_time = EXCLUDED.exposure_time, buttfingers_given = EXCLUDED.buttfingers_given,
                 buttfingers_received = EXCLUDED.buttfingers_received, viagra_used = EXCLUDED.viagra_used,
@@ -428,13 +465,20 @@ public class DatabaseStorageProvider implements StorageProvider {
                 wolves_affected = EXCLUDED.wolves_affected, cats_affected = EXCLUDED.cats_affected,
                 unique_cummed_on = EXCLUDED.unique_cummed_on, unique_got_cummed_by = EXCLUDED.unique_got_cummed_by,
                 unique_buttfingered = EXCLUDED.unique_buttfingered, unique_pissed_near = EXCLUDED.unique_pissed_near,
-                unique_farted_near = EXCLUDED.unique_farted_near, achievements = EXCLUDED.achievements,
-                updated_at = CURRENT_TIMESTAMP
+                unique_farted_near = EXCLUDED.unique_farted_near, mob_goon_counts = EXCLUDED.mob_goon_counts,
+                achievements = EXCLUDED.achievements, updated_at = CURRENT_TIMESTAMP
             """.formatted(tablePrefix);
     }
 
     private PlayerStats loadStatsFromRow(ResultSet rs) throws SQLException {
         PlayerStats stats = new PlayerStats();
+        
+        // Experience points
+        try {
+            stats.experience = rs.getLong("experience");
+        } catch (SQLException e) {
+            stats.experience = 0; // Column might not exist yet
+        }
         
         stats.goonCount = rs.getInt("goon_count");
         stats.cumOnOthersCount = rs.getInt("cum_on_others");
@@ -474,7 +518,42 @@ public class DatabaseStorageProvider implements StorageProvider {
         stats.uniquePlayersPissedNear = parseUUIDSet(rs.getString("unique_pissed_near"));
         stats.uniquePlayersFartedNear = parseUUIDSet(rs.getString("unique_farted_near"));
         
+        // Parse mob goon counts
+        try {
+            String mobGoonStr = rs.getString("mob_goon_counts");
+            stats.mobGoonCounts = parseMobGoonCounts(mobGoonStr);
+        } catch (SQLException e) {
+            // Column might not exist yet
+        }
+        
         return stats;
+    }
+    
+    private java.util.Map<String, Integer> parseMobGoonCounts(String str) {
+        java.util.Map<String, Integer> map = new java.util.HashMap<>();
+        if (str == null || str.isEmpty()) return map;
+        
+        // Format: "mob_type:count,mob_type:count,..."
+        for (String entry : str.split(",")) {
+            String[] parts = entry.split(":");
+            if (parts.length == 2) {
+                try {
+                    map.put(parts[0].trim(), Integer.parseInt(parts[1].trim()));
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+        return map;
+    }
+    
+    private String serializeMobGoonCounts(java.util.Map<String, Integer> map) {
+        if (map == null || map.isEmpty()) return "";
+        
+        StringBuilder sb = new StringBuilder();
+        for (var entry : map.entrySet()) {
+            if (sb.length() > 0) sb.append(",");
+            sb.append(entry.getKey()).append(":").append(entry.getValue());
+        }
+        return sb.toString();
     }
 
     private String serializeUUIDSet(Set<UUID> set) {

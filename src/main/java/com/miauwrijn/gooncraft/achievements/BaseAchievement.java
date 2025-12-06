@@ -17,9 +17,15 @@ public abstract class BaseAchievement {
     protected final long threshold;
     protected final boolean hidden;
     protected final String rarity; // "common", "uncommon", "rare", "mythic", "legendary"
+    protected final long xpReward; // XP awarded when unlocked
     
     public BaseAchievement(String id, String name, String description, 
                           String category, long threshold, boolean hidden, String rarity) {
+        this(id, name, description, category, threshold, hidden, rarity, calculateDefaultXp(rarity));
+    }
+    
+    public BaseAchievement(String id, String name, String description, 
+                          String category, long threshold, boolean hidden, String rarity, long xpReward) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,6 +38,22 @@ public abstract class BaseAchievement {
             normalizedRarity = "mythic";
         }
         this.rarity = normalizedRarity;
+        this.xpReward = xpReward > 0 ? xpReward : calculateDefaultXp(this.rarity);
+    }
+    
+    /**
+     * Calculate default XP reward based on rarity.
+     */
+    private static long calculateDefaultXp(String rarity) {
+        if (rarity == null) return 5;
+        return switch (rarity.toLowerCase()) {
+            case "legendary" -> 100;
+            case "mythic" -> 50;
+            case "rare" -> 25;
+            case "uncommon" -> 15;
+            case "common" -> 5;
+            default -> 5;
+        };
     }
     
     // Getters
@@ -42,6 +64,7 @@ public abstract class BaseAchievement {
     public long getThreshold() { return threshold; }
     public boolean isHidden() { return hidden; }
     public String getRarity() { return rarity; }
+    public long getXpReward() { return xpReward; }
     
     /**
      * Get rarity order for sorting (higher = rarer).
