@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
-import com.miauwrijn.gooncraft.managers.SkillPointsManager;
+import com.miauwrijn.gooncraft.handlers.SkillPointsHandler;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
@@ -153,7 +153,7 @@ public class StatsGUI extends GUI {
         
         // Skill Points button (only show for self)
         if (isSelf) {
-            int skillPoints = SkillPointsManager.getSkillPoints(target);
+            int skillPoints = SkillPointsHandler.getSkillPoints(target);
             setItem(slot(4, 2), new ItemBuilder(Material.EMERALD)
                     .name("§a§lSkill Points")
                     .lore(

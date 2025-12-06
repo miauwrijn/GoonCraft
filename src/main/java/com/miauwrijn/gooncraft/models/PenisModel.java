@@ -19,7 +19,7 @@ import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
 import com.miauwrijn.gooncraft.data.PenisStatistics;
-import com.miauwrijn.gooncraft.handlers.BodilyFunctionsHandler;
+import com.miauwrijn.gooncraft.util.AnimalInteractionHandler;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.CooldownManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
@@ -216,7 +216,7 @@ public class PenisModel implements Runnable {
         if (isEjaculating) {
             spawnCumParticles();
             // Easter egg: Check for nearby sheep/chickens to cover in white
-            BodilyFunctionsHandler.checkForAnimals(owner, "white");
+            AnimalInteractionHandler.checkForAnimals(owner, "white");
         }
     }
 

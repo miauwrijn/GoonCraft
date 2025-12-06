@@ -313,7 +313,7 @@ public class AchievementManager {
         
         if (oldRank != newRank) {
             // Player ranked up!
-            com.miauwrijn.gooncraft.managers.SkillPointsManager.awardSkillPointsOnRankUp(player, newRank);
+            com.miauwrijn.gooncraft.handlers.SkillPointsHandler.awardSkillPointsOnRankUp(player, newRank);
             
             // Apply rank perks (they'll be applied by applyAllRankPerks which checks up to current rank)
             RankPerkManager.applyAllRankPerks(player);

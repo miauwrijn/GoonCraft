@@ -1,6 +1,9 @@
 target/
 server-data/
 
+# Compiled Java classes (should only be in target/)
+*.class
+
 # IDE
 .idea/
 *.iml

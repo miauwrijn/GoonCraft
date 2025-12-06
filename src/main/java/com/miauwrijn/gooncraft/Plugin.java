@@ -8,13 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.miauwrijn.gooncraft.gui.GUIListener;
+import com.miauwrijn.gooncraft.gui.SkillPointsGUI;
 import com.miauwrijn.gooncraft.handlers.BodilyFunctionsHandler;
 import com.miauwrijn.gooncraft.handlers.BoobsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.ButtFingerCommandHandler;
 import com.miauwrijn.gooncraft.handlers.GenderCommandHandler;
 import com.miauwrijn.gooncraft.handlers.GenitalsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.PenisCommandHandler;
-import com.miauwrijn.gooncraft.handlers.SkillPointsCommandHandler;
+import com.miauwrijn.gooncraft.handlers.SkillPointsHandler;
 import com.miauwrijn.gooncraft.handlers.StatsCommandHandler;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
@@ -72,11 +73,6 @@ public class Plugin extends JavaPlugin {
         getCommand("gender").setExecutor(new GenderCommandHandler());
         getCommand("boobs").setExecutor(new BoobsCommandHandler());
         getCommand("genitals").setExecutor(new GenitalsCommandHandler());
-        
-        // Skill points
-        SkillPointsCommandHandler skillPointsHandler = new SkillPointsCommandHandler();
-        getCommand("skillpoints").setExecutor(skillPointsHandler);
-        getCommand("resetskillpoints").setExecutor(skillPointsHandler);
 
         LOGGER.info("GoonCraft enabled! Time to get weird.");
     }
@@ -112,6 +108,7 @@ public class Plugin extends JavaPlugin {
             case "achievements" -> statsHandler.handleAchievements(sender, subArgs);
             case "leaderboard", "lb" -> statsHandler.handleLeaderboard(sender, subArgs);
             case "perks", "perkmanagement" -> statsHandler.handlePerks(sender, subArgs);
+            case "skillpoints", "sp" -> handleSkillPoints(sender, subArgs);
             case "help" -> {
                 showHelp(sender);
                 yield true;
@@ -138,6 +135,91 @@ public class Plugin extends JavaPlugin {
         sender.sendMessage("§aGoonCraft config reloaded!");
         return true;
     }
+
+    private boolean handleSkillPoints(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player viewer)) {
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
+            return true;
+        }
+
+        // No args: open GUI for self
+        if (args.length == 0) {
+            new SkillPointsGUI(viewer, viewer).open();
+            return true;
+        }
+
+        // Check if first arg is a player name
+        Player target = getServer().getPlayer(args[0]);
+        
+        if (target == null) {
+            sender.sendMessage("§cPlayer not found: " + args[0]);
+            return true;
+        }
+
+        // One arg: open GUI for target player (if viewing others)
+        if (args.length == 1) {
+            new SkillPointsGUI(viewer, target).open();
+            return true;
+        }
+
+        // Admin commands: /gc skillpoints <username> <set/add/remove> <count>
+        if (!viewer.hasPermission("gooncraft.skillpoints.admin")) {
+            sender.sendMessage(ConfigManager.getMessage("no-permission"));
+            return true;
+        }
+
+        String action = args[1].toLowerCase();
+        
+        if (!action.equals("set") && !action.equals("add") && !action.equals("remove")) {
+            sender.sendMessage("§cInvalid action. Use: set, add, or remove");
+            sender.sendMessage("§7Usage: /gc skillpoints <player> <set/add/remove> <amount>");
+            return true;
+        }
+
+        if (args.length < 3) {
+            sender.sendMessage("§cUsage: /gc skillpoints <player> <set/add/remove> <amount>");
+            return true;
+        }
+
+        int amount;
+        try {
+            amount = Integer.parseInt(args[2]);
+            if (amount < 0) {
+                sender.sendMessage("§cAmount must be positive!");
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            sender.sendMessage("§cInvalid number: " + args[2]);
+            return true;
+        }
+
+        switch (action) {
+            case "set":
+                SkillPointsHandler.setSkillPoints(target, amount);
+                sender.sendMessage("§a§l✓ Set " + target.getName() + "'s skill points to " + amount);
+                if (target.isOnline()) {
+                    target.sendMessage("§6Your skill points have been set to " + amount + " by " + viewer.getName());
+                }
+                break;
+            case "add":
+                SkillPointsHandler.addSkillPoints(target, amount);
+                sender.sendMessage("§a§l✓ Added " + amount + " skill points to " + target.getName());
+                if (target.isOnline()) {
+                    target.sendMessage("§6§l+ " + amount + " Skill Point" + (amount > 1 ? "s" : "") + "! §7(Given by " + viewer.getName() + ")");
+                }
+                break;
+            case "remove":
+                int currentPoints = SkillPointsHandler.getSkillPoints(target);
+                SkillPointsHandler.removeSkillPoints(target, amount);
+                sender.sendMessage("§a§l✓ Removed " + amount + " skill points from " + target.getName() + " (had " + currentPoints + ")");
+                if (target.isOnline()) {
+                    target.sendMessage("§c§l- " + amount + " Skill Point" + (amount > 1 ? "s" : "") + " §7(Removed by " + viewer.getName() + ")");
+                }
+                break;
+        }
+        
+        return true;
+    }
     
     private void showHelp(CommandSender sender) {
         sender.sendMessage("");
@@ -148,6 +230,8 @@ public class Plugin extends JavaPlugin {
         sender.sendMessage("§e/gc achievements §7[player] §8- View achievements");
         sender.sendMessage("§e/gc leaderboard §8- View leaderboard GUI");
         sender.sendMessage("§e/gc perks §7[player] §8- Manage rank perks");
+        sender.sendMessage("§e/gc skillpoints §7[player] §8- View skill points shop");
+        sender.sendMessage("§e/gc skillpoints §7<player> <set/add/remove> <count> §8- Admin skill points §c(OP)");
         sender.sendMessage("§e/gc reload §8- Reload config §c(OP)");
         sender.sendMessage("");
         sender.sendMessage("§d§lGender & Body:");

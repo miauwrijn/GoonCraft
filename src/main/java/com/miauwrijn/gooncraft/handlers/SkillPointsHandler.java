@@ -1,4 +1,4 @@
-package com.miauwrijn.gooncraft.managers;
+package com.miauwrijn.gooncraft.handlers;
 
 import org.bukkit.entity.Player;
 
@@ -6,9 +6,9 @@ import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;
 
 /**
- * Manages skill points system - awards points on rank up and tracks purchases.
+ * Handles skill points system - awards points on rank up and tracks purchases.
  */
-public class SkillPointsManager {
+public class SkillPointsHandler {
 
     /**
      * Awards skill points when a player ranks up.
@@ -112,3 +112,4 @@ public class SkillPointsManager {
         return true;
     }
 }
+

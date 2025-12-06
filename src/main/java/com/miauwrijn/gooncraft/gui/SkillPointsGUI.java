@@ -7,7 +7,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import com.miauwrijn.gooncraft.managers.SkillPointsManager;
+import com.miauwrijn.gooncraft.handlers.SkillPointsHandler;
 import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;
 
@@ -29,7 +29,7 @@ public class SkillPointsGUI extends GUI {
         inventory.clear();
         clickHandlers.clear();
         
-        int skillPoints = SkillPointsManager.getSkillPoints(target);
+        int skillPoints = SkillPointsHandler.getSkillPoints(target);
         
         // Top border
         fillBorder(ItemBuilder.filler(Material.ORANGE_STAINED_GLASS_PANE));
@@ -57,7 +57,7 @@ public class SkillPointsGUI extends GUI {
         
         for (int i = startIndex; i < Math.min(startIndex + 28, allPerks.length); i++) {
             Perk perk = allPerks[i];
-            boolean hasPerk = SkillPointsManager.hasPerk(target, perk.id);
+            boolean hasPerk = SkillPointsHandler.hasPerk(target, perk.id);
             boolean canAfford = skillPoints >= perk.cost;
             boolean isEnabled = !disabledPerks.contains(perk.id);
             
@@ -115,7 +115,7 @@ public class SkillPointsGUI extends GUI {
             if (!hasPerk && canAfford) {
                 // Can purchase
                 setItem(slotIndex, builder.build(), event -> {
-                    if (SkillPointsManager.purchasePerk(target, finalPerk.id, finalPerk.cost)) {
+                    if (SkillPointsHandler.purchasePerk(target, finalPerk.id, finalPerk.cost)) {
                         viewer.sendMessage("§a§l✓ Purchased: " + finalPerk.name);
                         render(); // Refresh GUI
                     } else {

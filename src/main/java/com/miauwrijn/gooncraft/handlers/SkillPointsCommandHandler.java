@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.gui.SkillPointsGUI;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
-import com.miauwrijn.gooncraft.managers.SkillPointsManager;
 
 /**
  * Handles skill points related commands.
@@ -51,7 +50,7 @@ public class SkillPointsCommandHandler implements CommandExecutor {
         }
 
         // Reset skill points
-        SkillPointsManager.resetSkillPoints(player);
+        SkillPointsHandler.resetSkillPoints(player);
         player.sendMessage("§a§l✓ Skill points and perks reset!");
         player.sendMessage("§7You can earn them back by ranking up!");
         return true;
