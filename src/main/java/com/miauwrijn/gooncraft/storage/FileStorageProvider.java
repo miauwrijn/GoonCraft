@@ -92,8 +92,10 @@ public class FileStorageProvider implements StorageProvider {
             data.unlockedAchievements = loadAchievements(config);
             
             // Load skill points
-            data.skillPoints = config.getInt("SkillPoints", 0);
-            data.purchasedPerks = new HashSet<>(config.getStringList("PurchasedPerks"));
+            data.skillPoints = config.getInt("SkillPoints.Amount", 0);
+            data.purchasedPerks = new HashSet<>(config.getStringList("SkillPoints.PurchasedPerks"));
+            data.disabledSkillPointPerks = new HashSet<>(config.getStringList("SkillPoints.DisabledPerks"));
+            data.disabledPerks = new HashSet<>(config.getStringList("RankPerks.Disabled"));
             
         } catch (Exception e) {
             Plugin.instance.getLogger().log(Level.WARNING, "Failed to load player data for " + uuid, e);
@@ -138,8 +140,10 @@ public class FileStorageProvider implements StorageProvider {
             saveAchievements(config, data.unlockedAchievements);
             
             // Save skill points
-            config.set("SkillPoints", data.skillPoints);
-            config.set("PurchasedPerks", new ArrayList<>(data.purchasedPerks));
+            config.set("SkillPoints.Amount", data.skillPoints);
+            config.set("SkillPoints.PurchasedPerks", new ArrayList<>(data.purchasedPerks));
+            config.set("SkillPoints.DisabledPerks", new ArrayList<>(data.disabledSkillPointPerks));
+            config.set("RankPerks.Disabled", new ArrayList<>(data.disabledPerks));
             
             config.save(file);
             return true;

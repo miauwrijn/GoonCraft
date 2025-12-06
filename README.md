@@ -28,7 +28,7 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 🍆 **Penis models** with size & girth!
 - 🍑 **Vagina models** for females!
 - 🍈 **Boob models** with size & perkiness stats!
-- 🎖️ **12 Ranks** - From "Innocent Virgin" to "Ultimate Degenerate"
+- 🎖️ **50 Ranks** - From "Innocent Virgin" to "Ultimate Degenerate" (fully customizable via YAML!)
 - 💨 **Bodily Functions** - /fart, /poop, /piss commands
 - 🐑 **Easter Eggs** - Hidden achievements with 6 different animals!
 - 🔄 **Auto-updating config** - New options merge automatically
@@ -65,6 +65,7 @@ Use `/gc` or `/gooncraft` to see all available commands!
 | `/gooncraft stats [player]` | `/gc stats` | Open stats GUI |
 | `/gooncraft achievements [player]` | `/gc achievements` | Open achievements GUI |
 | `/gooncraft leaderboard` | `/gc lb` | Open leaderboard GUI |
+| `/gooncraft perks [player]` | `/gc perks` | Open perk management GUI |
 | `/gooncraft reload` | `/gc reload` | Reload config (OP) |
 
 ### Gender & Body Commands
@@ -169,7 +170,9 @@ Earn ranks by unlocking achievements! Each achievement brings you closer to the 
 
 Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 
-**Click your player head** in the Stats GUI to open the **Rank Roadmap** - a visual S-shaped progression path showing all ranks!
+**Click your player head** in the Stats GUI to open the **Rank Roadmap** - a visual snake-shaped progression path showing all ranks!
+
+**Ranks are fully customizable!** Edit `plugins/GoonCraft/ranks.yml` to add/modify ranks, perks, and skill point rewards. See the [Configuration](#-ranks-configuration-ranksyml) section for details.
 
 ---
 
@@ -188,6 +191,8 @@ Your rank is displayed in the Stats GUI with a progress bar to the next rank!
 - **Unique Players** - Different players you've interacted with
 
 ### Achievement Categories (67 Total)
+
+**Achievements are fully customizable!** Edit `plugins/GoonCraft/achievements.yml` to add/modify achievements. See the [Configuration](#-achievements-configuration-achievementsyml) section for details.
 
 | Category | Count | Examples |
 |----------|-------|----------|
@@ -423,6 +428,258 @@ Achievements:
   FART_1: true
   # ... more achievements
 ```
+
+### 🎖️ Ranks Configuration (`ranks.yml`)
+
+The ranks system is fully configurable via `plugins/GoonCraft/ranks.yml`. This file defines all ranks, their requirements, perks, and skill point rewards.
+
+#### Basic Rank Structure
+
+```yaml
+ranks:
+  rank_id:
+    required_achievements: 5        # Number of achievements needed to unlock
+    display_name: "§aMy Rank"       # Display name (supports color codes)
+    color: "§a"                     # Color code for the rank
+    icon: "⭐"                       # Emoji/icon displayed with the rank
+    description: "A cool rank!"     # Description shown in GUIs
+    skill_points: 2                 # Skill points awarded on rank-up (0+)
+    perks:                          # Optional list of perks
+      - type: cooldown_reduction
+        value: 0.10
+```
+
+#### Perk Types
+
+Ranks can have multiple perks that grant temporary bonuses:
+
+| Perk Type | Description | Value Range | Example |
+|-----------|-------------|-------------|---------|
+| `cooldown_reduction` | Reduces all cooldowns (fart, poop, etc.) | 0.0 - 0.70 (70% max) | `value: 0.10` = 10% faster |
+| `fap_speed` | Multiplies goon speed | 1.0+ | `value: 1.15` = 15% faster |
+| `size_boost` | Temporary +cm to penis size | 1+ | `value: 1` = +1cm |
+| `girth_boost` | Temporary +cm to penis girth | 1+ | `value: 1` = +1cm |
+| `boob_boost` | Temporary +1 cup size to boobs | 1+ | `value: 1` = +1 cup |
+| `cockmaster` | Chickens follow exposed penis | N/A | No value needed |
+| `pussy_magnet` | Cats follow exposed vagina | N/A | No value needed |
+
+#### Example Rank Configuration
+
+```yaml
+ranks:
+  expert:
+    required_achievements: 13
+    display_name: "§dExpert Gooner"
+    color: "§d"
+    icon: "🍆"
+    description: "Expert level achieved! You've mastered the basics and beyond."
+    skill_points: 2
+    perks:
+      - type: size_boost
+        value: 1
+  
+  master:
+    required_achievements: 14
+    display_name: "§5Master Bater"
+    color: "§5"
+    icon: "🎓"
+    description: "Master of the art! You've honed your craft to perfection."
+    skill_points: 3
+    perks:
+      - type: cooldown_reduction
+        value: 0.20
+      - type: cockmaster
+```
+
+#### Important Notes
+
+- **Ranks must be ordered by `required_achievements`** (lowest to highest)
+- **Perks are temporary** - they reset when players log out
+- **Cooldown reduction is capped at 70%** total (across all active ranks)
+- **Perks can be toggled on/off** in the Perk Management GUI (`/gc perks`)
+- The default file contains **50 ranks** from "Innocent Virgin" to "Ultimate Degenerate"
+
+---
+
+### 🏆 Achievements Configuration (`achievements.yml`)
+
+The achievements system is fully configurable via `plugins/GoonCraft/achievements.yml`. This file defines all 67 achievements, their types, requirements, and categories.
+
+#### Basic Achievement Structure
+
+```yaml
+achievements:
+  achievement_id:
+    name: "Achievement Name"
+    description: "What the player did"
+    category: "category_name"
+    type: "stat"                    # or "location", "mob_proximity", "hidden"
+    threshold: 10                   # Required value (1+)
+    hidden: false                   # true for hidden/easter egg achievements
+    stat_category: "goon"           # For type: "stat"
+    location_tag: "nether"          # For type: "location"
+    mob_type: "zombie"              # For type: "mob_proximity"
+```
+
+#### Achievement Types
+
+##### 1. Stat Achievements (`type: "stat"`)
+
+Based on player statistics. Requires `stat_category` field.
+
+```yaml
+first_goon:
+  name: "First Timer"
+  description: "Goon for the first time"
+  category: "goon"
+  type: "stat"
+  threshold: 1
+  stat_category: "goon"             # Must match a tracked stat
+```
+
+**Available Stat Categories:**
+- `goon` - Total goon count
+- `cum_on` - Times cummed on others
+- `got_cummed` - Times got cummed on
+- `time_out` - Total exposure time (in seconds)
+- `bf_given` - Buttfingers given
+- `bf_received` - Buttfingers received
+- `viagra` - Viagra pills used
+- `fart` - Fart count
+- `poop` - Poop count
+- `piss` - Piss count
+- `boob_toggle` - Boob flashes
+- `jiggle` - Boob jiggles
+- `gender_other` - Selected "Other" gender
+- `gender_changes` - Gender change count
+- `damage_goon` - Damage taken while gooning
+- `death_exposed` - Deaths while exposed
+- `goon_fire` - Goons while on fire
+- `goon_falling` - Goons while falling
+- `creeper_death` - Creeper deaths while exposed
+- `unique_cum` - Unique players cummed on
+- `unique_got_cum` - Unique players who cummed on you
+- `unique_piss` - Unique players pissed near
+- `unique_fart` - Unique players farted near
+- `unique_bf` - Unique players buttfingered
+- `speed_goon` - Goons in 60 seconds
+- `rapid_fire` - Ejaculations in 30 seconds
+- `group_goon` - Group goon count
+- `group_goon_3` - Threesome (3 players)
+- `group_goon_5` - Orgy (5 players)
+- `group_goon_7` - Gangbang (7 players)
+
+##### 2. Location Achievements (`type: "location"`)
+
+Achieved by gooning in specific locations. Requires `location_tag` field.
+
+```yaml
+goon_nether:
+  name: "Hot & Bothered"
+  description: "Goon in the Nether"
+  category: "location"
+  type: "location"
+  threshold: 1
+  location_tag: "nether"
+```
+
+**Available Location Tags:**
+- `nether` - The Nether dimension
+- `end` - The End dimension
+- `underwater` - Underwater (breathing potion not required)
+- `desert` - Desert biome
+- `snow` - Snow/ice biomes
+- `high` - Above Y=200
+
+##### 3. Mob Proximity Achievements (`type: "mob_proximity"`)
+
+Achieved by gooning near specific mobs. Requires `mob_type` field.
+
+```yaml
+goon_near_zombie:
+  name: "Zombie Encounter"
+  description: "Goon near a zombie"
+  category: "mob_proximity"
+  type: "mob_proximity"
+  threshold: 1
+  mob_type: "zombie"
+```
+
+**Available Mob Types:**
+- `zombie`, `skeleton`, `creeper`, `spider`, `enderman`
+- `pig`, `cow`, `sheep`, `chicken`, `horse`, `wolf`, `cat`
+- `villager`, `iron_golem`, `llama`, `panda`, `fox`
+- `bee`, `ocelot`, `dolphin`, `turtle`, `squid`
+- `goat`, `allay`, `axolotl`
+
+##### 4. Hidden Achievements (`type: "hidden"`)
+
+Easter egg achievements unlocked manually or through special conditions. Always set `hidden: true`.
+
+```yaml
+shart:
+  name: "Shart Attack"
+  description: "Fart and poop within 5 seconds"
+  category: "hidden"
+  type: "hidden"
+  threshold: 1
+  hidden: true
+```
+
+#### Example Achievement Configurations
+
+**Stat Achievement:**
+```yaml
+goon_100:
+  name: "Coomer"
+  description: "Goon 100 times"
+  category: "goon"
+  type: "stat"
+  threshold: 100
+  stat_category: "goon"
+```
+
+**Location Achievement:**
+```yaml
+goon_end:
+  name: "End Game"
+  description: "Beat the dragon... differently"
+  category: "location"
+  type: "location"
+  threshold: 1
+  location_tag: "end"
+```
+
+**Mob Proximity Achievement:**
+```yaml
+goon_near_creeper:
+  name: "Dangerous Liaison"
+  description: "Goon near a creeper"
+  category: "mob_proximity"
+  type: "mob_proximity"
+  threshold: 1
+  mob_type: "creeper"
+```
+
+**Hidden Achievement:**
+```yaml
+yellow_sheep:
+  name: "Golden Fleece"
+  description: "Dye a sheep yellow in an... unconventional way"
+  category: "hidden"
+  type: "hidden"
+  threshold: 1
+  hidden: true
+```
+
+#### Important Notes
+
+- **Achievement IDs must be unique** (used as internal identifiers)
+- **Threshold** is the value needed (1 = once, 100 = 100 times, etc.)
+- **Hidden achievements** (`hidden: true`) don't appear until unlocked
+- **Categories** are for organization in GUIs
+- The default file contains **67 achievements** (56 visible, 11 hidden)
+- **Reload the config** (`/gc reload`) after editing to apply changes
 
 ---
 

@@ -111,6 +111,7 @@ public class Plugin extends JavaPlugin {
             case "stats" -> statsHandler.handleStats(sender, subArgs);
             case "achievements" -> statsHandler.handleAchievements(sender, subArgs);
             case "leaderboard", "lb" -> statsHandler.handleLeaderboard(sender, subArgs);
+            case "perks", "perkmanagement" -> statsHandler.handlePerks(sender, subArgs);
             case "help" -> {
                 showHelp(sender);
                 yield true;
@@ -146,6 +147,7 @@ public class Plugin extends JavaPlugin {
         sender.sendMessage("§e/gc stats §7[player] §8- View goon statistics");
         sender.sendMessage("§e/gc achievements §7[player] §8- View achievements");
         sender.sendMessage("§e/gc leaderboard §8- View leaderboard GUI");
+        sender.sendMessage("§e/gc perks §7[player] §8- Manage rank perks");
         sender.sendMessage("§e/gc reload §8- Reload config §c(OP)");
         sender.sendMessage("");
         sender.sendMessage("§d§lGender & Body:");

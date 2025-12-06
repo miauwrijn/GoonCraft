@@ -2,11 +2,14 @@ package com.miauwrijn.gooncraft.gui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.managers.SkillPointsManager;
+import com.miauwrijn.gooncraft.storage.PlayerData;
+import com.miauwrijn.gooncraft.storage.StorageManager;
 
 /**
  * GUI for spending skill points on funny perks.
@@ -39,9 +42,13 @@ public class SkillPointsGUI extends GUI {
                     "§7Earn skill points by ranking up!",
                     "§7Spend them on hilarious perks below.",
                     "",
-                    "§8Click perks to purchase"
+                    "§8Click to purchase or toggle perks"
                 )
                 .build());
+        
+        // Get disabled perks
+        PlayerData data = StorageManager.getPlayerData(target);
+        Set<String> disabledPerks = data.disabledSkillPointPerks;
         
         // Display perks
         int slotIndex = 10;
@@ -52,6 +59,7 @@ public class SkillPointsGUI extends GUI {
             Perk perk = allPerks[i];
             boolean hasPerk = SkillPointsManager.hasPerk(target, perk.id);
             boolean canAfford = skillPoints >= perk.cost;
+            boolean isEnabled = !disabledPerks.contains(perk.id);
             
             List<String> lore = new ArrayList<>();
             lore.add("");
@@ -59,7 +67,13 @@ public class SkillPointsGUI extends GUI {
             lore.add("");
             
             if (hasPerk) {
-                lore.add("§a§l✓ PURCHASED");
+                if (isEnabled) {
+                    lore.add("§a§l✓ PURCHASED & ENABLED");
+                    lore.add("§7Click to disable");
+                } else {
+                    lore.add("§e§l✓ PURCHASED & DISABLED");
+                    lore.add("§7Click to enable");
+                }
             } else {
                 lore.add("§7Cost: §e" + perk.cost + " Skill Point" + (perk.cost > 1 ? "s" : ""));
                 if (!canAfford) {
@@ -75,18 +89,31 @@ public class SkillPointsGUI extends GUI {
                 }
             }
             
-            Material material = hasPerk ? Material.EMERALD_BLOCK : (canAfford ? Material.GOLD_INGOT : Material.IRON_INGOT);
+            Material material;
+            if (!hasPerk) {
+                // Not purchased - use barrier for locked
+                material = Material.BARRIER;
+            } else if (isEnabled) {
+                // Purchased and enabled
+                material = Material.EMERALD_BLOCK;
+            } else {
+                // Purchased but disabled
+                material = Material.REDSTONE_BLOCK;
+            }
             
             ItemBuilder builder = new ItemBuilder(material)
-                    .name(perk.icon + " §f§l" + perk.name)
+                    .name((hasPerk && isEnabled ? "§a" : hasPerk ? "§c" : "§7") + perk.icon + " §f§l" + perk.name)
                     .lore(lore);
             
-            if (hasPerk) {
+            if (hasPerk && isEnabled) {
                 builder.glow();
             }
             
+            final Perk finalPerk = perk;
+            final boolean finalIsEnabled = isEnabled;
+            
             if (!hasPerk && canAfford) {
-                final Perk finalPerk = perk;
+                // Can purchase
                 setItem(slotIndex, builder.build(), event -> {
                     if (SkillPointsManager.purchasePerk(target, finalPerk.id, finalPerk.cost)) {
                         viewer.sendMessage("§a§l✓ Purchased: " + finalPerk.name);
@@ -95,7 +122,14 @@ public class SkillPointsGUI extends GUI {
                         viewer.sendMessage("§cFailed to purchase perk!");
                     }
                 });
+            } else if (hasPerk) {
+                // Can toggle
+                setItem(slotIndex, builder.build(), event -> {
+                    toggleSkillPointPerk(target, finalPerk.id, !finalIsEnabled);
+                    render(); // Refresh GUI
+                });
             } else {
+                // Locked - no action
                 setItem(slotIndex, builder.build());
             }
             
@@ -287,5 +321,17 @@ public class SkillPointsGUI extends GUI {
             this.description = description;
             this.effects = java.util.Arrays.asList(effects);
         }
+    }
+    
+    private void toggleSkillPointPerk(Player player, String perkId, boolean enable) {
+        PlayerData data = StorageManager.getPlayerData(player);
+        if (enable) {
+            data.disabledSkillPointPerks.remove(perkId);
+            player.sendMessage("§a§l✓ Enabled perk: " + perkId);
+        } else {
+            data.disabledSkillPointPerks.add(perkId);
+            player.sendMessage("§c§l✗ Disabled perk: " + perkId);
+        }
+        StorageManager.savePlayerData(player.getUniqueId());
     }
 }

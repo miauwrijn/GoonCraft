@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.gui.AchievementsGUI;
 import com.miauwrijn.gooncraft.gui.LeaderboardGUI;
+import com.miauwrijn.gooncraft.gui.PerkManagementGUI;
 import com.miauwrijn.gooncraft.gui.StatsGUI;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
 
@@ -63,6 +64,27 @@ public class StatsCommandHandler {
         
         // Open GUI
         new LeaderboardGUI(player).open();
+        return true;
+    }
+
+    public boolean handlePerks(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
+            return true;
+        }
+        
+        Player target = player;
+        
+        if (args.length > 0) {
+            target = player.getServer().getPlayer(args[0]);
+            if (target == null) {
+                player.sendMessage(ConfigManager.getMessage("player-not-found"));
+                return true;
+            }
+        }
+        
+        // Open GUI
+        new PerkManagementGUI(player, target).open();
         return true;
     }
 }

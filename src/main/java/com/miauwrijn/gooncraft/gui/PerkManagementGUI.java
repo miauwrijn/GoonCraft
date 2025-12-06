@@ -10,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.managers.RankManager;
-import com.miauwrijn.gooncraft.managers.RankPerkManager;
 import com.miauwrijn.gooncraft.ranks.BaseRank;
 import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;

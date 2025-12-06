@@ -7,9 +7,14 @@ description: The Minecraft plugin your server never knew it needed
 commands:
   gooncraft:
     description: GoonCraft main command
-    usage: /<command> <stats|achievements|leaderboard|reload>
+    usage: /<command> <stats|achievements|leaderboard|perks|reload>
     aliases:
       - gc
+  perks:
+    description: Open perk management GUI
+    usage: /<command> [player]
+    aliases:
+      - perkmanagement
   buttfinger:
     description: Buttfinger someone nearby
     usage: /<command> <player>

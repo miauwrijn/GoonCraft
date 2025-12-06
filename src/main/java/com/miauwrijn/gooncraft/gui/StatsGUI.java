@@ -127,7 +127,7 @@ public class StatsGUI extends GUI {
                 .build());
         
         // Achievements button
-        setItem(slot(3, 6), new ItemBuilder(Material.GOLD_INGOT)
+        setItem(slot(3, 2), new ItemBuilder(Material.GOLD_INGOT)
                 .name("§6§lView Achievements")
                 .lore(
                     "§7Click to view achievements!",
@@ -140,7 +140,7 @@ public class StatsGUI extends GUI {
                 event -> new AchievementsGUI(viewer, target).open());
         
         // Leaderboard button
-        setItem(slot(3, 2), new ItemBuilder(Material.DIAMOND)
+        setItem(slot(3, 6), new ItemBuilder(Material.DIAMOND)
                 .name("§b§lLeaderboard")
                 .lore(
                     "§7Click to view the leaderboard!",
@@ -154,7 +154,7 @@ public class StatsGUI extends GUI {
         // Skill Points button (only show for self)
         if (isSelf) {
             int skillPoints = SkillPointsManager.getSkillPoints(target);
-            setItem(slot(3, 6), new ItemBuilder(Material.EMERALD)
+            setItem(slot(4, 2), new ItemBuilder(Material.EMERALD)
                     .name("§a§lSkill Points")
                     .lore(
                         "§7Your skill points: §e" + skillPoints,
@@ -166,6 +166,22 @@ public class StatsGUI extends GUI {
                     .glow()
                     .build(),
                     event -> new SkillPointsGUI(viewer, target).open());
+        }
+        
+        // Perk Management button (only show for self)
+        if (isSelf) {
+            setItem(slot(4, 6), new ItemBuilder(Material.ANVIL)
+                    .name("§6§lPerk Management")
+                    .lore(
+                        "§7Manage your rank perks!",
+                        "",
+                        "§7Toggle perks on/off",
+                        "",
+                        "§e§lClick to open Perk Management!"
+                    )
+                    .glow()
+                    .build(),
+                    event -> new PerkManagementGUI(viewer, target).open());
         }
         
         // Close button

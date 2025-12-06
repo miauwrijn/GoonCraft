@@ -38,6 +38,7 @@ public class PlayerData {
     // ===== Skill Points =====
     public int skillPoints;
     public Set<String> purchasedPerks; // Perks purchased with skill points
+    public Set<String> disabledSkillPointPerks; // Skill point perks that are disabled
     
     // ===== Perk Management =====
     public Set<String> disabledPerks; // Rank perks that are disabled
@@ -47,6 +48,7 @@ public class PlayerData {
         this.unlockedAchievements = new HashSet<>();
         this.skillPoints = 0;
         this.purchasedPerks = new HashSet<>();
+        this.disabledSkillPointPerks = new HashSet<>();
         this.disabledPerks = new HashSet<>();
     }
 
@@ -80,6 +82,7 @@ public class PlayerData {
         copy.stats = this.stats;
         copy.unlockedAchievements = new HashSet<>(this.unlockedAchievements);
         copy.purchasedPerks = new HashSet<>(this.purchasedPerks);
+        copy.disabledSkillPointPerks = new HashSet<>(this.disabledSkillPointPerks);
         copy.disabledPerks = new HashSet<>(this.disabledPerks);
         return copy;
     }
