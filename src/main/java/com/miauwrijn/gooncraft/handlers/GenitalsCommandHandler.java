@@ -124,16 +124,23 @@ public class GenitalsCommandHandler implements CommandExecutor {
         PenisStatistics stats = PenisStatisticManager.getStatistics(player);
         if (stats.penisModel != null) return; // Already showing
 
+        // Create model - size/girth boosts are applied via getEffectiveSize() in setBlockTransformation
         PenisModel model = new PenisModel(player, stats.bbc, stats.size, stats.girth, stats.viagraBoost);
         stats.penisModel = model;
         int taskId = scheduler.scheduleSyncRepeatingTask(Plugin.instance, model, 0, 1L);
         stats.runnableTaskId = taskId;
+        
+        // Reload model to ensure rank boosts are applied
+        if (stats.rankSizeBoost > 0 || stats.rankGirthBoost > 0) {
+            model.reload(stats);
+        }
     }
 
     private void showBoobs(Player player, BukkitScheduler scheduler) {
         if (GenderManager.getActiveBoobModel(player) != null) return; // Already showing
 
-        int size = GenderManager.getBoobSize(player);
+        // Use effective size including rank boosts
+        int size = GenderManager.getEffectiveBoobSize(player);
         int perkiness = GenderManager.getBoobPerkiness(player);
         BoobModel boobs = new BoobModel(player, size, perkiness);
         int taskId = scheduler.scheduleSyncRepeatingTask(Plugin.instance, boobs, 0, 1L);

@@ -7,7 +7,7 @@ description: The Minecraft plugin your server never knew it needed
 commands:
   gooncraft:
     description: GoonCraft main command
-    usage: /<command> <stats|achievements|leaderboard|perks|skillpoints|reload>
+    usage: /<command> <stats|achievements|leaderboard|perks|reload>
     aliases:
       - gc
   perks:
@@ -53,10 +53,6 @@ commands:
     aliases:
       - tits
       - breasts
-  resetskillpoints:
-    description: Reset your skill points and perks
-    usage: /<command> [confirm]
-    permission: gooncraft.skillpoints.reset
 
 permissions:
   gooncraft.reload:
@@ -76,10 +72,4 @@ permissions:
     default: op
   gooncraft.boobs.set:
     description: Allows setting player boob sizes
-    default: op
-  gooncraft.skillpoints.reset:
-    description: Allows resetting skill points
-    default: op
-  gooncraft.skillpoints.admin:
-    description: Allows managing skill points (set/add/remove)
     default: op

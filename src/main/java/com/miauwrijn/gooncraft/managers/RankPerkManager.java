@@ -163,8 +163,8 @@ public class RankPerkManager {
                             }
                         }
                     } else if ("pussy_magnet".equals(animalType)) {
-                        Gender gender = GenderManager.getGender(player);
-                        if (gender == Gender.FEMALE || (gender == Gender.OTHER && GenderManager.getActiveVaginaModel(player) != null)) {
+                        // Check if vagina is actually showing (for both FEMALE and OTHER genders)
+                        if (GenderManager.getActiveVaginaModel(player) != null) {
                             startCatFollowing(player);
                             return;
                         }
@@ -195,12 +195,15 @@ public class RankPerkManager {
             animals.add(chicken);
         });
         
-        // Make chickens follow
+        // Continuously make chickens follow (targets can reset)
         animals.stream()
             .filter(entity -> entity instanceof Chicken)
             .forEach(entity -> {
                 Chicken chicken = (Chicken) entity;
-                chicken.setTarget(player);
+                // Always set target to ensure they keep following
+                if (chicken.getTarget() != player) {
+                    chicken.setTarget(player);
+                }
             });
     }
     
@@ -222,12 +225,15 @@ public class RankPerkManager {
             animals.add(cat);
         });
         
-        // Make cats follow
+        // Continuously make cats follow (targets can reset)
         animals.stream()
             .filter(entity -> entity instanceof Cat)
             .forEach(entity -> {
                 Cat cat = (Cat) entity;
-                cat.setTarget(player);
+                // Always set target to ensure they keep following
+                if (cat.getTarget() != player) {
+                    cat.setTarget(player);
+                }
             });
     }
     

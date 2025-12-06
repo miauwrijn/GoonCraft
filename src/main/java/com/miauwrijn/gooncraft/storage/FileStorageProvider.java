@@ -12,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -61,15 +62,26 @@ public class FileStorageProvider implements StorageProvider {
         PlayerData data = new PlayerData(uuid);
         
         if (!file.exists()) {
-            return data; // Return empty data
+            // New player - initialize with random starting sizes
+            data.penisSize = PenisModel.getRandomSize();
+            data.penisGirth = PenisModel.getRandomGirth();
+            data.bbc = PenisModel.getRandomBbc();
+            data.boobSize = BoobModel.getRandomSize();
+            data.boobPerkiness = BoobModel.getRandomPerkiness();
+            return data;
         }
         
         try {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
             
             // Load penis data
-            data.penisSize = config.getInt("Penis.Size", PenisModel.getRandomSize());
-            data.penisGirth = config.getInt("Penis.Girth", PenisModel.getRandomGirth());
+            // If value is 0 or missing, initialize with random starting size
+            int penisSize = config.getInt("Penis.Size", 0);
+            data.penisSize = penisSize > 0 ? penisSize : PenisModel.getRandomSize();
+            
+            int penisGirth = config.getInt("Penis.Girth", 0);
+            data.penisGirth = penisGirth > 0 ? penisGirth : PenisModel.getRandomGirth();
+            
             data.bbc = config.getBoolean("Penis.BBC", PenisModel.getRandomBbc());
             data.viagraBoost = config.getInt("Penis.ViagraBoost", 0);
             
@@ -82,8 +94,12 @@ public class FileStorageProvider implements StorageProvider {
             }
             
             // Load boob data
-            data.boobSize = config.getInt("Boobs.Size", BoobModel.getRandomSize());
-            data.boobPerkiness = config.getInt("Boobs.Perkiness", BoobModel.getRandomPerkiness());
+            // If value is 0 or missing, initialize with random starting size
+            int boobSize = config.getInt("Boobs.Size", 0);
+            data.boobSize = boobSize > 0 ? boobSize : BoobModel.getRandomSize();
+            
+            int boobPerkiness = config.getInt("Boobs.Perkiness", 0);
+            data.boobPerkiness = boobPerkiness > 0 ? boobPerkiness : BoobModel.getRandomPerkiness();
             
             // Load statistics
             data.stats = loadStats(config);
@@ -91,10 +107,7 @@ public class FileStorageProvider implements StorageProvider {
             // Load achievements
             data.unlockedAchievements = loadAchievements(config);
             
-            // Load skill points
-            data.skillPoints = config.getInt("SkillPoints.Amount", 0);
-            data.purchasedPerks = new HashSet<>(config.getStringList("SkillPoints.PurchasedPerks"));
-            data.disabledSkillPointPerks = new HashSet<>(config.getStringList("SkillPoints.DisabledPerks"));
+            // Load rank perk settings
             data.disabledPerks = new HashSet<>(config.getStringList("RankPerks.Disabled"));
             
         } catch (Exception e) {
@@ -139,10 +152,7 @@ public class FileStorageProvider implements StorageProvider {
             // Save achievements
             saveAchievements(config, data.unlockedAchievements);
             
-            // Save skill points
-            config.set("SkillPoints.Amount", data.skillPoints);
-            config.set("SkillPoints.PurchasedPerks", new ArrayList<>(data.purchasedPerks));
-            config.set("SkillPoints.DisabledPerks", new ArrayList<>(data.disabledSkillPointPerks));
+            // Save rank perk settings
             config.set("RankPerks.Disabled", new ArrayList<>(data.disabledPerks));
             
             config.save(file);
@@ -312,9 +322,34 @@ public class FileStorageProvider implements StorageProvider {
     private Set<Achievement> loadAchievements(FileConfiguration config) {
         Set<Achievement> unlocked = EnumSet.noneOf(Achievement.class);
         
-        for (Achievement achievement : Achievement.values()) {
-            if (config.getBoolean("Achievements." + achievement.name(), false)) {
-                unlocked.add(achievement);
+        // Try new format first (list of achievement IDs)
+        if (config.isList("Achievements")) {
+            // New format: list of achievement IDs
+            List<String> achievementIds = config.getStringList("Achievements");
+            for (String id : achievementIds) {
+                try {
+                    // Convert lowercase ID to enum name (uppercase with underscores)
+                    String enumName = id.toUpperCase().replace("-", "_");
+                    Achievement achievement = Achievement.valueOf(enumName);
+                    unlocked.add(achievement);
+                } catch (IllegalArgumentException ignored) {
+                    // Achievement ID not found in enum, skip it
+                }
+            }
+        } else {
+            // Old format: boolean map - migrate from old format
+            ConfigurationSection achievementsSection = config.getConfigurationSection("Achievements");
+            if (achievementsSection != null) {
+                for (String key : achievementsSection.getKeys(false)) {
+                    if (achievementsSection.getBoolean(key, false)) {
+                        try {
+                            Achievement achievement = Achievement.valueOf(key.toUpperCase());
+                            unlocked.add(achievement);
+                        } catch (IllegalArgumentException ignored) {
+                            // Invalid achievement name, skip it
+                        }
+                    }
+                }
             }
         }
         
@@ -324,8 +359,23 @@ public class FileStorageProvider implements StorageProvider {
     private void saveAchievements(FileConfiguration config, Set<Achievement> achievements) {
         if (achievements == null) return;
         
-        for (Achievement achievement : Achievement.values()) {
-            config.set("Achievements." + achievement.name(), achievements.contains(achievement));
+        // Save as simple list of achievement IDs (enum names in lowercase)
+        List<String> achievementIds = new ArrayList<>();
+        for (Achievement achievement : achievements) {
+            achievementIds.add(achievement.name().toLowerCase());
+        }
+        
+        config.set("Achievements", achievementIds);
+        
+        // Remove old format if it exists (clean up boolean map)
+        ConfigurationSection oldSection = config.getConfigurationSection("Achievements");
+        if (oldSection != null && !config.isList("Achievements")) {
+            // This shouldn't happen, but just in case - clear the old section
+            for (String key : oldSection.getKeys(false)) {
+                if (!key.equals("Achievements")) {
+                    config.set("Achievements." + key, null);
+                }
+            }
         }
     }
 }

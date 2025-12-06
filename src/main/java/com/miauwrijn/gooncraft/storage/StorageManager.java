@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.managers.RankPerkManager;
+import com.miauwrijn.gooncraft.models.BoobModel;
+import com.miauwrijn.gooncraft.models.PenisModel;
 import com.miauwrijn.gooncraft.storage.DatabaseStorageProvider.DatabaseType;
 
 /**
@@ -196,7 +198,31 @@ public class StorageManager implements Listener {
         
         // Load async to not block join
         provider.loadPlayerDataAsync(player.getUniqueId()).thenAccept(data -> {
+            // Initialize genital sizes if they're 0 (uninitialized)
+            boolean needsSave = false;
+            if (data.penisSize <= 0) {
+                data.penisSize = PenisModel.getRandomSize();
+                needsSave = true;
+            }
+            if (data.penisGirth <= 0) {
+                data.penisGirth = PenisModel.getRandomGirth();
+                needsSave = true;
+            }
+            if (data.boobSize <= 0) {
+                data.boobSize = BoobModel.getRandomSize();
+                needsSave = true;
+            }
+            if (data.boobPerkiness <= 0) {
+                data.boobPerkiness = BoobModel.getRandomPerkiness();
+                needsSave = true;
+            }
+            
             cache.put(player.getUniqueId(), data);
+            
+            // Save if we initialized any values
+            if (needsSave) {
+                provider.savePlayerDataAsync(data);
+            }
             
             // Initialize rank perks after data is loaded
             Bukkit.getScheduler().runTaskLater(Plugin.instance, () -> {

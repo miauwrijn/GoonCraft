@@ -249,7 +249,8 @@ public class BoobsCommandHandler implements CommandExecutor {
 
     private void showBoobs(Player player) {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        int size = GenderManager.getBoobSize(player);
+        // Use effective size including rank boosts
+        int size = GenderManager.getEffectiveBoobSize(player);
         int perkiness = GenderManager.getBoobPerkiness(player);
         BoobModel boobs = new BoobModel(player, size, perkiness);
         int taskId = scheduler.scheduleSyncRepeatingTask(Plugin.instance, boobs, 0, 1L);

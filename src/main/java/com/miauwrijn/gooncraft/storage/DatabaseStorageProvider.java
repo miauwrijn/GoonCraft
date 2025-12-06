@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -129,8 +128,13 @@ public class DatabaseStorageProvider implements StorageProvider {
             
             if (rs.next()) {
                 // Penis data
-                data.penisSize = rs.getInt("penis_size");
-                data.penisGirth = rs.getInt("penis_girth");
+                // If value is 0, initialize with random starting size
+                int penisSize = rs.getInt("penis_size");
+                data.penisSize = penisSize > 0 ? penisSize : PenisModel.getRandomSize();
+                
+                int penisGirth = rs.getInt("penis_girth");
+                data.penisGirth = penisGirth > 0 ? penisGirth : PenisModel.getRandomGirth();
+                
                 data.bbc = rs.getBoolean("bbc");
                 data.viagraBoost = rs.getInt("viagra_boost");
                 
@@ -143,8 +147,12 @@ public class DatabaseStorageProvider implements StorageProvider {
                 }
                 
                 // Boob data
-                data.boobSize = rs.getInt("boob_size");
-                data.boobPerkiness = rs.getInt("boob_perkiness");
+                // If value is 0, initialize with random starting size
+                int boobSize = rs.getInt("boob_size");
+                data.boobSize = boobSize > 0 ? boobSize : BoobModel.getRandomSize();
+                
+                int boobPerkiness = rs.getInt("boob_perkiness");
+                data.boobPerkiness = boobPerkiness > 0 ? boobPerkiness : BoobModel.getRandomPerkiness();
                 
                 // Load stats
                 data.stats = loadStatsFromRow(rs);
@@ -152,19 +160,6 @@ public class DatabaseStorageProvider implements StorageProvider {
                 // Load achievements
                 String achievementsStr = rs.getString("achievements");
                 data.unlockedAchievements = parseAchievements(achievementsStr);
-                
-                // Load skill points (if columns exist - graceful fallback for old databases)
-                try {
-                    data.skillPoints = rs.getInt("skill_points");
-                } catch (SQLException e) {
-                    data.skillPoints = 0; // Column doesn't exist yet
-                }
-                try {
-                    String perksStr = rs.getString("purchased_perks");
-                    data.purchasedPerks = parsePerks(perksStr);
-                } catch (SQLException e) {
-                    data.purchasedPerks = new HashSet<>(); // Column doesn't exist yet
-                }
             } else {
                 // New player - set defaults
                 data.penisSize = PenisModel.getRandomSize();
@@ -503,36 +498,26 @@ public class DatabaseStorageProvider implements StorageProvider {
 
     private String serializeAchievements(Set<Achievement> achievements) {
         if (achievements == null || achievements.isEmpty()) return "";
-        return achievements.stream().map(Achievement::name).collect(Collectors.joining(","));
+        // Store as lowercase achievement IDs (matching file format)
+        return achievements.stream()
+            .map(a -> a.name().toLowerCase())
+            .collect(Collectors.joining(","));
     }
 
     private Set<Achievement> parseAchievements(String str) {
         Set<Achievement> set = EnumSet.noneOf(Achievement.class);
         if (str == null || str.isEmpty()) return set;
         
-        for (String name : str.split(",")) {
+        for (String id : str.split(",")) {
             try {
-                set.add(Achievement.valueOf(name.trim()));
-            } catch (IllegalArgumentException ignored) {}
-        }
-        return set;
-    }
-    
-    private Set<String> parsePerks(String str) {
-        Set<String> set = new HashSet<>();
-        if (str == null || str.isEmpty()) return set;
-        
-        for (String perk : str.split(",")) {
-            String trimmed = perk.trim();
-            if (!trimmed.isEmpty()) {
-                set.add(trimmed);
+                // Support both old format (uppercase enum names) and new format (lowercase IDs)
+                String trimmed = id.trim();
+                String enumName = trimmed.toUpperCase();
+                set.add(Achievement.valueOf(enumName));
+            } catch (IllegalArgumentException ignored) {
+                // Invalid achievement ID, skip it
             }
         }
         return set;
-    }
-    
-    private String serializePerks(Set<String> perks) {
-        if (perks == null || perks.isEmpty()) return "";
-        return String.join(",", perks);
     }
 }

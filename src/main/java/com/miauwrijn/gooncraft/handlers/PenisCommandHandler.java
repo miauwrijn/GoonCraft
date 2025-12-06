@@ -98,10 +98,14 @@ public class PenisCommandHandler implements CommandExecutor {
             showPenis(player, stats);
             player.sendMessage(ConfigManager.getMessage("penis.whipped-out"));
             StatisticsManager.startPenisOutTimer(player);
+            // Check animal following when shown
+            com.miauwrijn.gooncraft.managers.RankPerkManager.checkAnimalFollowing(player);
         } else {
             hidePenis(player);
             player.sendMessage(ConfigManager.getMessage("penis.put-away"));
             StatisticsManager.stopPenisOutTimer(player);
+            // Stop animal following when hidden
+            com.miauwrijn.gooncraft.managers.RankPerkManager.checkAnimalFollowing(player);
         }
         return true;
     }
@@ -265,9 +269,15 @@ public class PenisCommandHandler implements CommandExecutor {
 
     private void showPenis(Player player, PenisStatistics stats) {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        // Create model - size/girth boosts are applied via getEffectiveSize() in setBlockTransformation
         PenisModel penis = new PenisModel(player, stats.bbc, stats.size, stats.girth, stats.viagraBoost);
         int taskId = scheduler.scheduleSyncRepeatingTask(Plugin.instance, penis, 0, 1L);
         PenisStatisticManager.setActivePenis(player, penis, taskId);
+        
+        // Reload model to ensure rank boosts are applied
+        if (stats.rankSizeBoost > 0 || stats.rankGirthBoost > 0) {
+            penis.reload(stats);
+        }
     }
 
     private void hidePenis(Player player) {

@@ -31,6 +31,12 @@ public class PenisModel implements Runnable {
     public static final int maxSize = 30;
     public static final int minGirth = 5;
     public static final int maxGirth = 15;
+    
+    // Starting ranges for new players (minimum 5, random 5-10)
+    private static final int START_SIZE_MIN = 5;
+    private static final int START_SIZE_MAX = 10;
+    private static final int START_GIRTH_MIN = 5;
+    private static final int START_GIRTH_MAX = 10;
 
     private static final int CUM_ANIMATION_DURATION = 10;
     private static final int BASE_EJACULATE_CHANCE = 50; // 1 in 50 for rank 0
@@ -68,12 +74,18 @@ public class PenisModel implements Runnable {
         buildModel();
     }
 
+    /**
+     * Get random starting size for new players (5-10 range).
+     */
     public static int getRandomSize() {
-        return ThreadLocalRandom.current().nextInt(minSize, maxSize + 1);
+        return ThreadLocalRandom.current().nextInt(START_SIZE_MIN, START_SIZE_MAX + 1);
     }
 
+    /**
+     * Get random starting girth for new players (5-10 range).
+     */
     public static int getRandomGirth() {
-        return ThreadLocalRandom.current().nextInt(minGirth, maxGirth + 1);
+        return ThreadLocalRandom.current().nextInt(START_GIRTH_MIN, START_GIRTH_MAX + 1);
     }
 
     public static boolean getRandomBbc() {

@@ -94,7 +94,7 @@ public class PerkManagementGUI extends GUI {
             final PerkInfo finalPerk = perk;
             final boolean finalEnabled = isEnabled;
             setItem(slotIndex, builder.build(), event -> {
-                togglePerk(target, finalPerk.id, !finalEnabled);
+                togglePerk(target, finalPerk, !finalEnabled);
                 render(); // Refresh GUI
             });
             
@@ -197,14 +197,15 @@ public class PerkManagementGUI extends GUI {
         return getAllPerksForRank(rank).size();
     }
     
-    private void togglePerk(Player player, String perkId, boolean enable) {
+    private void togglePerk(Player player, PerkInfo perk, boolean enable) {
         PlayerData data = StorageManager.getPlayerData(player);
+        String displayName = perk.icon + " " + perk.name;
         if (enable) {
-            data.disabledPerks.remove(perkId);
-            player.sendMessage("§a§l✓ Enabled perk: " + perkId);
+            data.disabledPerks.remove(perk.id);
+            player.sendMessage("§a§l✓ Enabled perk: " + displayName);
         } else {
-            data.disabledPerks.add(perkId);
-            player.sendMessage("§c§l✗ Disabled perk: " + perkId);
+            data.disabledPerks.add(perk.id);
+            player.sendMessage("§c§l✗ Disabled perk: " + displayName);
         }
         StorageManager.savePlayerData(player.getUniqueId());
     }

@@ -17,17 +17,15 @@ public class BaseRank {
     protected final String color;
     protected final String icon;
     protected final String description;
-    protected final int skillPoints;
     protected final List<BasePerk> perks;
     
     public BaseRank(int requiredAchievements, String displayName, String color, 
-                    String icon, String description, int skillPoints, List<BasePerk> perks) {
+                    String icon, String description, List<BasePerk> perks) {
         this.requiredAchievements = requiredAchievements;
         this.displayName = displayName;
         this.color = color;
         this.icon = icon;
         this.description = description;
-        this.skillPoints = skillPoints;
         this.perks = perks != null ? new ArrayList<>(perks) : new ArrayList<>();
     }
     
@@ -37,7 +35,6 @@ public class BaseRank {
     public String getColor() { return color; }
     public String getIcon() { return icon; }
     public String getDescription() { return description; }
-    public int getSkillPoints() { return skillPoints; }
     
     /**
      * Get list of Perk objects for this rank.

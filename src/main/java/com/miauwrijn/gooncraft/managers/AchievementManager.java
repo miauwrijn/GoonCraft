@@ -300,12 +300,12 @@ public class AchievementManager {
         // Save immediately via StorageManager
         StorageManager.savePlayerData(player.getUniqueId());
         
-        // Check for rank up and award skill points
+        // Check for rank up
         checkRankUp(player);
     }
     
     /**
-     * Check if player ranked up and award skill points.
+     * Check if player ranked up.
      */
     private static void checkRankUp(Player player) {
         com.miauwrijn.gooncraft.ranks.BaseRank oldRank = RankManager.getRankForAchievements(getUnlockedCount(player) - 1);
@@ -313,8 +313,6 @@ public class AchievementManager {
         
         if (oldRank != newRank) {
             // Player ranked up!
-            com.miauwrijn.gooncraft.handlers.SkillPointsHandler.awardSkillPointsOnRankUp(player, newRank);
-            
             // Apply rank perks (they'll be applied by applyAllRankPerks which checks up to current rank)
             RankPerkManager.applyAllRankPerks(player);
             

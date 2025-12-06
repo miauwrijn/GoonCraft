@@ -99,7 +99,6 @@ public class RankBuilder {
             String color = section.getString("color", "§f");
             String icon = section.getString("icon", "⭐");
             String description = section.getString("description", "");
-            int skillPoints = section.getInt("skill_points", 0);
             
             // Build perks
             List<BasePerk> perks = new ArrayList<>();
@@ -114,7 +113,7 @@ public class RankBuilder {
             }
             
             BaseRank rank = new BaseRank(requiredAchievements, displayName, color, 
-                                        icon, description, skillPoints, perks);
+                                        icon, description, perks);
             rank.setOrdinal(ordinal);
             return rank;
             

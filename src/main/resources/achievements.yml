@@ -619,7 +619,7 @@ achievements:
     threshold: 1
     stat_category: "group_goon_7"
   
-  # ===== MOB PROXIMITY ACHIEVEMENTS (23) - Gender Neutral =====
+  # ===== MOB PROXIMITY ACHIEVEMENTS (71) - Gender Neutral =====
   goon_near_zombie:
     name: "Zombie Encounter"
     description: "Goon near a zombie"
@@ -819,4 +819,354 @@ achievements:
     type: "mob_proximity"
     threshold: 1
     mob_type: "axolotl"
+  
+  goon_near_rabbit:
+    name: "Bunny Hop"
+    description: "Goon near a rabbit"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "rabbit"
+  
+  goon_near_bat:
+    name: "Vampire's Delight"
+    description: "Goon near a bat"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "bat"
+  
+  goon_near_mooshroom:
+    name: "Fungi Fun"
+    description: "Goon near a mooshroom"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "mooshroom"
+  
+  goon_near_parrot:
+    name: "Polly Want Some?"
+    description: "Goon near a parrot"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "parrot"
+  
+  goon_near_polar_bear:
+    name: "Arctic Adventure"
+    description: "Goon near a polar bear"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "polar_bear"
+  
+  goon_near_glow_squid:
+    name: "Glowing Good Time"
+    description: "Goon near a glow squid"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "glow_squid"
+  
+  goon_near_hoglin:
+    name: "Hog Wild"
+    description: "Goon near a hoglin"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "hoglin"
+  
+  goon_near_strider:
+    name: "Strider Ride"
+    description: "Goon near a strider"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "strider"
+  
+  goon_near_frog:
+    name: "Ribbit & Rip"
+    description: "Goon near a frog"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "frog"
+  
+  goon_near_camel:
+    name: "Desert Oasis"
+    description: "Goon near a camel"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "camel"
+  
+  goon_near_sniffer:
+    name: "Nose Dive"
+    description: "Goon near a sniffer"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "sniffer"
+  
+  goon_near_warden:
+    name: "Deep Dark Secret"
+    description: "Goon near a warden"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "warden"
+  
+  # ===== ZOMBIE VARIANTS =====
+  goon_near_zombie_villager:
+    name: "Infected Neighbor"
+    description: "Goon near a zombie villager"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "zombie_villager"
+  
+  goon_near_husk:
+    name: "Desert Walker"
+    description: "Goon near a husk"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "husk"
+  
+  goon_near_drowned:
+    name: "Waterlogged"
+    description: "Goon near a drowned"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "drowned"
+  
+  goon_near_zombified_piglin:
+    name: "Nether Walker"
+    description: "Goon near a zombified piglin"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "zombified_piglin"
+  
+  # ===== SKELETON VARIANTS =====
+  goon_near_stray:
+    name: "Frozen Bones"
+    description: "Goon near a stray"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "stray"
+  
+  goon_near_wither_skeleton:
+    name: "Dark Bones"
+    description: "Goon near a wither skeleton"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "wither_skeleton"
+  
+  # ===== SPIDER VARIANTS =====
+  goon_near_cave_spider:
+    name: "Cave Crawler"
+    description: "Goon near a cave spider"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "cave_spider"
+  
+  # ===== OTHER HOSTILE MOBS =====
+  goon_near_blaze:
+    name: "Fire Starter"
+    description: "Goon near a blaze"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "blaze"
+  
+  goon_near_ghast:
+    name: "Ghastly Encounter"
+    description: "Goon near a ghast"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "ghast"
+  
+  goon_near_magma_cube:
+    name: "Hot & Bouncy"
+    description: "Goon near a magma cube"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "magma_cube"
+  
+  goon_near_slime:
+    name: "Bouncy Fun"
+    description: "Goon near a slime"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "slime"
+  
+  goon_near_witch:
+    name: "Witch's Brew"
+    description: "Goon near a witch"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "witch"
+  
+  goon_near_evoker:
+    name: "Magic Hands"
+    description: "Goon near an evoker"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "evoker"
+  
+  goon_near_vindicator:
+    name: "Vengeful Encounter"
+    description: "Goon near a vindicator"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "vindicator"
+  
+  goon_near_pillager:
+    name: "Raider's Reward"
+    description: "Goon near a pillager"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "pillager"
+  
+  goon_near_ravager:
+    name: "Beast Mode"
+    description: "Goon near a ravager"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "ravager"
+  
+  goon_near_shulker:
+    name: "Boxed In"
+    description: "Goon near a shulker"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "shulker"
+  
+  goon_near_phantom:
+    name: "Night Flyer"
+    description: "Goon near a phantom"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "phantom"
+  
+  goon_near_endermite:
+    name: "Tiny Terror"
+    description: "Goon near an endermite"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "endermite"
+  
+  goon_near_silverfish:
+    name: "Rock Crawler"
+    description: "Goon near a silverfish"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "silverfish"
+  
+  goon_near_vex:
+    name: "Ghostly Visitor"
+    description: "Goon near a vex"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "vex"
+  
+  # ===== OTHER PASSIVE/NEUTRAL MOBS =====
+  goon_near_donkey:
+    name: "Donkey Ride"
+    description: "Goon near a donkey"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "donkey"
+  
+  goon_near_mule:
+    name: "Mule Play"
+    description: "Goon near a mule"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "mule"
+  
+  goon_near_wandering_trader:
+    name: "Trading Partner"
+    description: "Goon near a wandering trader"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "wandering_trader"
+  
+  goon_near_snow_golem:
+    name: "Frosty Friend"
+    description: "Goon near a snow golem"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "snow_golem"
+  
+  # ===== AQUATIC MOBS =====
+  goon_near_cod:
+    name: "Fish Market"
+    description: "Goon near a cod"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "cod"
+  
+  goon_near_salmon:
+    name: "Salmony"
+    description: "Goon near a salmon"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "salmon"
+  
+  goon_near_pufferfish:
+    name: "Puff Up"
+    description: "Goon near a pufferfish"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "pufferfish"
+  
+  goon_near_tropical_fish:
+    name: "Tropical Delight"
+    description: "Goon near a tropical fish"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "tropical_fish"
+  
+  goon_near_guardian:
+    name: "Underwater Guardian"
+    description: "Goon near a guardian"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "guardian"
+  
+  goon_near_elder_guardian:
+    name: "Ancient Guardian"
+    description: "Goon near an elder guardian"
+    category: "mob_proximity"
+    type: "mob_proximity"
+    threshold: 1
+    mob_type: "elder_guardian"
 

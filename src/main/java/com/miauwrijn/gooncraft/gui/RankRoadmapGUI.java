@@ -221,12 +221,6 @@ public class RankRoadmapGUI extends GUI {
             }
         }
         
-        // Add skill point reward
-        int skillPoints = rank.getSkillPoints();
-        if (skillPoints > 0) {
-            lore.add("");
-            lore.add("§6§lReward: §e+" + skillPoints + " Skill Point" + (skillPoints > 1 ? "s" : ""));
-        }
         
         lore.add("");
         lore.add(statusLine);

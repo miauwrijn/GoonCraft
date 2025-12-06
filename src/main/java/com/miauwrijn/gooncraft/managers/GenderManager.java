@@ -36,6 +36,9 @@ public class GenderManager implements Listener {
     private static final Map<UUID, Integer> boobTaskIds = new ConcurrentHashMap<>();
     private static final Map<UUID, VaginaModel> activeVaginaModels = new ConcurrentHashMap<>();
     private static final Map<UUID, Integer> vaginaTaskIds = new ConcurrentHashMap<>();
+    
+    // Runtime-only: rank perk boosts for boobs (not persisted, reset on logout)
+    private static final Map<UUID, Integer> rankBoobBoosts = new ConcurrentHashMap<>();
 
     public GenderManager() {
         Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
@@ -70,7 +73,20 @@ public class GenderManager implements Listener {
 
     public static int getBoobSize(Player player) {
         PlayerData data = StorageManager.getPlayerData(player);
-        return data.boobSize > 0 ? data.boobSize : BoobModel.getRandomSize();
+        if (data.boobSize <= 0) {
+            data.boobSize = BoobModel.getRandomSize();
+            StorageManager.savePlayerData(player.getUniqueId());
+        }
+        return data.boobSize;
+    }
+    
+    /**
+     * Get effective boob size including rank boosts.
+     */
+    public static int getEffectiveBoobSize(Player player) {
+        int baseSize = getBoobSize(player);
+        int rankBoost = rankBoobBoosts.getOrDefault(player.getUniqueId(), 0);
+        return Math.min(BoobModel.maxSize, baseSize + rankBoost);
     }
 
     public static void setBoobSize(Player player, int size) {
@@ -78,16 +94,20 @@ public class GenderManager implements Listener {
         data.boobSize = size;
         StorageManager.savePlayerData(player.getUniqueId());
         
-        // Reload active model if exists
+        // Reload active model if exists (use effective size including rank boosts)
         BoobModel model = activeBoobModels.get(player.getUniqueId());
         if (model != null) {
-            model.reload(size, getBoobPerkiness(player));
+            model.reload(getEffectiveBoobSize(player), getBoobPerkiness(player));
         }
     }
 
     public static int getBoobPerkiness(Player player) {
         PlayerData data = StorageManager.getPlayerData(player);
-        return data.boobPerkiness > 0 ? data.boobPerkiness : BoobModel.getRandomPerkiness();
+        if (data.boobPerkiness <= 0) {
+            data.boobPerkiness = BoobModel.getRandomPerkiness();
+            StorageManager.savePlayerData(player.getUniqueId());
+        }
+        return data.boobPerkiness;
     }
 
     public static void setBoobPerkiness(Player player, int perkiness) {
@@ -199,9 +219,40 @@ public class GenderManager implements Listener {
         }, 40L); // 2 second delay
     }
 
+    /**
+     * Add rank boob boost (cumulative).
+     */
+    public static void addRankBoobBoost(Player player, int boost) {
+        UUID uuid = player.getUniqueId();
+        rankBoobBoosts.put(uuid, rankBoobBoosts.getOrDefault(uuid, 0) + boost);
+        
+        // Reload active model if exists
+        BoobModel model = activeBoobModels.get(uuid);
+        if (model != null) {
+            model.reload(getEffectiveBoobSize(player), getBoobPerkiness(player));
+        }
+    }
+    
+    /**
+     * Remove rank boob boost.
+     */
+    public static void removeRankBoobBoost(Player player, int boost) {
+        UUID uuid = player.getUniqueId();
+        int current = rankBoobBoosts.getOrDefault(uuid, 0);
+        rankBoobBoosts.put(uuid, Math.max(0, current - boost));
+        
+        // Reload active model if exists
+        BoobModel model = activeBoobModels.get(uuid);
+        if (model != null) {
+            model.reload(getEffectiveBoobSize(player), getBoobPerkiness(player));
+        }
+    }
+    
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
         clearActiveBoobModel(event.getPlayer());
         clearActiveVaginaModel(event.getPlayer());
+        rankBoobBoosts.remove(uuid);
     }
 }

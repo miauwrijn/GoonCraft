@@ -28,6 +28,12 @@ public class BoobModel implements Runnable {
     public static final int maxSize = 10;
     public static final int minPerkiness = 1;
     public static final int maxPerkiness = 10;
+    
+    // Starting ranges for new players (minimum 5, random 5-10)
+    private static final int START_SIZE_MIN = 5;
+    private static final int START_SIZE_MAX = 10;
+    private static final int START_PERKINESS_MIN = 5;
+    private static final int START_PERKINESS_MAX = 10;
 
     // Cup size names for display
     private static final String[] CUP_SIZES = {
@@ -65,12 +71,18 @@ public class BoobModel implements Runnable {
         buildModel();
     }
 
+    /**
+     * Get random starting size for new players (5-10 range).
+     */
     public static int getRandomSize() {
-        return ThreadLocalRandom.current().nextInt(minSize, maxSize + 1);
+        return ThreadLocalRandom.current().nextInt(START_SIZE_MIN, START_SIZE_MAX + 1);
     }
 
+    /**
+     * Get random starting perkiness for new players (5-10 range).
+     */
     public static int getRandomPerkiness() {
-        return ThreadLocalRandom.current().nextInt(minPerkiness, maxPerkiness + 1);
+        return ThreadLocalRandom.current().nextInt(START_PERKINESS_MIN, START_PERKINESS_MAX + 1);
     }
 
     /**

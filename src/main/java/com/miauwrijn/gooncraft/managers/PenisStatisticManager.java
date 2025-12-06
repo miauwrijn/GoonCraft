@@ -44,7 +44,18 @@ public class PenisStatisticManager implements Listener {
     public static PenisStatistics getStatistics(Player player) {
         return runtimeStats.computeIfAbsent(player.getUniqueId(), k -> {
             PlayerData data = StorageManager.getPlayerData(player);
-            return new PenisStatistics(data.penisSize, data.penisGirth, data.bbc);
+            // Ensure we have valid sizes (0 = uninitialized)
+            int size = data.penisSize > 0 ? data.penisSize : PenisModel.getRandomSize();
+            int girth = data.penisGirth > 0 ? data.penisGirth : PenisModel.getRandomGirth();
+            
+            // Update stored data if we initialized
+            if (data.penisSize <= 0 || data.penisGirth <= 0) {
+                data.penisSize = size;
+                data.penisGirth = girth;
+                StorageManager.savePlayerData(player.getUniqueId());
+            }
+            
+            return new PenisStatistics(size, girth, data.bbc);
         });
     }
 

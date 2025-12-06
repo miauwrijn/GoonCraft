@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
-import com.miauwrijn.gooncraft.handlers.SkillPointsHandler;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
@@ -150,23 +149,6 @@ public class StatsGUI extends GUI {
                 .glow()
                 .build(),
                 event -> new LeaderboardGUI(viewer).open());
-        
-        // Skill Points button (only show for self)
-        if (isSelf) {
-            int skillPoints = SkillPointsHandler.getSkillPoints(target);
-            setItem(slot(4, 2), new ItemBuilder(Material.EMERALD)
-                    .name("§a§lSkill Points")
-                    .lore(
-                        "§7Your skill points: §e" + skillPoints,
-                        "",
-                        "§7Spend them on hilarious perks!",
-                        "",
-                        "§e§lClick to open Skill Points Shop!"
-                    )
-                    .glow()
-                    .build(),
-                    event -> new SkillPointsGUI(viewer, target).open());
-        }
         
         // Perk Management button (only show for self)
         if (isSelf) {
