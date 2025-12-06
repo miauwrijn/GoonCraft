@@ -5,28 +5,24 @@ ranks:
     color: "§7"
     icon: "👶"
     description: "Pure as the driven snow. You haven't discovered the wonders of self-expression yet."
-    skill_points: 0
   curious:
     required_achievements: 1
     display_name: "§aCurious Toucher"
     color: "§a"
     icon: "🤔"
     description: "The first step is always the hardest... or is it the easiest?"
-    skill_points: 1
   beginner:
     required_achievements: 2
     display_name: "§aFirst Steps"
     color: "§a"
     icon: "👣"
     description: "Baby steps! You're learning what your body can do. So innocent, so pure... for now."
-    skill_points: 1
   awakening:
     required_achievements: 3
     display_name: "§eAwakening"
     color: "§e"
     icon: "🌅"
     description: "The veil has been lifted! You're starting to understand the true purpose of your hands."
-    skill_points: 1
     perks:
       - type: cooldown_reduction
         value: 0.05
@@ -36,21 +32,18 @@ ranks:
     color: "§e"
     icon: "🔍"
     description: "Adventure awaits! You're exploring new territories, both in-game and... elsewhere."
-    skill_points: 1
   amateur:
     required_achievements: 5
     display_name: "§eAmateur Stroker"
     color: "§e"
     icon: "✋"
     description: "You're getting the hang of it! Practice makes perfect, they say."
-    skill_points: 1
   practitioner:
     required_achievements: 6
     display_name: "§6Practitioner"
     color: "§6"
     icon: "🎯"
     description: "You've practiced enough to know what you're doing. Or so you think."
-    skill_points: 1
     perks:
       - type: cooldown_reduction
         value: 0.10
@@ -60,28 +53,24 @@ ranks:
     color: "§6"
     icon: "📚"
     description: "Dedication is key! You're studying the art form intensely."
-    skill_points: 1
   enthusiast:
     required_achievements: 8
     display_name: "§6Goon Enthusiast"
     color: "§6"
     icon: "🔥"
     description: "Your passion burns bright! You've become a true enthusiast."
-    skill_points: 2
   passionate:
     required_achievements: 9
     display_name: "§cPassionate Player"
     color: "§c"
     icon: "❤️"
     description: "Your passion knows no bounds! You're in it for the long haul."
-    skill_points: 1
   committed:
     required_achievements: 10
     display_name: "§cCommitted Degenerate"
     color: "§c"
     icon: "💪"
     description: "You've committed to the cause. No turning back now!"
-    skill_points: 1
     perks:
       - type: fap_speed
         value: 1.15
@@ -91,14 +80,12 @@ ranks:
     color: "§c"
     icon: "💦"
     description: "Advanced techniques unlocked! You're getting good at this."
-    skill_points: 2
   skilled:
     required_achievements: 12
     display_name: "§dSkilled Performer"
     color: "§d"
     icon: "🎪"
     description: "Your skills are on display! The show must go on!"
-    skill_points: 1
     perks:
       - type: cockmaster
   expert:
@@ -107,7 +94,6 @@ ranks:
     color: "§d"
     icon: "🍆"
     description: "Expert level achieved! You've mastered the basics and beyond."
-    skill_points: 2
     perks:
       - type: size_boost
         value: 1
@@ -117,7 +103,6 @@ ranks:
     color: "§5"
     icon: "🎓"
     description: "Master of the art! You've honed your craft to perfection."
-    skill_points: 3
     perks:
       - type: cooldown_reduction
         value: 0.20
@@ -127,28 +112,24 @@ ranks:
     color: "§5"
     icon: "🛡️"
     description: "A true veteran! You've seen things... many, many things."
-    skill_points: 1
   professional:
     required_achievements: 16
     display_name: "§5Professional Gooner"
     color: "§5"
     icon: "👑"
     description: "Professional status! You could charge for this expertise."
-    skill_points: 2
   elite:
     required_achievements: 17
     display_name: "§3Elite Exhibitionist"
     color: "§3"
     icon: "⭐"
     description: "Elite tier unlocked! You stand among the best."
-    skill_points: 2
   champion:
     required_achievements: 18
     display_name: "§3Champion"
     color: "§3"
     icon: "🏅"
     description: "Champion of degeneracy! You've earned your title."
-    skill_points: 1
     perks:
       - type: pussy_magnet
   legendary:
@@ -157,7 +138,6 @@ ranks:
     color: "§4"
     icon: "🏆"
     description: "Legendary status! Your name will be remembered... probably."
-    skill_points: 3
     perks:
       - type: size_boost
         value: 1
@@ -167,14 +147,12 @@ ranks:
     color: "§4"
     icon: "⚔️"
     description: "Mythic tier! Stories of your exploits spread far and wide."
-    skill_points: 2
   epic:
     required_achievements: 21
     display_name: "§4Epic Coomer"
     color: "§4"
     icon: "🗡️"
     description: "Epic proportions! Everything about you is larger than life."
-    skill_points: 1
     perks:
       - type: fap_speed
         value: 1.25
@@ -186,14 +164,12 @@ ranks:
     color: "§b"
     icon: "✨"
     description: "Divine intervention! The gods smile upon your dedication."
-    skill_points: 4
   transcendent:
     required_achievements: 23
     display_name: "§bTranscendent"
     color: "§b"
     icon: "🌟"
     description: "You've transcended mortal limitations! Beyond comprehension!"
-    skill_points: 2
     perks:
       - type: cooldown_reduction
         value: 0.25
@@ -203,7 +179,6 @@ ranks:
     color: "§b"
     icon: "☄️"
     description: "Celestial being! The stars themselves watch in awe."
-    skill_points: 1
     perks:
       - type: girth_boost
         value: 1
@@ -213,14 +188,12 @@ ranks:
     color: "§d"
     icon: "🌌"
     description: "Cosmic proportions! Your reach spans galaxies."
-    skill_points: 2
   infinite:
     required_achievements: 26
     display_name: "§dInfinite Gooner"
     color: "§d"
     icon: "♾️"
     description: "Infinite power! Your potential knows no bounds!"
-    skill_points: 3
     perks:
       - type: size_boost
         value: 1
@@ -230,7 +203,6 @@ ranks:
     color: "§5"
     icon: "🔮"
     description: "Eternal glory! You'll be remembered for eons."
-    skill_points: 1
     perks:
       - type: cooldown_reduction
         value: 0.30
@@ -242,7 +214,6 @@ ranks:
     color: "§5"
     icon: "💎"
     description: "Immortality achieved! Your legend never dies!"
-    skill_points: 4
     perks:
       - type: size_boost
         value: 1
@@ -254,7 +225,6 @@ ranks:
     color: "§6"
     icon: "⚡"
     description: "Godlike power! Mortals tremble before you!"
-    skill_points: 3
     perks:
       - type: cooldown_reduction
         value: 0.50
@@ -266,42 +236,36 @@ ranks:
     color: "§6§l"
     icon: "👁️"
     description: "Ultimate status! You've reached the peak of degeneracy!"
-    skill_points: 5
   omnipotent:
     required_achievements: 31
     display_name: "§6§lOmnipotent"
     color: "§6§l"
     icon: "🌠"
     description: "Omnipotent power! Reality bends to your will!"
-    skill_points: 3
   omniscient:
     required_achievements: 33
     display_name: "§d§lOmniscient Coomer"
     color: "§d§l"
     icon: "🔭"
     description: "Omniscient knowledge! You know all the secrets!"
-    skill_points: 2
   almighty:
     required_achievements: 35
     display_name: "§d§lAlmighty"
     color: "§d§l"
     icon: "⚛️"
     description: "Almighty status! Nothing can stop you now!"
-    skill_points: 4
   supreme:
     required_achievements: 37
     display_name: "§5§lSupreme Degenerate"
     color: "§5§l"
     icon: "💫"
     description: "Supreme authority! You rule over all degenerates!"
-    skill_points: 2
   absolute:
     required_achievements: 39
     display_name: "§5§lAbsolute Pervert"
     color: "§5§l"
     icon: "🎭"
     description: "Absolute perfection! The pinnacle of perversion!"
-    skill_points: 3
     perks:
       - type: cooldown_reduction
         value: 0.50
@@ -311,7 +275,6 @@ ranks:
     color: "§4§l"
     icon: "👑"
     description: "Apex predator! You stand at the top of the food chain!"
-    skill_points: 4
     perks:
       - type: fap_speed
         value: 1.50
@@ -323,21 +286,18 @@ ranks:
     color: "§4§l"
     icon: "🔥"
     description: "Prime specimen! The best of the best!"
-    skill_points: 3
   paragon:
     required_achievements: 45
     display_name: "§c§lParagon"
     color: "§c§l"
     icon: "⭐"
     description: "Paragon of virtue! ...wait, that doesn't sound right."
-    skill_points: 2
   phenomenal:
     required_achievements: 47
     display_name: "§c§lPhenomenal Degenerate"
     color: "§c§l"
     icon: "🌙"
     description: "Phenomenal power! Beyond human comprehension!"
-    skill_points: 3
     perks:
       - type: boob_boost
         value: 1
@@ -347,7 +307,6 @@ ranks:
     color: "§e§l"
     icon: "☀️"
     description: "Extraordinary abilities! You've surpassed all expectations!"
-    skill_points: 2
     perks:
       - type: cooldown_reduction
         value: 0.40
@@ -357,7 +316,6 @@ ranks:
     color: "§e§l"
     icon: "💥"
     description: "Exceptionally exceptional! You break all the rules!"
-    skill_points: 4
     perks:
       - type: cooldown_reduction
         value: 1.0
@@ -367,42 +325,36 @@ ranks:
     color: "§6§l"
     icon: "🗿"
     description: "Monumental achievement! A statue should be built in your honor!"
-    skill_points: 4
   revolutionary:
     required_achievements: 55
     display_name: "§6§lRevolutionary"
     color: "§6§l"
     icon: "🚀"
     description: "Revolutionary! You've changed the game forever!"
-    skill_points: 5
   unprecedented:
     required_achievements: 57
     display_name: "§d§lUnprecedented Coomer"
     color: "§d§l"
     icon: "🌊"
     description: "Unprecedented power! No one has ever reached these heights!"
-    skill_points: 4
   incomparable:
     required_achievements: 59
     display_name: "§d§lIncomparable"
     color: "§d§l"
     icon: "🌋"
     description: "Incomparable greatness! There is no equal!"
-    skill_points: 3
   unmatched:
     required_achievements: 61
     display_name: "§5§lUnmatched Degenerate"
     color: "§5§l"
     icon: "⚡"
     description: "Unmatched skill! You are truly one of a kind!"
-    skill_points: 5
   unstoppable:
     required_achievements: 63
     display_name: "§5§lUnstoppable Pervert"
     color: "§5§l"
     icon: "💀"
     description: "Unstoppable force! Nothing can hold you back!"
-    skill_points: 5
     perks:
       - type: fap_speed
         value: 1.60
@@ -412,11 +364,9 @@ ranks:
     color: "§6§l§o"
     icon: "✨"
     description: "Golden status! Pure perfection encased in gold!"
-    skill_points: 5
   ultimatelegend:
     required_achievements: 67
     display_name: "§d§l§o✦ ULTIMATE DEGENERATE ✦"
     color: "§d§l§o"
     icon: "🌟"
     description: "The ultimate legend! You've achieved what was thought impossible!"
-    skill_points: 10

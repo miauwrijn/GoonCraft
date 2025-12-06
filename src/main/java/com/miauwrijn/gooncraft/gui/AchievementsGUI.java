@@ -7,6 +7,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.achievements.BaseAchievement;
 import com.miauwrijn.gooncraft.achievements.StatAchievement;
 import com.miauwrijn.gooncraft.data.PlayerStats;
@@ -21,6 +22,7 @@ public class AchievementsGUI extends GUI {
     private final Player target;
     private int page = 0;
     private String categoryFilter = null;
+    private String sortType = "category"; // "alphabetical", "rarity", "category"
 
     public AchievementsGUI(Player viewer, Player target) {
         super(viewer, "§6§l" + target.getName() + "'s Achievements", 6);
@@ -38,17 +40,18 @@ public class AchievementsGUI extends GUI {
         // Top border with category filters
         fillBorder(ItemBuilder.filler(Material.PURPLE_STAINED_GLASS_PANE));
         
-        // Category filter buttons
-        setCategoryButton(slot(0, 1), "goon", "§d§lGooning", Material.BONE, unlocked);
-        setCategoryButton(slot(0, 2), "cum_on", "§f§lCumming", Material.GHAST_TEAR, unlocked);
-        setCategoryButton(slot(0, 3), "got_cummed", "§a§lGot Cummed", Material.SLIME_BALL, unlocked);
-        setCategoryButton(slot(0, 4), "time_out", "§e§lExposure", Material.CLOCK, unlocked);
-        setCategoryButton(slot(0, 5), "bf_given", "§6§lButtfinger", Material.CARROT, unlocked);
-        setCategoryButton(slot(0, 6), "bf_received", "§c§lGot BF'd", Material.GOLDEN_CARROT, unlocked);
-        setCategoryButton(slot(0, 7), "hidden", "§5§l???", Material.ENDER_EYE, unlocked);
+        // Category filter buttons (only the 5 valid categories)
+        setCategoryButton(slot(0, 2), "location", "§b§lLocation", Material.COMPASS, unlocked);
+        setCategoryButton(slot(0, 3), "gooning", "§d§lGooning", Material.BONE, unlocked);
+        setCategoryButton(slot(0, 4), "exposure", "§e§lExposure", Material.CLOCK, unlocked);
+        setCategoryButton(slot(0, 5), "advanced", "§6§lAdvanced", Material.NETHER_STAR, unlocked);
+        setCategoryButton(slot(0, 6), "hidden", "§5§l???", Material.ENDER_EYE, unlocked);
         
         // Get filtered achievements from YAML
         List<BaseAchievement> achievements = AchievementManager.getAchievementsByCategory(categoryFilter);
+        
+        // Sort achievements
+        achievements = sortAchievements(achievements, sortType);
         
         // Display achievements (28 per page - 4 rows of 7)
         int startIndex = page * 28;
@@ -121,9 +124,17 @@ public class AchievementsGUI extends GUI {
                     "",
                     "§7Unlocked: §e" + unlocked.size() + "§7/§e" + AchievementManager.getTotalAchievements(),
                     "",
-                    categoryFilter != null ? "§7Filter: §e" + getCategoryName(categoryFilter) : "§7Showing all"
+                    categoryFilter != null ? "§7Filter: §e" + getCategoryName(categoryFilter) : "§7Showing all",
+                    "§7Sort: §e" + getSortTypeName(sortType),
+                    "",
+                    "§7Rarities: §fCommon §aUncommon §bRare §5Mythic §6Legendary"
                 )
                 .build());
+        
+        // Sort buttons (bottom row)
+        setSortButton(slot(5, 6), "alphabetical", "§e§lA-Z", Material.BOOK, sortType);
+        setSortButton(slot(5, 7), "rarity", "§6§lRarity", Material.EMERALD, sortType);
+        setSortButton(slot(5, 8), "category", "§b§lCategory", Material.COMPASS, sortType);
         
         // Next page
         if ((page + 1) * 28 < achievements.size()) {
@@ -137,9 +148,9 @@ public class AchievementsGUI extends GUI {
                     });
         }
         
-        // Clear filter
+        // Clear filter (move to slot 5, 2)
         if (categoryFilter != null) {
-            setItem(slot(5, 7), new ItemBuilder(Material.HOPPER)
+            setItem(slot(5, 2), new ItemBuilder(Material.HOPPER)
                     .name("§c§lClear Filter")
                     .lore("§7Show all achievements")
                     .build(),
@@ -151,7 +162,7 @@ public class AchievementsGUI extends GUI {
         }
         
         // Close button
-        setItem(slot(5, 8), new ItemBuilder(Material.BARRIER)
+        setItem(slot(4, 8), new ItemBuilder(Material.BARRIER)
                 .name("§c§lClose")
                 .lore("§7Click to close")
                 .build(),
@@ -200,22 +211,21 @@ public class AchievementsGUI extends GUI {
         // Hidden achievements show as ??? until unlocked
         boolean isHidden = achievement.isHidden() && !isUnlocked;
         
-        Material material;
-        if (isUnlocked) {
-            material = Material.LIME_DYE;
-        } else if (isHidden) {
-            material = Material.PURPLE_DYE;
-        } else {
-            material = Material.GRAY_DYE;
-        }
+        // Material based on rarity
+        Material material = getRarityMaterial(achievement.getRarity(), isUnlocked, isHidden);
         
         String displayName = isHidden ? "§5§k???" : achievement.getName();
         String displayDesc = isHidden ? "§5§oDiscover this secret..." : achievement.getDescription();
         String status = isUnlocked ? "§a§lUNLOCKED" : (isHidden ? "§5§lHIDDEN" : "§c§lLOCKED");
         
+        // Get rarity display
+        String rarityDisplay = achievement.getRarityDisplayName();
+        
         List<String> lore = new ArrayList<>();
         lore.add("");
         lore.add("§7" + displayDesc);
+        lore.add("");
+        lore.add("§7Rarity: " + rarityDisplay);
         lore.add("");
         lore.add(status);
         
@@ -228,8 +238,10 @@ public class AchievementsGUI extends GUI {
             lore.add("§5§oFind the easter egg to unlock!");
         }
         
+        // Use rarity color for unlocked achievements, muted for locked
+        String nameColor = isUnlocked ? achievement.getRarityColor() : (isHidden ? "§5" : "§7");
         ItemBuilder builder = new ItemBuilder(material)
-                .name((isUnlocked ? "§a" : (isHidden ? "§5" : "§7")) + displayName)
+                .name(nameColor + displayName)
                 .lore(lore);
         
         if (isUnlocked) {
@@ -237,6 +249,28 @@ public class AchievementsGUI extends GUI {
         }
         
         return builder.build();
+    }
+    
+    /**
+     * Get material based on rarity.
+     */
+    private Material getRarityMaterial(String rarity, boolean isUnlocked, boolean isHidden) {
+        if (isHidden) {
+            return Material.PURPLE_DYE;
+        }
+        if (!isUnlocked) {
+            return Material.GRAY_DYE;
+        }
+        
+        // Unlocked achievements use rarity-based materials
+        return switch (rarity) {
+            case "legendary" -> Material.NETHERITE_INGOT;
+            case "mythic" -> Material.AMETHYST_SHARD;
+            case "rare" -> Material.DIAMOND;
+            case "uncommon" -> Material.EMERALD;
+            case "common" -> Material.IRON_INGOT;
+            default -> Material.LIME_DYE;
+        };
     }
 
     private String createProgressBar(int percent) {
@@ -269,16 +303,74 @@ public class AchievementsGUI extends GUI {
     }
 
     private String getCategoryName(String category) {
-        return switch (category) {
-            case "goon" -> "Gooning";
-            case "cum_on" -> "Cumming";
-            case "got_cummed" -> "Got Cummed";
-            case "time_out" -> "Exposure";
-            case "bf_given" -> "Buttfinger";
-            case "bf_received" -> "Got BF'd";
-            case "viagra" -> "Viagra";
+        if (category == null) return "All";
+        
+        return switch (category.toLowerCase()) {
+            case "location" -> "Location";
+            case "gooning" -> "Gooning";
+            case "exposure" -> "Exposure";
+            case "advanced" -> "Advanced";
             case "hidden" -> "???";
+            default -> {
+                // Log warning for invalid category
+                Plugin.instance.getLogger().warning(
+                    "AchievementsGUI: Unknown category '" + category + "' requested. Using 'Unknown'."
+                );
+                yield "Unknown";
+            }
+        };
+    }
+    
+    private String getSortTypeName(String sortType) {
+        return switch (sortType) {
+            case "alphabetical" -> "A-Z";
+            case "rarity" -> "Rarity";
+            case "category" -> "Category";
             default -> "Unknown";
         };
+    }
+    
+    private void setSortButton(int slot, String sortType, String name, Material material, String currentSort) {
+        boolean isSelected = sortType.equals(currentSort);
+        
+        ItemBuilder builder = new ItemBuilder(material)
+                .name(name)
+                .lore(
+                    "",
+                    isSelected ? "§aCurrently sorting" : "§7Click to sort by " + getSortTypeName(sortType)
+                )
+                .hideFlags();
+        
+        if (isSelected) {
+            builder.glow();
+        }
+        
+        setItem(slot, builder.build(), event -> {
+            this.sortType = sortType;
+            page = 0; // Reset to first page when changing sort
+            render();
+        });
+    }
+    
+    private List<BaseAchievement> sortAchievements(List<BaseAchievement> achievements, String sortType) {
+        List<BaseAchievement> sorted = new ArrayList<>(achievements);
+        
+        switch (sortType) {
+            case "alphabetical" -> sorted.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+            case "rarity" -> sorted.sort((a, b) -> {
+                int rarityCompare = Integer.compare(b.getRarityOrder(), a.getRarityOrder()); // Higher rarity first
+                if (rarityCompare != 0) return rarityCompare;
+                return a.getName().compareToIgnoreCase(b.getName()); // Then alphabetical
+            });
+            case "category" -> sorted.sort((a, b) -> {
+                int categoryCompare = a.getCategory().compareToIgnoreCase(b.getCategory());
+                if (categoryCompare != 0) return categoryCompare;
+                int rarityCompare = Integer.compare(b.getRarityOrder(), a.getRarityOrder());
+                if (rarityCompare != 0) return rarityCompare;
+                return a.getName().compareToIgnoreCase(b.getName());
+            });
+        }
+        
+        return sorted;
     }
 }

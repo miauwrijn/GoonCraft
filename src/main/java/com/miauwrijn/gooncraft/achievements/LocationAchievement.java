@@ -12,8 +12,8 @@ public class LocationAchievement extends BaseAchievement {
     private final String locationTag;
     
     public LocationAchievement(String id, String name, String description, 
-                              String category, long threshold, boolean hidden, String locationTag) {
-        super(id, name, description, category, threshold, hidden);
+                              String category, long threshold, boolean hidden, String rarity, String locationTag) {
+        super(id, name, description, category, threshold, hidden, rarity);
         this.locationTag = locationTag;
     }
     

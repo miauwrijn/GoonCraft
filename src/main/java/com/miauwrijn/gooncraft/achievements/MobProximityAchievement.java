@@ -13,8 +13,8 @@ public class MobProximityAchievement extends BaseAchievement {
     private final String mobType;
     
     public MobProximityAchievement(String id, String name, String description, 
-                                   String category, long threshold, boolean hidden, String mobType) {
-        super(id, name, description, category, threshold, hidden);
+                                   String category, long threshold, boolean hidden, String rarity, String mobType) {
+        super(id, name, description, category, threshold, hidden, rarity);
         this.mobType = mobType;
     }
     

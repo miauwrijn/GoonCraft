@@ -18,6 +18,7 @@ public class RankRoadmapGUI extends GUI {
 
     private final Player target;
     private int page = 0;
+    private String sortType = "required"; // "required", "rarity", "alphabetical"
     private static final int RANKS_PER_PAGE = 28; // 4 rows of 7 ranks (with snake pattern)
     
     // Snake pattern positions - winds through rows 1-4, columns 1-7
@@ -64,7 +65,20 @@ public class RankRoadmapGUI extends GUI {
         BaseRank currentRank = RankManager.getRank(target);
         int unlockedAchievements = AchievementManager.getUnlockedCount(target);
         BaseRank[] allRanks = RankManager.getAllRanks();
-        int currentRankIndex = currentRank.getOrdinal();
+        
+        // Sort ranks based on sortType
+        List<BaseRank> sortedRanks = sortRanks(new ArrayList<>(List.of(allRanks)), sortType);
+        allRanks = sortedRanks.toArray(new BaseRank[0]);
+        
+        // Recalculate current rank index after sorting
+        int currentRankIndex = -1;
+        for (int i = 0; i < allRanks.length; i++) {
+            if (allRanks[i].getOrdinal() == currentRank.getOrdinal()) {
+                currentRankIndex = i;
+                break;
+            }
+        }
+        if (currentRankIndex == -1) currentRankIndex = 0;
         
         // Fill with dark background
         fill(ItemBuilder.filler(Material.BLACK_STAINED_GLASS_PANE));
@@ -166,12 +180,64 @@ public class RankRoadmapGUI extends GUI {
                     });
         }
         
-        // Close button
-        setItem(slot(5, 8), new ItemBuilder(Material.BARRIER)
+        // Sort buttons
+        setSortButton(slot(5, 6), "required", "§e§lRequired", Material.EMERALD, sortType);
+        setSortButton(slot(5, 7), "rarity", "§6§lRarity", Material.DIAMOND, sortType);
+        setSortButton(slot(5, 8), "alphabetical", "§b§lA-Z", Material.BOOK, sortType);
+        
+        // Close button moved to slot 4, 8
+        setItem(slot(4, 8), new ItemBuilder(Material.BARRIER)
                 .name("§c§lClose")
                 .lore("§7Click to close")
                 .build(),
                 event -> viewer.closeInventory());
+    }
+    
+    private void setSortButton(int slot, String sortType, String name, Material material, String currentSort) {
+        boolean isSelected = sortType.equals(currentSort);
+        
+        ItemBuilder builder = new ItemBuilder(material)
+                .name(name)
+                .lore(
+                    "",
+                    isSelected ? "§aCurrently sorting" : "§7Click to sort by " + getSortTypeName(sortType)
+                )
+                .hideFlags();
+        
+        if (isSelected) {
+            builder.glow();
+        }
+        
+        setItem(slot, builder.build(), event -> {
+            this.sortType = sortType;
+            page = 0; // Reset to first page when changing sort
+            render();
+        });
+    }
+    
+    private String getSortTypeName(String sortType) {
+        return switch (sortType) {
+            case "required" -> "Required Achievements";
+            case "rarity" -> "Rarity";
+            case "alphabetical" -> "Alphabetical";
+            default -> "Unknown";
+        };
+    }
+    
+    private List<BaseRank> sortRanks(List<BaseRank> ranks, String sortType) {
+        List<BaseRank> sorted = new ArrayList<>(ranks);
+        
+        switch (sortType) {
+            case "alphabetical" -> sorted.sort((a, b) -> a.getDisplayName().compareToIgnoreCase(b.getDisplayName()));
+            case "rarity" -> sorted.sort((a, b) -> {
+                int rarityCompare = Integer.compare(b.getRarityOrder(), a.getRarityOrder()); // Higher rarity first
+                if (rarityCompare != 0) return rarityCompare;
+                return Integer.compare(a.getRequiredAchievements(), b.getRequiredAchievements()); // Then by required
+            });
+            case "required" -> sorted.sort((a, b) -> Integer.compare(a.getRequiredAchievements(), b.getRequiredAchievements()));
+        }
+        
+        return sorted;
     }
 
     private ItemBuilder createRankItem(BaseRank rank, boolean isUnlocked, boolean isCurrent, boolean isNext, int unlockedAchievements) {

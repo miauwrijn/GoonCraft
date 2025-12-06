@@ -190,323 +190,323 @@ animals:
     
     cow:
       white: "§f§lCream Cow"
-      brown: ""
-      yellow: ""
+      brown: "§6§lChocolate Milk"
+      yellow: "§e§lButter Cow"
     
     pig:
       white: "§f§lGlazed Ham"
-      brown: ""
-      yellow: ""
+      brown: "§6§lMud Pig"
+      yellow: "§e§lGolden Pig"
     
     sheep:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Sheep"
+      brown: "§6§lMuddy Wool"
+      yellow: "§e§lGolden Fleece"
     
     horse:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Pony"
+      brown: "§6§lMud Stallion"
+      yellow: "§e§lPissed Off Horse"
     
     donkey:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lGlazed Donkey"
+      brown: "§6§lPoopy Ass"
+      yellow: "§e§lGolden Donkey"
     
     mule:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Mule"
+      brown: "§6§lChocolate Mule"
+      yellow: "§e§lLemon Mule"
     
     llama:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Llama"
+      brown: "§6§lPoopy Llama"
+      yellow: "§e§lPissed Llama"
     
     wolf:
-      white: ""
-      brown: ""
+      white: "§f§lFrosted Wolf"
+      brown: "§6§lMuddy Wolf"
       yellow: "§e§lGolden Retriever"
     
     cat:
       white: "§f§lCream Puff"
-      brown: ""
-      yellow: ""
+      brown: "§6§lMuddy Cat"
+      yellow: "§e§lGolden Cat"
     
     ocelot:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Cat"
+      brown: "§6§lMuddy Ocelot"
+      yellow: "§e§lGolden Cat"
     
     fox:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Fox"
+      brown: "§6§lMuddy Fox"
+      yellow: "§e§lGolden Fox"
     
     panda:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Panda"
+      brown: "§6§lMuddy Panda"
+      yellow: "§e§lGolden Panda"
     
     rabbit:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Bunny"
+      brown: "§6§lChocolate Rabbit"
+      yellow: "§e§lGolden Rabbit"
     
     polar_bear:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lExtra Frosty Bear"
+      brown: "§6§lMuddy Polar Bear"
+      yellow: "§e§lGolden Bear"
     
     turtle:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Turtle"
+      brown: "§6§lMuddy Shell"
+      yellow: "§e§lGolden Turtle"
     
     dolphin:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Dolphin"
+      brown: "§6§lMuddy Dolphin"
+      yellow: "§e§lGolden Dolphin"
     
     squid:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Squid"
+      brown: "§6§lInk & Mud"
+      yellow: "§e§lGolden Squid"
     
     glow_squid:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lGlowing Cream"
+      brown: "§6§lGlowing Mud"
+      yellow: "§e§lGlowing Piss"
     
     cod:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Cod"
+      brown: "§6§lMuddy Fish"
+      yellow: "§e§lGolden Fish"
     
     salmon:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Salmon"
+      brown: "§6§lMuddy Salmon"
+      yellow: "§e§lGolden Salmon"
     
     pufferfish:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Puffer"
+      brown: "§6§lMuddy Puffer"
+      yellow: "§e§lGolden Puffer"
     
     tropical_fish:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Tropical"
+      brown: "§6§lMuddy Tropical"
+      yellow: "§e§lGolden Tropical"
     
     axolotl:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Axolotl"
+      brown: "§6§lMuddy Axolotl"
+      yellow: "§e§lGolden Axolotl"
     
     frog:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Frog"
+      brown: "§6§lMuddy Frog"
+      yellow: "§e§lPissed Frog"
     
     goat:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Goat"
+      brown: "§6§lMuddy Goat"
+      yellow: "§e§lGolden Goat"
     
     allay:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Allay"
+      brown: "§6§lMuddy Allay"
+      yellow: "§e§lGolden Allay"
     
     bat:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Bat"
+      brown: "§6§lMuddy Bat"
+      yellow: "§e§lGolden Bat"
     
     parrot:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Parrot"
+      brown: "§6§lMuddy Parrot"
+      yellow: "§e§lGolden Parrot"
     
     mooshroom:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCream Mushroom"
+      brown: "§6§lMuddy Mushroom"
+      yellow: "§e§lGolden Mushroom"
     
     sniffer:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Sniffer"
+      brown: "§6§lMuddy Sniffer"
+      yellow: "§e§lGolden Sniffer"
     
     # Villagers
     villager:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Villager"
+      brown: "§6§lMuddy Villager"
+      yellow: "§e§lPissed Villager"
     
     wandering_trader:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Trader"
+      brown: "§6§lMuddy Trader"
+      yellow: "§e§lPissed Trader"
     
     # Golems
     iron_golem:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Golem"
+      brown: "§6§lRusty Golem"
+      yellow: "§e§lGolden Golem"
     
     snow_golem:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lExtra Frosty"
+      brown: "§6§lMuddy Snowman"
+      yellow: "§e§lGolden Snowman"
     
     # Hostile mobs
     zombie:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Zombie"
+      brown: "§6§lMuddy Zombie"
+      yellow: "§e§lPissed Zombie"
     
     zombie_villager:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Zombie"
+      brown: "§6§lMuddy Zombie"
+      yellow: "§e§lPissed Zombie"
     
     husk:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Husk"
+      brown: "§6§lMuddy Husk"
+      yellow: "§e§lPissed Husk"
     
     drowned:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Drowned"
+      brown: "§6§lMuddy Drowned"
+      yellow: "§e§lPissed Drowned"
     
     zombified_piglin:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Piglin"
+      brown: "§6§lMuddy Piglin"
+      yellow: "§e§lPissed Piglin"
     
     skeleton:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Bones"
+      brown: "§6§lMuddy Skeleton"
+      yellow: "§e§lGolden Bones"
     
     stray:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Stray"
+      brown: "§6§lMuddy Stray"
+      yellow: "§e§lPissed Stray"
     
     wither_skeleton:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Wither"
+      brown: "§6§lMuddy Wither"
+      yellow: "§e§lPissed Wither"
     
     creeper:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamed Creeper"
+      brown: "§6§lMuddy Creeper"
+      yellow: "§e§lPissed Creeper"
     
     spider:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Spider"
+      brown: "§6§lMuddy Web"
+      yellow: "§e§lGolden Spider"
     
     cave_spider:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Cave Spider"
+      brown: "§6§lMuddy Cave Spider"
+      yellow: "§e§lPissed Cave Spider"
     
     enderman:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Enderman"
+      brown: "§6§lMuddy Enderman"
+      yellow: "§e§lPissed Enderman"
     
     endermite:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Endermite"
+      brown: "§6§lMuddy Endermite"
+      yellow: "§e§lPissed Endermite"
     
     shulker:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Shulker"
+      brown: "§6§lMuddy Shulker"
+      yellow: "§e§lPissed Shulker"
     
     blaze:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Blaze"
+      brown: "§6§lMuddy Blaze"
+      yellow: "§e§lPissed Blaze"
     
     ghast:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Ghast"
+      brown: "§6§lMuddy Ghast"
+      yellow: "§e§lPissed Ghast"
     
     slime:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lCreamy Slime"
+      brown: "§6§lMuddy Slime"
+      yellow: "§e§lGolden Slime"
     
     magma_cube:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Magma"
+      brown: "§6§lMuddy Magma"
+      yellow: "§e§lPissed Magma"
     
     witch:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Witch"
+      brown: "§6§lMuddy Witch"
+      yellow: "§e§lPissed Witch"
     
     evoker:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Evoker"
+      brown: "§6§lMuddy Evoker"
+      yellow: "§e§lPissed Evoker"
     
     vindicator:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Vindicator"
+      brown: "§6§lMuddy Vindicator"
+      yellow: "§e§lPissed Vindicator"
     
     pillager:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Pillager"
+      brown: "§6§lMuddy Pillager"
+      yellow: "§e§lPissed Pillager"
     
     ravager:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Ravager"
+      brown: "§6§lMuddy Ravager"
+      yellow: "§e§lPissed Ravager"
     
     phantom:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Phantom"
+      brown: "§6§lMuddy Phantom"
+      yellow: "§e§lPissed Phantom"
     
     vex:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Vex"
+      brown: "§6§lMuddy Vex"
+      yellow: "§e§lPissed Vex"
     
     guardian:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Guardian"
+      brown: "§6§lMuddy Guardian"
+      yellow: "§e§lPissed Guardian"
     
     elder_guardian:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Elder"
+      brown: "§6§lMuddy Elder"
+      yellow: "§e§lPissed Elder"
     
     hoglin:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Hoglin"
+      brown: "§6§lMuddy Hoglin"
+      yellow: "§e§lPissed Hoglin"
     
     strider:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Strider"
+      brown: "§6§lMuddy Strider"
+      yellow: "§e§lPissed Strider"
     
     warden:
-      white: ""
-      brown: ""
-      yellow: ""
+      white: "§f§lFrosted Warden"
+      brown: "§6§lMuddy Warden"
+      yellow: "§e§lPissed Warden"

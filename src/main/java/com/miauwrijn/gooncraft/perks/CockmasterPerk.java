@@ -10,7 +10,11 @@ import com.miauwrijn.gooncraft.managers.RankPerkManager;
 public class CockmasterPerk extends BasePerk {
     
     public CockmasterPerk() {
-        super("Cockmaster", "🐓 Cockmaster: Chickens follow your cock when it's out!", "🐓");
+        this("common");
+    }
+    
+    public CockmasterPerk(String rarity) {
+        super("Cockmaster", "🐓 Cockmaster: Chickens follow your cock when it's out!", "🐓", rarity);
     }
     
     @Override

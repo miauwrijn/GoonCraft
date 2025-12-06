@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.managers.RankManager;
+import com.miauwrijn.gooncraft.perks.BasePerk;
 import com.miauwrijn.gooncraft.ranks.BaseRank;
 import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;
@@ -21,6 +22,7 @@ public class PerkManagementGUI extends GUI {
 
     private final Player target;
     private int page = 0;
+    private String sortType = "rarity"; // "alphabetical", "rarity", "rank"
     private static final int PERKS_PER_PAGE = 28;
 
     public PerkManagementGUI(Player viewer, Player target) {
@@ -55,6 +57,8 @@ public class PerkManagementGUI extends GUI {
         
         // Get all perks for current rank and below
         List<PerkInfo> allPerks = getAllPerksForRank(currentRank);
+        // Sort perks
+        allPerks = sortPerks(allPerks, sortType);
         int startIndex = page * PERKS_PER_PAGE;
         
         // Display perks
@@ -161,12 +165,64 @@ public class PerkManagementGUI extends GUI {
                     });
         }
         
-        // Close button
-        setItem(slot(5, 8), new ItemBuilder(Material.BARRIER)
+        // Sort buttons
+        setSortButton(slot(5, 6), "alphabetical", "§e§lA-Z", Material.BOOK, sortType);
+        setSortButton(slot(5, 7), "rarity", "§6§lRarity", Material.EMERALD, sortType);
+        setSortButton(slot(5, 8), "rank", "§b§lRank", Material.COMPASS, sortType);
+        
+        // Close button moved to slot 4, 8
+        setItem(slot(4, 8), new ItemBuilder(Material.BARRIER)
                 .name("§c§lClose")
                 .lore("§7Click to close")
                 .build(),
                 event -> viewer.closeInventory());
+    }
+    
+    private void setSortButton(int slot, String sortType, String name, Material material, String currentSort) {
+        boolean isSelected = sortType.equals(currentSort);
+        
+        ItemBuilder builder = new ItemBuilder(material)
+                .name(name)
+                .lore(
+                    "",
+                    isSelected ? "§aCurrently sorting" : "§7Click to sort by " + getSortTypeName(sortType)
+                )
+                .hideFlags();
+        
+        if (isSelected) {
+            builder.glow();
+        }
+        
+        setItem(slot, builder.build(), event -> {
+            this.sortType = sortType;
+            page = 0; // Reset to first page when changing sort
+            render();
+        });
+    }
+    
+    private String getSortTypeName(String sortType) {
+        return switch (sortType) {
+            case "alphabetical" -> "Alphabetical";
+            case "rarity" -> "Rarity";
+            case "rank" -> "Rank";
+            default -> "Unknown";
+        };
+    }
+    
+    private List<PerkInfo> sortPerks(List<PerkInfo> perks, String sortType) {
+        List<PerkInfo> sorted = new ArrayList<>(perks);
+        
+        switch (sortType) {
+            case "alphabetical" -> sorted.sort((a, b) -> a.name.compareToIgnoreCase(b.name));
+            case "rarity" -> sorted.sort((a, b) -> {
+                int rarityCompare = Integer.compare(b.getRarityOrder(), a.getRarityOrder());
+                if (rarityCompare != 0) return rarityCompare;
+                return Integer.compare(a.rank.getOrdinal(), b.rank.getOrdinal());
+            });
+            case "rank" -> sorted.sort((a, b) -> Integer.compare(a.rank.getOrdinal(), b.rank.getOrdinal()));
+        }
+        
+        return sorted;
     }
     
     private List<PerkInfo> getAllPerksForRank(BaseRank rank) {
@@ -178,10 +234,11 @@ public class PerkManagementGUI extends GUI {
         
         for (BaseRank r : allRanks) {
             if (r.getOrdinal() <= rank.getOrdinal()) {
-                for (String perkText : r.getPerkDescriptions()) {
+                for (BasePerk perk : r.getPerks()) {
                     String perkId = "perk_" + r.getOrdinal() + "_" + genericPerkCounter;
                     if (!perkMap.containsKey(perkId)) {
-                        PerkInfo info = new PerkInfo(perkId, "⭐", perkText, perkText, r, true);
+                        PerkInfo info = new PerkInfo(perkId, perk.getIcon(), perk.getName(), 
+                                                     perk.getDescription(), r, true, perk);
                         perkMap.put(perkId, info);
                         perks.add(info);
                         genericPerkCounter++;
@@ -217,14 +274,28 @@ public class PerkManagementGUI extends GUI {
         final String description;
         final BaseRank rank;
         final boolean hasEffect;
+        final BasePerk perk; // Store the perk object for rarity access
         
         PerkInfo(String id, String icon, String name, String description, BaseRank rank, boolean hasEffect) {
+            this(id, icon, name, description, rank, hasEffect, null);
+        }
+        
+        PerkInfo(String id, String icon, String name, String description, BaseRank rank, boolean hasEffect, BasePerk perk) {
             this.id = id;
             this.icon = icon;
             this.name = name;
             this.description = description;
             this.rank = rank;
             this.hasEffect = hasEffect;
+            this.perk = perk;
+        }
+        
+        int getRarityOrder() {
+            if (perk != null) {
+                return perk.getRarityOrder();
+            }
+            // Fallback to rank rarity
+            return rank.getRarityOrder();
         }
     }
 }

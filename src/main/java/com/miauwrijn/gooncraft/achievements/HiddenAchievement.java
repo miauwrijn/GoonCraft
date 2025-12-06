@@ -10,8 +10,8 @@ import com.miauwrijn.gooncraft.data.PlayerStats;
 public class HiddenAchievement extends BaseAchievement {
     
     public HiddenAchievement(String id, String name, String description, 
-                            String category, long threshold) {
-        super(id, name, description, category, threshold, true);
+                            String category, long threshold, String rarity) {
+        super(id, name, description, category, threshold, true, rarity);
     }
     
     @Override

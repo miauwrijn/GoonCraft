@@ -12,8 +12,8 @@ public class StatAchievement extends BaseAchievement {
     private final String statCategory;
     
     public StatAchievement(String id, String name, String description, 
-                          String category, long threshold, boolean hidden, String statCategory) {
-        super(id, name, description, category, threshold, hidden);
+                          String category, long threshold, boolean hidden, String rarity, String statCategory) {
+        super(id, name, description, category, threshold, hidden, rarity);
         this.statCategory = statCategory;
     }
     

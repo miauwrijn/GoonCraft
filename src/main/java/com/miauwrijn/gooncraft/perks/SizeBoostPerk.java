@@ -13,7 +13,11 @@ public class SizeBoostPerk extends BasePerk {
     private final int boost;
     
     public SizeBoostPerk(int boost) {
-        super("Size Boost", "Permanent +" + boost + "cm size", "📏");
+        this(boost, "common");
+    }
+    
+    public SizeBoostPerk(int boost, String rarity) {
+        super("Size Boost", "Permanent +" + boost + "cm size", "📏", rarity);
         this.boost = boost;
     }
     

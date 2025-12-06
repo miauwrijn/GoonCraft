@@ -12,7 +12,11 @@ public class BoobBoostPerk extends BasePerk {
     private final int boost;
     
     public BoobBoostPerk(int boost) {
-        super("Boob Boost", "Permanent +" + boost + "cm boob size", "💋");
+        this(boost, "common");
+    }
+    
+    public BoobBoostPerk(int boost, String rarity) {
+        super("Boob Boost", "Permanent +" + boost + "cm boob size", "💋", rarity);
         this.boost = boost;
     }
     

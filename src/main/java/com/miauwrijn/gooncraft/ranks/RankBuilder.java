@@ -99,6 +99,7 @@ public class RankBuilder {
             String color = section.getString("color", "§f");
             String icon = section.getString("icon", "⭐");
             String description = section.getString("description", "");
+            String rarity = section.getString("rarity", "common").toLowerCase();
             
             // Build perks
             List<BasePerk> perks = new ArrayList<>();
@@ -113,7 +114,7 @@ public class RankBuilder {
             }
             
             BaseRank rank = new BaseRank(requiredAchievements, displayName, color, 
-                                        icon, description, perks);
+                                        icon, description, rarity, perks);
             rank.setOrdinal(ordinal);
             return rank;
             
@@ -133,34 +134,35 @@ public class RankBuilder {
         }
         
         String type = perkMap.get("type").toString().toLowerCase();
+        String rarity = perkMap.containsKey("rarity") ? perkMap.get("rarity").toString().toLowerCase() : "common";
         
         try {
             switch (type) {
                 case "cooldown_reduction":
                     double reduction = getDouble(perkMap, "value", 0.0);
-                    return new CooldownReductionPerk(reduction);
+                    return new CooldownReductionPerk(reduction, rarity);
                 
                 case "fap_speed":
                     double multiplier = getDouble(perkMap, "value", 1.0);
-                    return new FapSpeedPerk(multiplier);
+                    return new FapSpeedPerk(multiplier, rarity);
                 
                 case "size_boost":
                     int sizeBoost = getInt(perkMap, "value", 0);
-                    return new SizeBoostPerk(sizeBoost);
+                    return new SizeBoostPerk(sizeBoost, rarity);
                 
                 case "girth_boost":
                     int girthBoost = getInt(perkMap, "value", 0);
-                    return new GirthBoostPerk(girthBoost);
+                    return new GirthBoostPerk(girthBoost, rarity);
                 
                 case "boob_boost":
                     int boobBoost = getInt(perkMap, "value", 0);
-                    return new BoobBoostPerk(boobBoost);
+                    return new BoobBoostPerk(boobBoost, rarity);
                 
                 case "cockmaster":
-                    return new CockmasterPerk();
+                    return new CockmasterPerk(rarity);
                 
                 case "pussy_magnet":
-                    return new PussyMagnetPerk();
+                    return new PussyMagnetPerk(rarity);
                 
                 default:
                     Plugin.instance.getLogger().warning("Unknown perk type: " + type);

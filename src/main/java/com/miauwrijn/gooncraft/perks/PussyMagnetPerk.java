@@ -10,7 +10,11 @@ import com.miauwrijn.gooncraft.managers.RankPerkManager;
 public class PussyMagnetPerk extends BasePerk {
     
     public PussyMagnetPerk() {
-        super("Pussy Magnet", "🐱 Pussy Magnet: Cats follow your pussy when it's out!", "🐱");
+        this("common");
+    }
+    
+    public PussyMagnetPerk(String rarity) {
+        super("Pussy Magnet", "🐱 Pussy Magnet: Cats follow your pussy when it's out!", "🐱", rarity);
     }
     
     @Override

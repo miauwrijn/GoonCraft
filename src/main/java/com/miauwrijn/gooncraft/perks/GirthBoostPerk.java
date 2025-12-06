@@ -13,7 +13,11 @@ public class GirthBoostPerk extends BasePerk {
     private final int boost;
     
     public GirthBoostPerk(int boost) {
-        super("Girth Boost", "Permanent +" + boost + "cm girth", "📐");
+        this(boost, "common");
+    }
+    
+    public GirthBoostPerk(int boost, String rarity) {
+        super("Girth Boost", "Permanent +" + boost + "cm girth", "📐", rarity);
         this.boost = boost;
     }
     
