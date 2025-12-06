@@ -319,18 +319,18 @@ public class PenisModel implements Runnable {
     private void sendCumMessage(Player player, double distance, boolean isEjaculating) {
         if (isEjaculating) {
             if (ConfigManager.showEjaculateMessages()) {
-                player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("cum.ejaculate"));
+                player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("goon.orgasm"));
             }
         } else if (distance < 2 && player != owner) {
             if (ConfigManager.showCummedOnMessages()) {
-                player.sendMessage(ConfigManager.getMessage("cum.cummed-on", "{player}", owner.getName()));
+                player.sendMessage(ConfigManager.getMessage("goon.cummed-on", "{player}", owner.getName()));
             }
             // Track statistic for getting cummed on (with unique player tracking)
             StatisticsManager.incrementGotCummedOn(player, owner);
             StatisticsManager.incrementCumOnOthers(owner, player);
         } else {
-            if (ConfigManager.showFapMessages()) {
-                player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("cum.fap"));
+            if (ConfigManager.showGoonMessages()) {
+                player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("goon.goon"));
             }
         }
     }

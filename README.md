@@ -33,6 +33,8 @@ GoonCraft is a *highly sophisticated* Minecraft plugin that adds anatomically...
 - 🐑 **Easter Eggs** - Hidden achievements with 6 different animals!
 - 🔄 **Auto-updating config** - New options merge automatically
 - 🔀 **Gender-neutral "Goon"** - Works for all genders!
+- 🗄️ **MySQL/PostgreSQL support** - Perfect for BungeeCord/Velocity networks!
+- 🥶 **Temperature effects** - Cold shrinks penises, makes nipples erect!
 
 ---
 
@@ -166,6 +168,8 @@ Earn ranks by unlocking achievements! Each achievement brings you closer to the 
 | **67** | **✦ ULTIMATE DEGENERATE ✦** | 🌟 |
 
 Your rank is displayed in the Stats GUI with a progress bar to the next rank!
+
+**Click your player head** in the Stats GUI to open the **Rank Roadmap** - a visual S-shaped progression path showing all ranks!
 
 ---
 
@@ -337,6 +341,11 @@ Click on any player to view their detailed stats!
   - Ejaculate near them for a white coating
   - **11 hidden achievements** to discover!
 - **Shart Attack** - Fart and then poop within 5 seconds 💨💩
+- 🥶 **Temperature Effects** - Cold biomes/weather affect your body!
+  - Penis shrinks in cold (up to 50% smaller!)
+  - Nipples become more erect in cold
+  - Effects are gradual and temporary
+- 🗺️ **Rank Roadmap GUI** - Click your player head in Stats to see your progression!
 
 ---
 
@@ -351,7 +360,43 @@ When you update the plugin, new config options are **automatically merged** into
 [GoonCraft] Config updated successfully!
 ```
 
+### 🗄️ Storage Options
+
+GoonCraft supports **multiple storage backends** - perfect for BungeeCord/Velocity networks!
+
+#### File Storage (Default)
+Player data is stored in YAML files: `plugins/GoonCraft/players/<uuid>.yml`
+
+#### MySQL / PostgreSQL (Network Support)
+For server networks, enable database storage in `config.yml`:
+
+```yaml
+storage:
+  # Options: 'file', 'mysql', 'postgresql'
+  type: mysql
+  
+  database:
+    host: localhost
+    port: 3306           # 3306 for MySQL, 5432 for PostgreSQL
+    database: gooncraft
+    username: root
+    password: "your_password"
+    table-prefix: gooncraft_
+```
+
+**Benefits of Database Storage:**
+- 📡 Shared data across BungeeCord/Velocity servers
+- 🔄 Real-time sync between server instances
+- 🚀 Connection pooling with HikariCP
+- 💾 Reliable async saving
+- 🔀 Easy migration from file storage
+
+**Requirements:**
+- MySQL 5.7+ or PostgreSQL 10+
+- The plugin automatically creates tables on first run
+
 ### Player Data
+
 All player data is stored in a single file per player: `plugins/GoonCraft/players/<uuid>.yml`
 
 ```yaml
@@ -364,9 +409,9 @@ Boobs:
   Size: 7
   Perkiness: 5
 Stats:
-  GoonCount: 42        # Renamed from FapCount - works for all genders!
+  GoonCount: 42
   CumOnOthersCount: 10
-  TotalExposureTime: 3600  # Renamed from TotalTimeWithPenisOut
+  TotalExposureTime: 3600
   FartCount: 25
   PoopCount: 12
   PissCount: 8
@@ -374,7 +419,7 @@ Stats:
   GenderChanges: 3
   # ... more stats
 Achievements:
-  FIRST_GOON: true     # Renamed from FIRST_FAP
+  FIRST_GOON: true
   FART_1: true
   # ... more achievements
 ```
@@ -488,6 +533,7 @@ com.miauwrijn.gooncraft/
 │   ├── StatsGUI.java        # Statistics menu
 │   ├── AchievementsGUI.java # Achievements menu (67 achievements!)
 │   ├── LeaderboardGUI.java  # Leaderboard menu
+│   ├── RankRoadmapGUI.java  # Rank progression display
 │   └── GenderSelectionGUI.java # Gender picker (rainbow!)
 ├── handlers/
 │   ├── BodilyFunctionsHandler.java # Fart/poop/piss + animal easter eggs
@@ -506,10 +552,16 @@ com.miauwrijn.gooncraft/
 │   ├── PillManager.java
 │   ├── RankManager.java        # 12 ranks with perks
 │   └── StatisticsManager.java  # Tracks everything!
-└── models/
-    ├── BoobModel.java       # 3D boob display with nipples
-    ├── PenisModel.java      # 3D penis display model
-    └── VaginaModel.java     # 3D vagina display model (NEW!)
+├── models/
+│   ├── BoobModel.java       # 3D boob display with nipples
+│   ├── PenisModel.java      # 3D penis display model
+│   └── VaginaModel.java     # 3D vagina display model
+└── storage/                 # NEW: Pluggable storage system
+    ├── StorageProvider.java     # Abstract storage interface
+    ├── StorageManager.java      # Factory & cache manager
+    ├── PlayerData.java          # Unified data container
+    ├── FileStorageProvider.java # YAML file storage
+    └── DatabaseStorageProvider.java # MySQL/PostgreSQL support
 ```
 
 ---

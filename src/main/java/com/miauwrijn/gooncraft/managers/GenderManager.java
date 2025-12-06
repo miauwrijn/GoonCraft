@@ -1,15 +1,10 @@
 package com.miauwrijn.gooncraft.managers;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,10 +16,12 @@ import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.gui.GenderSelectionGUI;
 import com.miauwrijn.gooncraft.models.BoobModel;
 import com.miauwrijn.gooncraft.models.VaginaModel;
+import com.miauwrijn.gooncraft.storage.PlayerData;
+import com.miauwrijn.gooncraft.storage.StorageManager;
 
 /**
  * Manages player gender selection, boob models, and vagina models.
- * Data is stored in the players folder alongside penis stats.
+ * Uses StorageManager for persistence (supports file and database storage).
  */
 public class GenderManager implements Listener {
 
@@ -34,54 +31,52 @@ public class GenderManager implements Listener {
         OTHER      // Has penis + boobs
     }
 
-    private static final Map<UUID, Gender> playerGenders = new ConcurrentHashMap<>();
-    private static final Map<UUID, Integer> boobSizes = new ConcurrentHashMap<>();
-    private static final Map<UUID, Integer> boobPerkiness = new ConcurrentHashMap<>();
+    // Runtime-only: active models (not persisted)
     private static final Map<UUID, BoobModel> activeBoobModels = new ConcurrentHashMap<>();
     private static final Map<UUID, Integer> boobTaskIds = new ConcurrentHashMap<>();
     private static final Map<UUID, VaginaModel> activeVaginaModels = new ConcurrentHashMap<>();
     private static final Map<UUID, Integer> vaginaTaskIds = new ConcurrentHashMap<>();
-    private static File dataFolder;
 
     public GenderManager() {
-        dataFolder = new File(Plugin.instance.getDataFolder(), "players");
-        ensureDataFolderExists();
-        loadOnlinePlayers();
-        
         Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
     }
 
     public static Gender getGender(Player player) {
-        return playerGenders.get(player.getUniqueId());
+        PlayerData data = StorageManager.getPlayerData(player);
+        return data.gender;
     }
 
     public static boolean hasSelectedGender(Player player) {
-        return playerGenders.containsKey(player.getUniqueId());
+        PlayerData data = StorageManager.getPlayerData(player);
+        return data.gender != null;
     }
 
     public static void setGender(Player player, Gender gender) {
-        playerGenders.put(player.getUniqueId(), gender);
+        PlayerData data = StorageManager.getPlayerData(player);
+        data.gender = gender;
         
         // Generate boob stats if female or other
         if ((gender == Gender.FEMALE || gender == Gender.OTHER)) {
-            if (!boobSizes.containsKey(player.getUniqueId())) {
-                boobSizes.put(player.getUniqueId(), BoobModel.getRandomSize());
+            if (data.boobSize <= 0) {
+                data.boobSize = BoobModel.getRandomSize();
             }
-            if (!boobPerkiness.containsKey(player.getUniqueId())) {
-                boobPerkiness.put(player.getUniqueId(), BoobModel.getRandomPerkiness());
+            if (data.boobPerkiness <= 0) {
+                data.boobPerkiness = BoobModel.getRandomPerkiness();
             }
         }
         
-        savePlayerData(player);
+        StorageManager.savePlayerData(player.getUniqueId());
     }
 
     public static int getBoobSize(Player player) {
-        return boobSizes.getOrDefault(player.getUniqueId(), BoobModel.getRandomSize());
+        PlayerData data = StorageManager.getPlayerData(player);
+        return data.boobSize > 0 ? data.boobSize : BoobModel.getRandomSize();
     }
 
     public static void setBoobSize(Player player, int size) {
-        boobSizes.put(player.getUniqueId(), size);
-        savePlayerData(player);
+        PlayerData data = StorageManager.getPlayerData(player);
+        data.boobSize = size;
+        StorageManager.savePlayerData(player.getUniqueId());
         
         // Reload active model if exists
         BoobModel model = activeBoobModels.get(player.getUniqueId());
@@ -91,12 +86,14 @@ public class GenderManager implements Listener {
     }
 
     public static int getBoobPerkiness(Player player) {
-        return boobPerkiness.getOrDefault(player.getUniqueId(), BoobModel.getRandomPerkiness());
+        PlayerData data = StorageManager.getPlayerData(player);
+        return data.boobPerkiness > 0 ? data.boobPerkiness : BoobModel.getRandomPerkiness();
     }
 
     public static void setBoobPerkiness(Player player, int perkiness) {
-        boobPerkiness.put(player.getUniqueId(), perkiness);
-        savePlayerData(player);
+        PlayerData data = StorageManager.getPlayerData(player);
+        data.boobPerkiness = perkiness;
+        StorageManager.savePlayerData(player.getUniqueId());
         
         // Reload active model if exists
         BoobModel model = activeBoobModels.get(player.getUniqueId());
@@ -187,87 +184,19 @@ public class GenderManager implements Listener {
                PenisStatisticManager.getStatistics(player).penisModel != null;
     }
 
-    // ===== Persistence =====
+    // ===== Event Handlers =====
 
-    private void ensureDataFolderExists() {
-        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            Plugin.instance.getLogger().warning("Failed to create players folder: " + dataFolder.getAbsolutePath());
-        }
-    }
-
-    private void loadOnlinePlayers() {
-        for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
-            loadPlayerData(player);
-        }
-    }
-
-    private void loadPlayerData(Player player) {
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        
-        if (file.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            
-            String genderStr = config.getString("Gender", null);
-            if (genderStr != null) {
-                try {
-                    Gender gender = Gender.valueOf(genderStr);
-                    playerGenders.put(player.getUniqueId(), gender);
-                } catch (IllegalArgumentException ignored) {}
-            }
-            
-            int boobSize = config.getInt("Boobs.Size", -1);
-            if (boobSize > 0) {
-                boobSizes.put(player.getUniqueId(), boobSize);
-            }
-            
-            int perkiness = config.getInt("Boobs.Perkiness", -1);
-            if (perkiness > 0) {
-                boobPerkiness.put(player.getUniqueId(), perkiness);
-            }
-        }
-    }
-
-    private static void savePlayerData(Player player) {
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        
-        try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            
-            Gender gender = playerGenders.get(player.getUniqueId());
-            if (gender != null) {
-                config.set("Gender", gender.name());
-            }
-            
-            Integer boobSize = boobSizes.get(player.getUniqueId());
-            if (boobSize != null) {
-                config.set("Boobs.Size", boobSize);
-            }
-            
-            Integer perkiness = boobPerkiness.get(player.getUniqueId());
-            if (perkiness != null) {
-                config.set("Boobs.Perkiness", perkiness);
-            }
-            
-            config.save(file);
-        } catch (IOException e) {
-            Plugin.instance.getLogger().log(Level.WARNING, "Failed to save gender data", e);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        loadPlayerData(player);
         
         // Show gender selection GUI if not selected yet
-        if (!hasSelectedGender(player)) {
-            // Delay slightly so player fully loads in
-            Bukkit.getScheduler().runTaskLater(Plugin.instance, () -> {
-                if (player.isOnline()) {
-                    new GenderSelectionGUI(player).open();
-                }
-            }, 20L); // 1 second delay
-        }
+        // Delayed to ensure StorageManager has loaded player data
+        Bukkit.getScheduler().runTaskLater(Plugin.instance, () -> {
+            if (player.isOnline() && !hasSelectedGender(player)) {
+                new GenderSelectionGUI(player).open();
+            }
+        }, 40L); // 2 second delay
     }
 
     @EventHandler

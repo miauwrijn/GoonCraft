@@ -21,6 +21,7 @@ import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
 import com.miauwrijn.gooncraft.managers.PillManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
+import com.miauwrijn.gooncraft.storage.StorageManager;
 
 /**
  * GoonCraft - The Minecraft plugin your server never knew it needed.
@@ -31,6 +32,7 @@ public class Plugin extends JavaPlugin {
     public static Plugin instance;
     
     private StatsCommandHandler statsHandler;
+    private StorageManager storageManager;
 
     @Override
     public void onEnable() {
@@ -38,6 +40,9 @@ public class Plugin extends JavaPlugin {
         
         // Load configuration
         ConfigManager.load();
+        
+        // Initialize storage (must be before other managers!)
+        storageManager = new StorageManager();
         
         // Initialize managers
         new PenisStatisticManager();
@@ -76,6 +81,12 @@ public class Plugin extends JavaPlugin {
         PenisStatisticManager.clearAllActivePenises();
         GenderManager.clearAllActiveBoobModels();
         GenderManager.clearAllActiveVaginaModels();
+        
+        // Save all player data and close storage
+        if (storageManager != null) {
+            storageManager.shutdown();
+        }
+        
         LOGGER.info("GoonCraft disabled. Put your pants back on.");
     }
 
@@ -111,6 +122,12 @@ public class Plugin extends JavaPlugin {
             return true;
         }
         ConfigManager.reload();
+        
+        // Reload storage if config changed
+        if (storageManager != null) {
+            storageManager.reload();
+        }
+        
         sender.sendMessage("§aGoonCraft config reloaded!");
         return true;
     }

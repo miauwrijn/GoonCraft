@@ -1,63 +1,55 @@
 package com.miauwrijn.gooncraft.managers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.miauwrijn.gooncraft.Plugin;
-import com.miauwrijn.gooncraft.data.PenisStatistics;
 import com.miauwrijn.gooncraft.data.PlayerStats;
+import com.miauwrijn.gooncraft.storage.PlayerData;
+import com.miauwrijn.gooncraft.storage.StorageManager;
 
 /**
- * Manages player statistics tracking and persistence.
- * Data is stored in the players folder alongside other player data.
+ * Manages player statistics tracking.
+ * Uses StorageManager for persistence (supports file and database storage).
  */
 public class StatisticsManager implements Listener {
-
-    private static final Map<UUID, PlayerStats> playerStats = new ConcurrentHashMap<>();
-    private static File dataFolder;
     
     // Track last fart time for shart combo
     private static final Map<UUID, Long> lastFartTime = new ConcurrentHashMap<>();
 
     public StatisticsManager() {
-        dataFolder = new File(Plugin.instance.getDataFolder(), "players");
-        ensureDataFolderExists();
-        loadOnlinePlayers();
-        
         Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
-        
-        // Auto-save every 5 minutes
-        Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin.instance, this::saveAll, 6000L, 6000L);
     }
 
+    /**
+     * Get stats for a player (from StorageManager cache).
+     */
     public static PlayerStats getStats(Player player) {
-        return playerStats.computeIfAbsent(player.getUniqueId(), k -> new PlayerStats());
+        PlayerData data = StorageManager.getPlayerData(player);
+        if (data.stats == null) {
+            data.stats = new PlayerStats();
+        }
+        return data.stats;
     }
 
+    /**
+     * Get stats for a UUID (from StorageManager cache).
+     */
     public static PlayerStats getStats(UUID uuid) {
-        return playerStats.get(uuid);
+        PlayerData data = StorageManager.getPlayerData(uuid);
+        return data != null ? data.stats : null;
     }
 
     // ===== Goon (Masturbation) Stats - Gender Neutral =====
@@ -388,201 +380,4 @@ public class StatisticsManager implements Listener {
         }
     }
 
-    // ===== Persistence =====
-
-    private void ensureDataFolderExists() {
-        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            Plugin.instance.getLogger().warning("Failed to create players folder: " + dataFolder.getAbsolutePath());
-        }
-    }
-
-    private void loadOnlinePlayers() {
-        for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
-            loadPlayerStats(player);
-        }
-    }
-
-    private void loadPlayerStats(Player player) {
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        PlayerStats stats = new PlayerStats();
-        
-        if (file.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            
-            // Core stats (with backwards compatibility)
-            stats.goonCount = config.getInt("Stats.GoonCount", config.getInt("Stats.FapCount", 0));
-            stats.cumOnOthersCount = config.getInt("Stats.CumOnOthersCount", 0);
-            stats.gotCummedOnCount = config.getInt("Stats.GotCummedOnCount", 0);
-            stats.totalExposureTime = config.getLong("Stats.TotalExposureTime", 
-                config.getLong("Stats.TotalTimeWithPenisOut", 0));
-            stats.buttfingersGiven = config.getInt("Stats.ButtfingersGiven", 0);
-            stats.buttfingersReceived = config.getInt("Stats.ButtfingersReceived", 0);
-            stats.viagraUsed = config.getInt("Stats.ViagraUsed", 0);
-            
-            // Bodily function stats
-            stats.fartCount = config.getInt("Stats.FartCount", 0);
-            stats.poopCount = config.getInt("Stats.PoopCount", 0);
-            stats.pissCount = config.getInt("Stats.PissCount", 0);
-            
-            // Boob stats
-            stats.jiggleCount = config.getInt("Stats.JiggleCount", 0);
-            stats.boobToggleCount = config.getInt("Stats.BoobToggleCount", 0);
-            
-            // Gender stats
-            stats.genderChanges = config.getInt("Stats.GenderChanges", 0);
-            
-            // Unique player sets
-            stats.uniquePlayersCummedOn = loadUUIDSet(config, "Stats.UniqueCummedOn");
-            stats.uniquePlayersGotCummedBy = loadUUIDSet(config, "Stats.UniqueGotCummedBy");
-            stats.uniquePlayersButtfingered = loadUUIDSet(config, "Stats.UniqueButtfingered");
-            stats.uniquePlayersPissedNear = loadUUIDSet(config, "Stats.UniquePissedNear");
-            stats.uniquePlayersFartedNear = loadUUIDSet(config, "Stats.UniqueFartedNear");
-            
-            // Danger stats (with backwards compatibility)
-            stats.deathsWhileExposed = config.getInt("Stats.DeathsWhileExposed", 0);
-            stats.damageWhileGooning = config.getInt("Stats.DamageWhileGooning", 
-                config.getInt("Stats.DamageWhileFapping", 0));
-            stats.goonsWhileFalling = config.getInt("Stats.GoonsWhileFalling", 
-                config.getInt("Stats.FapsWhileFalling", 0));
-            stats.goonsWhileOnFire = config.getInt("Stats.GoonsWhileOnFire", 
-                config.getInt("Stats.FapsWhileOnFire", 0));
-            stats.creeperDeathsWhileExposed = config.getInt("Stats.CreeperDeaths", 0);
-            
-            // Location flags (with backwards compatibility)
-            stats.goonedInNether = config.getBoolean("Stats.GoonedInNether", 
-                config.getBoolean("Stats.FappedInNether", false));
-            stats.goonedInEnd = config.getBoolean("Stats.GoonedInEnd", 
-                config.getBoolean("Stats.FappedInEnd", false));
-            stats.goonedUnderwater = config.getBoolean("Stats.GoonedUnderwater", 
-                config.getBoolean("Stats.FappedUnderwater", false));
-            stats.goonedInDesert = config.getBoolean("Stats.GoonedInDesert", 
-                config.getBoolean("Stats.FappedInDesert", false));
-            stats.goonedInSnow = config.getBoolean("Stats.GoonedInSnow", 
-                config.getBoolean("Stats.FappedInSnow", false));
-            stats.goonedHighAltitude = config.getBoolean("Stats.GoonedHighAltitude", 
-                config.getBoolean("Stats.FappedHighAltitude", false));
-            
-            // Speed stats (with backwards compatibility)
-            stats.maxGoonsInMinute = config.getInt("Stats.MaxGoonsInMinute", 
-                config.getInt("Stats.MaxFapsInMinute", 0));
-            stats.ejaculationsIn30Seconds = config.getInt("Stats.MaxEjaculationsIn30s", 0);
-            
-            // Animal stats
-            stats.pigsAffected = config.getInt("Stats.PigsAffected", 0);
-            stats.cowsAffected = config.getInt("Stats.CowsAffected", 0);
-            stats.wolvesAffected = config.getInt("Stats.WolvesAffected", 0);
-            stats.catsAffected = config.getInt("Stats.CatsAffected", 0);
-        }
-        
-        playerStats.put(player.getUniqueId(), stats);
-    }
-
-    private Set<UUID> loadUUIDSet(FileConfiguration config, String path) {
-        Set<UUID> set = new HashSet<>();
-        List<String> list = config.getStringList(path);
-        for (String uuidStr : list) {
-            try {
-                set.add(UUID.fromString(uuidStr));
-            } catch (IllegalArgumentException ignored) {}
-        }
-        return set;
-    }
-
-    private void savePlayerStats(Player player) {
-        PlayerStats stats = playerStats.get(player.getUniqueId());
-        if (stats == null) return;
-        
-        // Stop timer to capture current session time
-        if (stats.isExposed) {
-            stats.stopExposureTimer();
-        }
-        
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        
-        try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            
-            // Core stats (new naming)
-            config.set("Stats.GoonCount", stats.goonCount);
-            config.set("Stats.CumOnOthersCount", stats.cumOnOthersCount);
-            config.set("Stats.GotCummedOnCount", stats.gotCummedOnCount);
-            config.set("Stats.TotalExposureTime", stats.totalExposureTime);
-            config.set("Stats.ButtfingersGiven", stats.buttfingersGiven);
-            config.set("Stats.ButtfingersReceived", stats.buttfingersReceived);
-            config.set("Stats.ViagraUsed", stats.viagraUsed);
-            
-            // Bodily function stats
-            config.set("Stats.FartCount", stats.fartCount);
-            config.set("Stats.PoopCount", stats.poopCount);
-            config.set("Stats.PissCount", stats.pissCount);
-            
-            // Boob stats
-            config.set("Stats.JiggleCount", stats.jiggleCount);
-            config.set("Stats.BoobToggleCount", stats.boobToggleCount);
-            
-            // Gender stats
-            config.set("Stats.GenderChanges", stats.genderChanges);
-            
-            // Unique player sets
-            config.set("Stats.UniqueCummedOn", stats.uniquePlayersCummedOn.stream().map(UUID::toString).toList());
-            config.set("Stats.UniqueGotCummedBy", stats.uniquePlayersGotCummedBy.stream().map(UUID::toString).toList());
-            config.set("Stats.UniqueButtfingered", stats.uniquePlayersButtfingered.stream().map(UUID::toString).toList());
-            config.set("Stats.UniquePissedNear", stats.uniquePlayersPissedNear.stream().map(UUID::toString).toList());
-            config.set("Stats.UniqueFartedNear", stats.uniquePlayersFartedNear.stream().map(UUID::toString).toList());
-            
-            // Danger stats (new naming)
-            config.set("Stats.DeathsWhileExposed", stats.deathsWhileExposed);
-            config.set("Stats.DamageWhileGooning", stats.damageWhileGooning);
-            config.set("Stats.GoonsWhileFalling", stats.goonsWhileFalling);
-            config.set("Stats.GoonsWhileOnFire", stats.goonsWhileOnFire);
-            config.set("Stats.CreeperDeaths", stats.creeperDeathsWhileExposed);
-            
-            // Location flags (new naming)
-            config.set("Stats.GoonedInNether", stats.goonedInNether);
-            config.set("Stats.GoonedInEnd", stats.goonedInEnd);
-            config.set("Stats.GoonedUnderwater", stats.goonedUnderwater);
-            config.set("Stats.GoonedInDesert", stats.goonedInDesert);
-            config.set("Stats.GoonedInSnow", stats.goonedInSnow);
-            config.set("Stats.GoonedHighAltitude", stats.goonedHighAltitude);
-            
-            // Speed stats (new naming)
-            config.set("Stats.MaxGoonsInMinute", stats.maxGoonsInMinute);
-            config.set("Stats.MaxEjaculationsIn30s", stats.ejaculationsIn30Seconds);
-            
-            // Animal stats
-            config.set("Stats.PigsAffected", stats.pigsAffected);
-            config.set("Stats.CowsAffected", stats.cowsAffected);
-            config.set("Stats.WolvesAffected", stats.wolvesAffected);
-            config.set("Stats.CatsAffected", stats.catsAffected);
-            
-            config.save(file);
-        } catch (IOException e) {
-            Plugin.instance.getLogger().log(Level.WARNING, "Failed to save player stats", e);
-        }
-    }
-
-    private void saveAll() {
-        for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
-            savePlayerStats(player);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        loadPlayerStats(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        PlayerStats stats = playerStats.get(player.getUniqueId());
-        
-        if (stats != null && stats.isExposed) {
-            stats.stopExposureTimer();
-        }
-        
-        savePlayerStats(player);
-        playerStats.remove(player.getUniqueId());
-        lastFartTime.remove(player.getUniqueId());
-    }
 }

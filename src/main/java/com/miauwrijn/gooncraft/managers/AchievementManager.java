@@ -1,34 +1,22 @@
 package com.miauwrijn.gooncraft.managers;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PlayerStats;
+import com.miauwrijn.gooncraft.storage.PlayerData;
+import com.miauwrijn.gooncraft.storage.StorageManager;
 
 /**
  * Manages achievements for players.
- * Data is stored in the players folder alongside other player data.
+ * Uses StorageManager for persistence (supports file and database storage).
  */
-public class AchievementManager implements Listener {
+public class AchievementManager {
 
     public enum Achievement {
         // ===== GOON ACHIEVEMENTS (6) - Gender Neutral =====
@@ -165,19 +153,19 @@ public class AchievementManager implements Listener {
         }
     }
 
-    private static final Map<UUID, Set<Achievement>> unlockedAchievements = new ConcurrentHashMap<>();
-    private static File dataFolder;
-
     public AchievementManager() {
-        dataFolder = new File(Plugin.instance.getDataFolder(), "players");
-        ensureDataFolderExists();
-        loadOnlinePlayers();
-        
-        Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
+        // No initialization needed - StorageManager handles data
     }
 
+    /**
+     * Get unlocked achievements for a player from StorageManager.
+     */
     public static Set<Achievement> getUnlocked(Player player) {
-        return unlockedAchievements.computeIfAbsent(player.getUniqueId(), k -> EnumSet.noneOf(Achievement.class));
+        PlayerData data = StorageManager.getPlayerData(player);
+        if (data.unlockedAchievements == null) {
+            data.unlockedAchievements = EnumSet.noneOf(Achievement.class);
+        }
+        return data.unlockedAchievements;
     }
 
     public static void checkAchievements(Player player, PlayerStats stats) {
@@ -276,8 +264,8 @@ public class AchievementManager implements Listener {
             "{name}", achievement.name);
         Bukkit.broadcastMessage(broadcast);
         
-        // Save immediately
-        savePlayerAchievements(player);
+        // Save immediately via StorageManager
+        StorageManager.savePlayerData(player.getUniqueId());
     }
 
     public static int getUnlockedCount(Player player) {
@@ -330,64 +318,4 @@ public class AchievementManager implements Listener {
             .toList();
     }
 
-    // ===== Persistence =====
-
-    private void ensureDataFolderExists() {
-        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            Plugin.instance.getLogger().warning("Failed to create players folder: " + dataFolder.getAbsolutePath());
-        }
-    }
-
-    private void loadOnlinePlayers() {
-        for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
-            loadPlayerAchievements(player);
-        }
-    }
-
-    private void loadPlayerAchievements(Player player) {
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        Set<Achievement> unlocked = EnumSet.noneOf(Achievement.class);
-        
-        if (file.exists()) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            
-            for (Achievement achievement : Achievement.values()) {
-                if (config.getBoolean("Achievements." + achievement.name(), false)) {
-                    unlocked.add(achievement);
-                }
-            }
-        }
-        
-        unlockedAchievements.put(player.getUniqueId(), unlocked);
-    }
-
-    private static void savePlayerAchievements(Player player) {
-        Set<Achievement> unlocked = unlockedAchievements.get(player.getUniqueId());
-        if (unlocked == null) return;
-        
-        File file = new File(dataFolder, player.getUniqueId() + ".yml");
-        
-        try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-            
-            for (Achievement achievement : Achievement.values()) {
-                config.set("Achievements." + achievement.name(), unlocked.contains(achievement));
-            }
-            
-            config.save(file);
-        } catch (IOException e) {
-            Plugin.instance.getLogger().log(Level.WARNING, "Failed to save player achievements", e);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        loadPlayerAchievements(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        savePlayerAchievements(event.getPlayer());
-        unlockedAchievements.remove(event.getPlayer().getUniqueId());
-    }
 }

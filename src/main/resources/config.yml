@@ -5,7 +5,23 @@
 # Available placeholders: {player}, {target}, {value}, {min}, {max}
 
 # DO NOT MODIFY - Used for automatic config migration
-config-version: 3
+config-version: 5
+
+# ===== Storage Configuration =====
+# Choose between 'file', 'mysql', or 'postgresql'
+# Database storage is recommended for BungeeCord/Velocity networks
+storage:
+  # Storage type: 'file' (default), 'mysql', or 'postgresql'
+  type: file
+  
+  # Database settings (only used if type is 'mysql' or 'postgresql')
+  database:
+    host: localhost
+    port: 3306  # Default: 3306 for MySQL, 5432 for PostgreSQL
+    database: gooncraft
+    username: root
+    password: ""
+    table-prefix: gooncraft_
 
 messages:
   # General
@@ -39,12 +55,7 @@ messages:
     bbc-set-true: "&aSet {player}'s penis to a BBC"
     bbc-set-false: "&aSet {player}'s penis to a regular penis"
     invalid-boolean: "&cValue must be true or false"
-    
-    # Toggle (deprecated - use /genitals)
-    need-penis: "&cYou need to have a penis to use this command"
     no-penis: "&cYou don't have a penis! Use &e/gender change &cto get one."
-    whipped-out: "&aYou whipped it out!"
-    put-away: "&aYou put it away."
 
   # Genitals command (unified for all genders)
   genitals:
@@ -75,12 +86,6 @@ messages:
     cummed-on: "&6You have been cummed on by &a&l{player}"
     squirted-on: "&6You have been squirted on by &a&l{player}"
 
-  # Legacy cum messages (deprecated - use goon)
-  cum:
-    fap: "&7*goon*..."
-    ejaculate: "&7Hmmfff.. *finishes*"
-    cummed-on: "&6You have been cummed on by &a&l{player}"
-
   # Gender messages
   gender:
     current: "&7Your current gender is: {gender}"
@@ -103,8 +108,6 @@ messages:
     player-perkiness: "&d{player}'s boob perkiness is &e{value}"
     perkiness-set: "&aSet {player}'s boob perkiness to {value}"
     perkiness-range: "&cPerkiness must be between {min} and {max}"
-    whipped-out: "&dYou flashed your boobs!"
-    put-away: "&dYou covered up."
     need-toggle: "&cYou need to have your boobs out first! Use &e/genitals"
     jiggle: "&d*jiggle jiggle*"
 

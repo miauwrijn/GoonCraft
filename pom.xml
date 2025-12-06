@@ -35,6 +35,12 @@
 			<version>1.21.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- HikariCP for database connection pooling -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>5.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -53,6 +59,29 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.1.2</version>
+			</plugin>
+			<!-- Shade HikariCP into the plugin JAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.5.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<relocations>
+								<relocation>
+									<pattern>com.zaxxer.hikari</pattern>
+									<shadedPattern>com.miauwrijn.gooncraft.lib.hikari</shadedPattern>
+								</relocation>
+							</relocations>
+							<minimizeJar>true</minimizeJar>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

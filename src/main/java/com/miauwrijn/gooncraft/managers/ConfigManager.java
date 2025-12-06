@@ -20,7 +20,7 @@ public class ConfigManager {
 
     private static FileConfiguration config;
     private static final String CONFIG_VERSION_KEY = "config-version";
-    private static final int CURRENT_CONFIG_VERSION = 3; // Increment when config structure changes
+    private static final int CURRENT_CONFIG_VERSION = 5; // Increment when config structure changes
 
     public static void load() {
         File configFile = new File(Plugin.instance.getDataFolder(), "config.yml");
@@ -156,12 +156,8 @@ public class ConfigManager {
         return config.getInt("cooldowns.buttfinger", 5);
     }
 
-    public static boolean showFapMessages() {
-        // Support both old and new config keys
-        if (config.contains("chat.show-goon-messages")) {
-            return config.getBoolean("chat.show-goon-messages", true);
-        }
-        return config.getBoolean("chat.show-fap-messages", true);
+    public static boolean showGoonMessages() {
+        return config.getBoolean("chat.show-goon-messages", true);
     }
 
     public static boolean showEjaculateMessages() {

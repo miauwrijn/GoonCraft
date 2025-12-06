@@ -241,7 +241,7 @@ public class VaginaModel implements Runnable {
             StatisticsManager.incrementGotSquirtedOn(player, owner);
             StatisticsManager.incrementSquirtOnOthers(owner, player);
         } else {
-            if (ConfigManager.showFapMessages()) {
+            if (ConfigManager.showGoonMessages()) {
                 player.sendMessage("<" + owner.getName() + "> " + ConfigManager.getMessage("goon.goon"));
             }
         }
