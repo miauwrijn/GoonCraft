@@ -1,0 +1,512 @@
+# GoonCraft Configuration
+# =======================
+# Customize all plugin messages here!
+# Use color codes with § or & (e.g., &6 for gold, &c for red)
+# Available placeholders: {player}, {target}, {value}, {min}, {max}
+
+# DO NOT MODIFY - Used for automatic config migration
+config-version: 6
+
+# ===== Storage Configuration =====
+# Choose between 'file', 'mysql', or 'postgresql'
+# Database storage is recommended for BungeeCord/Velocity networks
+storage:
+  # Storage type: 'file' (default), 'mysql', or 'postgresql'
+  type: file
+  
+  # Database settings (only used if type is 'mysql' or 'postgresql')
+  database:
+    host: localhost
+    port: 3306  # Default: 3306 for MySQL, 5432 for PostgreSQL
+    database: gooncraft
+    username: root
+    password: ""
+    table-prefix: gooncraft_
+
+messages:
+  # General
+  only-players: "&cOnly players can use this command"
+  player-not-found: "&cPlayer not found"
+  no-permission: "&cYou don't have permission to do that"
+  no-stats: "&cNo stats found"
+
+  # Penis commands
+  penis:
+    usage: "&6Usage: /penis <size|girth|bbc> [player]"
+    unknown-subcommand: "&cUnknown subcommand. Use: size, girth, or bbc"
+    
+    # Size
+    your-size: "&6Your penis size is &e{value}cm"
+    player-size: "&6{player}'s penis size is &e{value}cm"
+    size-set: "&aSet {player}'s penis size to {value}cm"
+    size-range: "&cSize must be between {min} and {max}cm"
+    
+    # Girth
+    your-girth: "&6Your penis girth is &e{value}cm"
+    player-girth: "&6{player}'s penis girth is &e{value}cm"
+    girth-set: "&aSet {player}'s penis girth to {value}cm"
+    girth-range: "&cGirth must be between {min} and {max}cm"
+    
+    # BBC
+    you-have-bbc: "&aYes, you have a BBC"
+    you-no-bbc: "&cNo, you don't have a BBC"
+    player-has-bbc: "&a{player} has a BBC"
+    player-no-bbc: "&c{player} doesn't have a BBC"
+    bbc-set-true: "&aSet {player}'s penis to a BBC"
+    bbc-set-false: "&aSet {player}'s penis to a regular penis"
+    invalid-boolean: "&cValue must be true or false"
+    no-penis: "&cYou don't have a penis! Use &e/gender change &cto get one."
+
+  # Genitals command (unified for all genders)
+  genitals:
+    usage: "&6Usage: /genitals [toggle]"
+    no-gender: "&cYou need to select a gender first! Use &e/gender change"
+    shown: "&aYou exposed yourself!"
+    hidden: "&aYou covered up."
+
+  # Buttfinger command
+  buttfinger:
+    usage: "&cUsage: /buttfinger <player>"
+    cooldown: "&cYou can only buttfinger once every {value} seconds"
+    too-far: "&cPlayer is too far away to buttfinger!"
+    self: "&6You just buttfinger'd yourself! Kinky..."
+    victim: "&6You have been buttfinger'd by &e{player}&6!"
+    success: "&aYou buttfinger'd &e{target}&a!"
+
+  # Viagra
+  viagra:
+    need-toggle: "&cYou need to have your genitals out to use this Viagra!"
+    success: "&aNice! Your size temporarily grew {value}cm!"
+    given: "&aYou've been given a Viagra pill!"
+
+  # Goon messages (gender neutral - works for penis and vagina)
+  goon:
+    goon: "&7*goon*..."
+    orgasm: "&7Hmmfff.. *finishes*"
+    cummed-on: "&6You have been cummed on by &a&l{player}"
+    squirted-on: "&6You have been squirted on by &a&l{player}"
+
+  # Gender messages
+  gender:
+    current: "&7Your current gender is: {gender}"
+    change-hint: "&7Use &e/gender change &7to change it"
+    selected-male: "&bYou selected Male! &7You have been given a penis."
+    selected-female: "&dYou selected Female! &7You have been given boobs and a vagina."
+    selected-other: "&c&lO&6&lt&e&lh&a&le&b&lr&d&l! &7You have been given BOTH penis and boobs!"
+
+  # Boobs messages
+  boobs:
+    usage: "&6Usage: /boobs <size|perkiness|jiggle>"
+    unknown-subcommand: "&cUnknown subcommand. Use: size, perkiness, or jiggle"
+    no-boobs: "&cYou don't have boobs! Use &e/gender change &cto get some."
+    your-size: "&dYour boob size is &e{value}"
+    player-size: "&d{player}'s boob size is &e{value}"
+    player-no-boobs: "&c{player} doesn't have boobs!"
+    size-set: "&aSet {player}'s boob size to {value}"
+    size-range: "&cCup size must be between {min} and {max}"
+    your-perkiness: "&dYour boob perkiness is &e{value}"
+    player-perkiness: "&d{player}'s boob perkiness is &e{value}"
+    perkiness-set: "&aSet {player}'s boob perkiness to {value}"
+    perkiness-range: "&cPerkiness must be between {min} and {max}"
+    need-toggle: "&cYou need to have your boobs out first! Use &e/genitals"
+    jiggle: "&d*jiggle jiggle*"
+
+  # Bodily function messages
+  bodily:
+    cooldown: "&cYou need to wait before doing that again!"
+    piss-need-toggle: "&cYou need to have your genitals out to piss!"
+    fart: "&e{player} &7let one rip... &8*pffrrrt*"
+    poop: "&6{player} &7just dropped a deuce... &8*plop*"
+    piss: "&e{player} &7is taking a leak..."
+
+  # Statistics
+  stats:
+    header: "&6&l═══ {player}'s Goon Stats ═══"
+    goon-count: "&7Goon count: &e{value}"
+    cum-on-others: "&7Cummed on others: &e{value}"
+    got-cummed-on: "&7Got cummed on: &e{value}"
+    time-exposed: "&7Time exposed: &e{value}"
+    buttfingers-given: "&7Buttfingers given: &e{value}"
+    buttfingers-received: "&7Buttfingers received: &e{value}"
+    viagra-used: "&7Viagra used: &e{value}"
+    achievements: "&6Achievements: &e{unlocked}&7/&e{total}"
+
+  # Achievements
+  achievement:
+    unlocked-title: "&6&l★ ACHIEVEMENT UNLOCKED ★"
+    unlocked-name: "&e{name}"
+    unlocked-description: "&7{description}"
+    broadcast: "&6{player} &7unlocked the achievement &e{name}&7!"
+
+  achievements:
+    header: "&6&l═══ {player}'s Achievements ({unlocked}/{total}) ═══"
+
+  # Leaderboard
+  leaderboard:
+    header: "&6&l═══ Leaderboard: {category} ═══"
+
+# Viagra item settings
+viagra:
+  boost-amount: 5
+  item-name: "&dViagra"
+  item-lore:
+    - "&aCan't get it up or simply have a small ween?"
+    - "&aTake this for a temporary +{value}cm boost!"
+
+# Cooldowns (in seconds)
+cooldowns:
+  buttfinger: 5
+
+# Chat message settings
+chat:
+  # Show "*goon*" messages to nearby players
+  show-goon-messages: true
+  # Show "*finishes*" messages to nearby players
+  show-ejaculate-messages: true
+  # Show "You have been cummed on" messages
+  show-cummed-on-messages: true
+  # Show fart messages to nearby players
+  show-fart-messages: true
+  # Show poop messages to nearby players
+  show-poop-messages: true
+  # Show piss messages to nearby players
+  show-piss-messages: true
+
+# Animal/Mob interaction configuration
+# Customize how animals react when gooned on, pooped on, or pissed on
+animals:
+  # Whether sheep should change color when affected
+  change-sheep-color: true
+  
+  # Mob configurations
+  # Available colors: "white" (gooned on), "brown" (pooped on), "yellow" (pissed on)
+  # Leave name empty ("") to disable that interaction type
+  mobs:
+    # Passive mobs
+    chicken:
+      white: "§f§lCreamed Chicken"
+      brown: "§6§lChocolate Nugget"
+      yellow: "§e§lLemon Chicken"
+    
+    cow:
+      white: "§f§lCream Cow"
+      brown: "§6§lChocolate Milk"
+      yellow: "§e§lButter Cow"
+    
+    pig:
+      white: "§f§lGlazed Ham"
+      brown: "§6§lMud Pig"
+      yellow: "§e§lGolden Pig"
+    
+    sheep:
+      white: "§f§lFrosted Sheep"
+      brown: "§6§lMuddy Wool"
+      yellow: "§e§lGolden Fleece"
+    
+    horse:
+      white: "§f§lCream Pony"
+      brown: "§6§lMud Stallion"
+      yellow: "§e§lPissed Off Horse"
+    
+    donkey:
+      white: "§f§lGlazed Donkey"
+      brown: "§6§lPoopy Ass"
+      yellow: "§e§lGolden Donkey"
+    
+    mule:
+      white: "§f§lFrosted Mule"
+      brown: "§6§lChocolate Mule"
+      yellow: "§e§lLemon Mule"
+    
+    llama:
+      white: "§f§lCream Llama"
+      brown: "§6§lPoopy Llama"
+      yellow: "§e§lPissed Llama"
+    
+    wolf:
+      white: "§f§lFrosted Wolf"
+      brown: "§6§lMuddy Wolf"
+      yellow: "§e§lGolden Retriever"
+    
+    cat:
+      white: "§f§lCream Puff"
+      brown: "§6§lMuddy Cat"
+      yellow: "§e§lGolden Cat"
+    
+    ocelot:
+      white: "§f§lFrosted Cat"
+      brown: "§6§lMuddy Ocelot"
+      yellow: "§e§lGolden Cat"
+    
+    fox:
+      white: "§f§lFrosted Fox"
+      brown: "§6§lMuddy Fox"
+      yellow: "§e§lGolden Fox"
+    
+    panda:
+      white: "§f§lCream Panda"
+      brown: "§6§lMuddy Panda"
+      yellow: "§e§lGolden Panda"
+    
+    rabbit:
+      white: "§f§lCream Bunny"
+      brown: "§6§lChocolate Rabbit"
+      yellow: "§e§lGolden Rabbit"
+    
+    polar_bear:
+      white: "§f§lExtra Frosty Bear"
+      brown: "§6§lMuddy Polar Bear"
+      yellow: "§e§lGolden Bear"
+    
+    turtle:
+      white: "§f§lFrosted Turtle"
+      brown: "§6§lMuddy Shell"
+      yellow: "§e§lGolden Turtle"
+    
+    dolphin:
+      white: "§f§lCream Dolphin"
+      brown: "§6§lMuddy Dolphin"
+      yellow: "§e§lGolden Dolphin"
+    
+    squid:
+      white: "§f§lCream Squid"
+      brown: "§6§lInk & Mud"
+      yellow: "§e§lGolden Squid"
+    
+    glow_squid:
+      white: "§f§lGlowing Cream"
+      brown: "§6§lGlowing Mud"
+      yellow: "§e§lGlowing Piss"
+    
+    cod:
+      white: "§f§lCreamed Cod"
+      brown: "§6§lMuddy Fish"
+      yellow: "§e§lGolden Fish"
+    
+    salmon:
+      white: "§f§lCreamed Salmon"
+      brown: "§6§lMuddy Salmon"
+      yellow: "§e§lGolden Salmon"
+    
+    pufferfish:
+      white: "§f§lFrosted Puffer"
+      brown: "§6§lMuddy Puffer"
+      yellow: "§e§lGolden Puffer"
+    
+    tropical_fish:
+      white: "§f§lFrosted Tropical"
+      brown: "§6§lMuddy Tropical"
+      yellow: "§e§lGolden Tropical"
+    
+    axolotl:
+      white: "§f§lCreamed Axolotl"
+      brown: "§6§lMuddy Axolotl"
+      yellow: "§e§lGolden Axolotl"
+    
+    frog:
+      white: "§f§lFrosted Frog"
+      brown: "§6§lMuddy Frog"
+      yellow: "§e§lPissed Frog"
+    
+    goat:
+      white: "§f§lCreamed Goat"
+      brown: "§6§lMuddy Goat"
+      yellow: "§e§lGolden Goat"
+    
+    allay:
+      white: "§f§lFrosted Allay"
+      brown: "§6§lMuddy Allay"
+      yellow: "§e§lGolden Allay"
+    
+    bat:
+      white: "§f§lFrosted Bat"
+      brown: "§6§lMuddy Bat"
+      yellow: "§e§lGolden Bat"
+    
+    parrot:
+      white: "§f§lFrosted Parrot"
+      brown: "§6§lMuddy Parrot"
+      yellow: "§e§lGolden Parrot"
+    
+    mooshroom:
+      white: "§f§lCream Mushroom"
+      brown: "§6§lMuddy Mushroom"
+      yellow: "§e§lGolden Mushroom"
+    
+    sniffer:
+      white: "§f§lFrosted Sniffer"
+      brown: "§6§lMuddy Sniffer"
+      yellow: "§e§lGolden Sniffer"
+    
+    # Villagers
+    villager:
+      white: "§f§lCreamed Villager"
+      brown: "§6§lMuddy Villager"
+      yellow: "§e§lPissed Villager"
+    
+    wandering_trader:
+      white: "§f§lFrosted Trader"
+      brown: "§6§lMuddy Trader"
+      yellow: "§e§lPissed Trader"
+    
+    # Golems
+    iron_golem:
+      white: "§f§lFrosted Golem"
+      brown: "§6§lRusty Golem"
+      yellow: "§e§lGolden Golem"
+    
+    snow_golem:
+      white: "§f§lExtra Frosty"
+      brown: "§6§lMuddy Snowman"
+      yellow: "§e§lGolden Snowman"
+    
+    # Hostile mobs
+    zombie:
+      white: "§f§lCreamed Zombie"
+      brown: "§6§lMuddy Zombie"
+      yellow: "§e§lPissed Zombie"
+    
+    zombie_villager:
+      white: "§f§lFrosted Zombie"
+      brown: "§6§lMuddy Zombie"
+      yellow: "§e§lPissed Zombie"
+    
+    husk:
+      white: "§f§lFrosted Husk"
+      brown: "§6§lMuddy Husk"
+      yellow: "§e§lPissed Husk"
+    
+    drowned:
+      white: "§f§lCreamed Drowned"
+      brown: "§6§lMuddy Drowned"
+      yellow: "§e§lPissed Drowned"
+    
+    zombified_piglin:
+      white: "§f§lFrosted Piglin"
+      brown: "§6§lMuddy Piglin"
+      yellow: "§e§lPissed Piglin"
+    
+    skeleton:
+      white: "§f§lFrosted Bones"
+      brown: "§6§lMuddy Skeleton"
+      yellow: "§e§lGolden Bones"
+    
+    stray:
+      white: "§f§lFrosted Stray"
+      brown: "§6§lMuddy Stray"
+      yellow: "§e§lPissed Stray"
+    
+    wither_skeleton:
+      white: "§f§lFrosted Wither"
+      brown: "§6§lMuddy Wither"
+      yellow: "§e§lPissed Wither"
+    
+    creeper:
+      white: "§f§lCreamed Creeper"
+      brown: "§6§lMuddy Creeper"
+      yellow: "§e§lPissed Creeper"
+    
+    spider:
+      white: "§f§lFrosted Spider"
+      brown: "§6§lMuddy Web"
+      yellow: "§e§lGolden Spider"
+    
+    cave_spider:
+      white: "§f§lFrosted Cave Spider"
+      brown: "§6§lMuddy Cave Spider"
+      yellow: "§e§lPissed Cave Spider"
+    
+    enderman:
+      white: "§f§lFrosted Enderman"
+      brown: "§6§lMuddy Enderman"
+      yellow: "§e§lPissed Enderman"
+    
+    endermite:
+      white: "§f§lFrosted Endermite"
+      brown: "§6§lMuddy Endermite"
+      yellow: "§e§lPissed Endermite"
+    
+    shulker:
+      white: "§f§lFrosted Shulker"
+      brown: "§6§lMuddy Shulker"
+      yellow: "§e§lPissed Shulker"
+    
+    blaze:
+      white: "§f§lFrosted Blaze"
+      brown: "§6§lMuddy Blaze"
+      yellow: "§e§lPissed Blaze"
+    
+    ghast:
+      white: "§f§lFrosted Ghast"
+      brown: "§6§lMuddy Ghast"
+      yellow: "§e§lPissed Ghast"
+    
+    slime:
+      white: "§f§lCreamy Slime"
+      brown: "§6§lMuddy Slime"
+      yellow: "§e§lGolden Slime"
+    
+    magma_cube:
+      white: "§f§lFrosted Magma"
+      brown: "§6§lMuddy Magma"
+      yellow: "§e§lPissed Magma"
+    
+    witch:
+      white: "§f§lFrosted Witch"
+      brown: "§6§lMuddy Witch"
+      yellow: "§e§lPissed Witch"
+    
+    evoker:
+      white: "§f§lFrosted Evoker"
+      brown: "§6§lMuddy Evoker"
+      yellow: "§e§lPissed Evoker"
+    
+    vindicator:
+      white: "§f§lFrosted Vindicator"
+      brown: "§6§lMuddy Vindicator"
+      yellow: "§e§lPissed Vindicator"
+    
+    pillager:
+      white: "§f§lFrosted Pillager"
+      brown: "§6§lMuddy Pillager"
+      yellow: "§e§lPissed Pillager"
+    
+    ravager:
+      white: "§f§lFrosted Ravager"
+      brown: "§6§lMuddy Ravager"
+      yellow: "§e§lPissed Ravager"
+    
+    phantom:
+      white: "§f§lFrosted Phantom"
+      brown: "§6§lMuddy Phantom"
+      yellow: "§e§lPissed Phantom"
+    
+    vex:
+      white: "§f§lFrosted Vex"
+      brown: "§6§lMuddy Vex"
+      yellow: "§e§lPissed Vex"
+    
+    guardian:
+      white: "§f§lFrosted Guardian"
+      brown: "§6§lMuddy Guardian"
+      yellow: "§e§lPissed Guardian"
+    
+    elder_guardian:
+      white: "§f§lFrosted Elder"
+      brown: "§6§lMuddy Elder"
+      yellow: "§e§lPissed Elder"
+    
+    hoglin:
+      white: "§f§lFrosted Hoglin"
+      brown: "§6§lMuddy Hoglin"
+      yellow: "§e§lPissed Hoglin"
+    
+    strider:
+      white: "§f§lFrosted Strider"
+      brown: "§6§lMuddy Strider"
+      yellow: "§e§lPissed Strider"
+    
+    warden:
+      white: "§f§lFrosted Warden"
+      brown: "§6§lMuddy Warden"
+      yellow: "§e§lPissed Warden"

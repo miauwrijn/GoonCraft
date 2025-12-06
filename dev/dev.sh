@@ -20,11 +20,44 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+apply_ops() {
+    if [ -f .env ]; then
+        # Try MC_USERNAME first (current format), then fall back to OPS (legacy format)
+        OPS=""
+        if grep -q "^MC_USERNAME=" .env; then
+            OPS=$(grep "^MC_USERNAME=" .env | cut -d'=' -f2- | xargs)
+        elif grep -q "^OPS=" .env; then
+            OPS=$(grep "^OPS=" .env | cut -d'=' -f2- | xargs)
+        fi
+        
+        if [ -n "$OPS" ]; then
+            echo -e "${CYAN}👑 Applying OPs...${NC}"
+            IFS=',' read -ra PLAYERS <<< "$OPS"
+            for player in "${PLAYERS[@]}"; do
+                player=$(echo "$player" | xargs)
+                if [ -n "$player" ]; then
+                    docker exec gooncraft-server rcon-cli op "$player" 2>/dev/null || true
+                    echo "   OP: $player"
+                fi
+            done
+        else
+            echo -e "${YELLOW}⚠️  No MC_USERNAME or OPS found in .env file${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠️  .env file not found${NC}"
+    fi
+}
+
 case "$1" in
   start)
     echo -e "${CYAN}🚀 Starting GoonCraft server...${NC}"
     docker compose up -d minecraft
     echo -e "${GREEN}✅ Server starting at localhost:25565${NC}"
+    echo "   Use './dev/dev.sh op' to apply OPs after server is ready"
+    ;;
+  op)
+    apply_ops
+    echo -e "${GREEN}✅ OPs applied${NC}"
     ;;
   stop)
     echo -e "${YELLOW}🛑 Stopping server...${NC}"
@@ -68,6 +101,7 @@ case "$1" in
     echo ""
     echo "  Commands:"
     echo "    start   - Start the Minecraft server"
+    echo "    op      - Apply OPs from .env file"
     echo "    stop    - Stop the server"
     echo "    build   - Build the plugin"
     echo "    reload  - Reload plugin on server"

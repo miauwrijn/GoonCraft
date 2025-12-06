@@ -1,9 +1,6 @@
-package com.miauwrijn.gooncraft;
-
-import java.util.List;
+package com.miauwrijn.gooncraft.managers;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -20,17 +17,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 public class PillManager implements Listener, CommandExecutor {
 
-    private static final int VIAGRA_BOOST = 5;
-    private final ItemStack viagraItem;
     private final NamespacedKey viagraKey;
 
     public PillManager() {
         this.viagraKey = new NamespacedKey(Plugin.instance, "viagra");
-        this.viagraItem = createViagraItem();
         registerRecipe();
         
         Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
@@ -41,11 +37,8 @@ public class PillManager implements Listener, CommandExecutor {
         ItemMeta meta = item.getItemMeta();
         
         if (meta != null) {
-            meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Viagra");
-            meta.setLore(List.of(
-                ChatColor.GREEN + "Can't get it up or simply have a small ween?",
-                ChatColor.GREEN + "Take this for a temporary +" + VIAGRA_BOOST + "cm boost!"
-            ));
+            meta.setDisplayName(ConfigManager.getViagraName());
+            meta.setLore(ConfigManager.getViagraLore());
             meta.getPersistentDataContainer().set(viagraKey, PersistentDataType.BOOLEAN, true);
             item.setItemMeta(meta);
         }
@@ -54,6 +47,7 @@ public class PillManager implements Listener, CommandExecutor {
     }
 
     private void registerRecipe() {
+        ItemStack viagraItem = createViagraItem();
         ShapedRecipe recipe = new ShapedRecipe(viagraKey, viagraItem);
         recipe.shape("DDD", "DSD", "DDD");
         recipe.setIngredient('D', Material.DIAMOND);
@@ -73,7 +67,7 @@ public class PillManager implements Listener, CommandExecutor {
 
         PenisStatistics stats = PenisStatisticManager.getStatistics(player);
         if (stats == null || stats.penisModel == null) {
-            player.sendMessage(ChatColor.RED + "You need to have your dick out to use this Viagra!");
+            player.sendMessage(ConfigManager.getMessage("viagra.need-toggle"));
             return;
         }
 
@@ -81,10 +75,14 @@ public class PillManager implements Listener, CommandExecutor {
         item.setAmount(item.getAmount() - 1);
         
         // Apply the boost
-        PenisStatisticManager.setViagraBoost(player, stats.viagraBoost + VIAGRA_BOOST);
+        int boost = ConfigManager.getViagraBoost();
+        PenisStatisticManager.setViagraBoost(player, stats.viagraBoost + boost);
+        
+        // Track statistic
+        StatisticsManager.incrementViagraUsed(player);
         
         // Effects
-        player.sendMessage(ChatColor.GREEN + "Nice cock bro! Your dick temporarily grew " + VIAGRA_BOOST + "cm!");
+        player.sendMessage(ConfigManager.getMessage("viagra.success", "{value}", String.valueOf(boost)));
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 0.5f);
         
         event.setCancelled(true);
@@ -108,7 +106,7 @@ public class PillManager implements Listener, CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command");
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
             return true;
         }
 
@@ -117,12 +115,12 @@ public class PillManager implements Listener, CommandExecutor {
         }
 
         if (!player.hasPermission("gooncraft.viagra")) {
-            player.sendMessage(ChatColor.RED + "You don't have permission to spawn viagra!");
+            player.sendMessage(ConfigManager.getMessage("no-permission"));
             return true;
         }
 
-        player.getInventory().addItem(new ItemStack(viagraItem));
-        player.sendMessage(ChatColor.GREEN + "You've been given a Viagra pill!");
+        player.getInventory().addItem(createViagraItem());
+        player.sendMessage(ConfigManager.getMessage("viagra.given"));
         return true;
     }
 }

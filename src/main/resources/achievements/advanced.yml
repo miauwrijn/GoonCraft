@@ -1,0 +1,352 @@
+# ===== ADVANCED ACHIEVEMENTS =====
+# Buttfinger, viagra, bodily functions, boobs, gender, danger, and social achievements
+
+achievements:
+  # ===== BUTTFINGER ACHIEVEMENTS (5) =====
+  buttfinger_1:
+    name: "Probing"
+    description: "Buttfinger someone for the first time"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "bf_given"
+    xp_reward: 5
+  
+  buttfinger_10:
+    name: "Proctologist"
+    description: "Buttfinger 10 people"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "bf_given"
+    xp_reward: 15
+  
+  buttfinger_50:
+    name: "Master Fingerer"
+    description: "Buttfinger 50 people"
+    category: "advanced"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "bf_given"
+    xp_reward: 150
+  
+  got_bf_1:
+    name: "Surprised!"
+    description: "Get buttfingered for the first time"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "bf_received"
+    xp_reward: 5
+  
+  got_bf_10:
+    name: "Loose"
+    description: "Get buttfingered 10 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "bf_received"
+    xp_reward: 15
+  
+  # ===== VIAGRA ACHIEVEMENTS (3) =====
+  viagra_1:
+    name: "Performance Issues"
+    description: "Use your first Viagra"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "viagra"
+    xp_reward: 5
+  
+  viagra_10:
+    name: "Pill Popper"
+    description: "Use 10 Viagras"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "viagra"
+    xp_reward: 15
+  
+  viagra_50:
+    name: "Pharmacist's Best Friend"
+    description: "Use 50 Viagras"
+    category: "advanced"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "viagra"
+    xp_reward: 150
+  
+  # ===== FART ACHIEVEMENTS (3) =====
+  fart_1:
+    name: "Wind Breaker"
+    description: "Your first toot"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "fart"
+    xp_reward: 5
+  
+  fart_50:
+    name: "Crop Duster"
+    description: "Spread the love - fart 50 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "fart"
+    xp_reward: 100
+  
+  fart_500:
+    name: "Taco Bell Survivor"
+    description: "You should see a doctor - fart 500 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 500
+    rarity: "rare"
+    stat_category: "fart"
+    xp_reward: 500
+  
+  # ===== POOP ACHIEVEMENTS (3) =====
+  poop_1:
+    name: "First Drop"
+    description: "Nature calls"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "poop"
+    xp_reward: 5
+  
+  poop_50:
+    name: "Regular Schedule"
+    description: "Fiber is important - poop 50 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "poop"
+    xp_reward: 100
+  
+  poop_500:
+    name: "IBS Warrior"
+    description: "Your poor toilet - poop 500 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 500
+    rarity: "rare"
+    stat_category: "poop"
+    xp_reward: 500
+  
+  # ===== PISS ACHIEVEMENTS (3) =====
+  piss_1:
+    name: "Marking Territory"
+    description: "Claim what's yours"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "piss"
+    xp_reward: 5
+  
+  piss_50:
+    name: "Fire Hydrant"
+    description: "Like a dog - piss 50 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "piss"
+    xp_reward: 100
+  
+  piss_500:
+    name: "Niagara Falls"
+    description: "Endless stream - piss 500 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 500
+    rarity: "rare"
+    stat_category: "piss"
+    xp_reward: 500
+  
+  # ===== BOOB ACHIEVEMENTS (4) =====
+  boob_toggle_1:
+    name: "Flasher"
+    description: "Show 'em off"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "boob_toggle"
+    xp_reward: 5
+  
+  boob_toggle_50:
+    name: "Mardi Gras"
+    description: "Free the nipple - flash 50 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "boob_toggle"
+    xp_reward: 100
+  
+  jiggle_10:
+    name: "Jello Jigglers"
+    description: "Boing boing - jiggle 10 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "jiggle"
+    xp_reward: 25
+  
+  jiggle_100:
+    name: "Earthquake"
+    description: "8.0 on the Richter scale - jiggle 100 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 100
+    rarity: "rare"
+    stat_category: "jiggle"
+    xp_reward: 250
+  
+  # ===== GENDER ACHIEVEMENTS (3) =====
+  gender_other:
+    name: "Best of Both Worlds"
+    description: "Embrace it all - select Other gender"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "advanced"
+    xp_reward: 10
+  
+  gender_change_5:
+    name: "Identity Crisis"
+    description: "Can't decide - change gender 5 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 5
+    rarity: "common"
+    stat_category: "gender_changes"
+    xp_reward: 15
+  
+  gender_change_20:
+    name: "Fluid"
+    description: "Go with the flow - change gender 20 times"
+    category: "advanced"
+    type: "stat"
+    threshold: 20
+    rarity: "uncommon"
+    stat_category: "gender_changes"
+    xp_reward: 30
+
+  # ===== DANGER ACHIEVEMENTS (5) - Gender Neutral =====
+  damage_while_goon:
+    name: "Caught Red-Handed"
+    description: "Take damage while gooning"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "advanced"
+    xp_reward: 10
+  
+  death_exposed:
+    name: "Didn't See That Coming"
+    description: "Die while exposed"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "rare"
+    stat_category: "death_exposed"
+    xp_reward: 25
+  
+  goon_on_fire:
+    name: "Too Hot To Handle"
+    description: "Goon while on fire"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 15
+  
+  goon_falling:
+    name: "Terminal Velocity"
+    description: "Falling with style"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 15
+  
+  creeper_death:
+    name: "Creeper's Delight"
+    description: "Get blown up while exposed"
+    category: "advanced"
+    type: "stat"
+    threshold: 1
+    rarity: "rare"
+    stat_category: "creeper_death"
+    xp_reward: 200
+  
+  # ===== SOCIAL ACHIEVEMENTS (6) =====
+  cum_variety_10:
+    name: "Sharing is Caring"
+    description: "Cum on 10 different players"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "advanced"
+    xp_reward: 25
+  
+  got_cum_variety_10:
+    name: "Popular Target"
+    description: "Get cummed on by 10 different players"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "advanced"
+    xp_reward: 25
+  
+  piss_variety_10:
+    name: "Golden Shower Hour"
+    description: "Piss near 10 different players"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "piss"
+    xp_reward: 20
+  
+  fart_variety_10:
+    name: "Stink Bomb"
+    description: "Fart near 10 different players"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "fart"
+    xp_reward: 20
+  
+  bf_variety_10:
+    name: "Explorer"
+    description: "Buttfinger 10 different players"
+    category: "advanced"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "bf_given"
+    xp_reward: 25

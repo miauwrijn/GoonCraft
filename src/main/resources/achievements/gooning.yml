@@ -1,0 +1,198 @@
+# ===== GOONING ACHIEVEMENTS =====
+# Core gooning statistics, cum interactions, and group activities
+
+achievements:
+  # ===== GOON ACHIEVEMENTS (6) - Gender Neutral =====
+  first_goon:
+    name: "First Timer"
+    description: "Goon for the first time"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 5
+  
+  goon_10:
+    name: "Getting Started"
+    description: "Goon 10 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 10
+  
+  goon_50:
+    name: "Chronic Masturbator"
+    description: "Goon 50 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "goon"
+    xp_reward: 25
+  
+  goon_100:
+    name: "Coomer"
+    description: "Goon 100 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 100
+    rarity: "rare"
+    stat_category: "goon"
+    xp_reward: 50
+  
+  goon_500:
+    name: "Professional Gooner"
+    description: "Goon 500 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 500
+    rarity: "rare"
+    stat_category: "goon"
+    xp_reward: 500
+  
+  goon_1000:
+    name: "Legendary Gooner"
+    description: "Goon 1000 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 1000
+    rarity: "mythic"
+    stat_category: "goon"
+    xp_reward: 1500
+  
+  # ===== CUM ON OTHERS ACHIEVEMENTS (4) =====
+  cum_on_1:
+    name: "Oops!"
+    description: "Cum on someone for the first time"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "cum_on"
+    xp_reward: 5
+  
+  cum_on_10:
+    name: "Spray and Pray"
+    description: "Cum on others 10 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "cum_on"
+    xp_reward: 15
+  
+  cum_on_50:
+    name: "Human Sprinkler"
+    description: "Cum on others 50 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "cum_on"
+    xp_reward: 150
+  
+  cum_on_100:
+    name: "Bukakke Master"
+    description: "Cum on others 100 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 100
+    rarity: "rare"
+    stat_category: "cum_on"
+    xp_reward: 400
+  
+  # ===== GOT CUMMED ON ACHIEVEMENTS (3) =====
+  got_cummed_1:
+    name: "Victim"
+    description: "Get cummed on for the first time"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "got_cummed"
+    xp_reward: 5
+  
+  got_cummed_10:
+    name: "Easy Target"
+    description: "Get cummed on 10 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "got_cummed"
+    xp_reward: 15
+  
+  got_cummed_50:
+    name: "Cum Magnet"
+    description: "Get cummed on 50 times"
+    category: "gooning"
+    type: "stat"
+    threshold: 50
+    rarity: "uncommon"
+    stat_category: "got_cummed"
+    xp_reward: 35
+
+  # ===== GROUP GOONING ACHIEVEMENTS (4) - Gender Neutral =====
+  circle_goon:
+    name: "Circle Goon"
+    description: "Goon with 3+ players at the same time"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 75
+  
+  threesome:
+    name: "Threesome"
+    description: "Three's company - goon with 2 others"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 50
+  
+  orgy:
+    name: "Orgy"
+    description: "Goon party - 5+ players together"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 150
+  
+  gangbang:
+    name: "Gangbang"
+    description: "Seven's a crowd - goon with 6+ others"
+    category: "gooning"
+    type: "stat"
+    threshold: 1
+    rarity: "common"
+    stat_category: "goon"
+    xp_reward: 250
+
+  # ===== SPEED ACHIEVEMENTS (2) - Gender Neutral =====
+  speed_goon_10:
+    name: "Speed Runner"
+    description: "Goon 10 times in 60 seconds"
+    category: "gooning"
+    type: "stat"
+    threshold: 10
+    rarity: "common"
+    stat_category: "speed_goon"
+    xp_reward: 20
+  
+  rapid_fire_3:
+    name: "Rapid Fire"
+    description: "Finish 3 times in 30 seconds"
+    category: "gooning"
+    type: "stat"
+    threshold: 3
+    rarity: "common"
+    stat_category: "rapid_fire"
+    xp_reward: 25

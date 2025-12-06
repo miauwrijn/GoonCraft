@@ -1,0 +1,64 @@
+# ===== LOCATION ACHIEVEMENTS =====
+# Achievements for gooning in specific locations/biomes
+
+achievements:
+  # ===== LOCATION ACHIEVEMENTS (6) - Gender Neutral =====
+  goon_nether:
+    name: "Hot & Bothered"
+    description: "Goon in the Nether"
+    category: "location"
+    type: "location"
+    threshold: 1
+    rarity: "uncommon"
+    location_tag: "nether"
+    xp_reward: 20
+  
+  goon_end:
+    name: "End Game"
+    description: "Beat the dragon... differently"
+    category: "location"
+    type: "location"
+    threshold: 1
+    rarity: "uncommon"
+    location_tag: "end"
+    xp_reward: 25
+  
+  goon_underwater:
+    name: "Deep Diver"
+    description: "Aquatic activities"
+    category: "location"
+    type: "location"
+    threshold: 1
+    rarity: "uncommon"
+    location_tag: "underwater"
+    xp_reward: 20
+  
+  goon_desert:
+    name: "Dry Rub"
+    description: "Sandy situation"
+    category: "location"
+    type: "location"
+    threshold: 1
+    rarity: "uncommon"
+    location_tag: "desert"
+    xp_reward: 15
+  
+  goon_snow:
+    name: "Shrinkage"
+    description: "It's cold!"
+    category: "location"
+    type: "location"
+    threshold: 1
+    rarity: "uncommon"
+    location_tag: "snow"
+    xp_reward: 15
+  
+  goon_high:
+    name: "Mile High Club"
+    description: "Get freaky above Y=200"
+    category: "location"
+    type: "location"
+    threshold: 1
+    rarity: "uncommon"
+    location_tag: "high"
+    xp_reward: 20

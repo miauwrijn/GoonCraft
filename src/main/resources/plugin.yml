@@ -1,24 +1,76 @@
 name: GoonCraft
 main: com.miauwrijn.gooncraft.Plugin
-version: 0.1.0
+version: 0.3.0
 api-version: '1.21'
 authors: ["Miauwrijn"]
 description: The Minecraft plugin your server never knew it needed
+softdepend: [PlaceholderAPI]
 commands:
+  gooncraft:
+    description: GoonCraft main command
+    usage: /<command> <stats|achievements|leaderboard|perks|reload>
+    aliases:
+      - gc
+  perks:
+    description: Open perk management GUI
+    usage: /<command> [player]
+    aliases:
+      - perkmanagement
   buttfinger:
     description: Buttfinger someone nearby
     usage: /<command> <player>
     aliases:
       - bf
-    permission-message: You do not have permission to use this command
   penis:
-    description: Penis commands
-    usage: /<command> <size|girth|bbc|toggle>
+    description: Penis stat commands
+    usage: /<command> <size|girth|bbc>
     aliases:
       - pp
-    permission-message: You do not have permission to use this command
+  genitals:
+    description: Toggle your genitals visibility (gender-aware)
+    usage: /<command> [toggle]
+    aliases:
+      - geni
+      - expose
   viagra:
     description: Get a viagra pill
     usage: /<command>
     permission: gooncraft.viagra
-    permission-message: You do not have permission to use this command
+  fart:
+    description: Let one rip
+    usage: /<command>
+  poop:
+    description: Drop a deuce
+    usage: /<command>
+  piss:
+    description: Take a leak (requires genitals toggle)
+    usage: /<command>
+  gender:
+    description: View or change your gender
+    usage: /<command> [change]
+  boobs:
+    description: Boob stat commands
+    usage: /<command> <size|perkiness|jiggle>
+    aliases:
+      - tits
+      - breasts
+
+permissions:
+  gooncraft.reload:
+    description: Allows reloading the config
+    default: op
+  gooncraft.viagra:
+    description: Allows spawning viagra pills
+    default: op
+  gooncraft.size.set:
+    description: Allows setting player sizes
+    default: op
+  gooncraft.girth.set:
+    description: Allows setting player girths
+    default: op
+  gooncraft.bbc.set:
+    description: Allows setting BBC status
+    default: op
+  gooncraft.boobs.set:
+    description: Allows setting player boob sizes
+    default: op

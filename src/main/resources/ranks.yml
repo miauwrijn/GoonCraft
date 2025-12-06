@@ -1,0 +1,372 @@
+ranks:
+  innocent:
+    required_xp: 0
+    display_name: "§7Innocent Virgin"
+    color: "§7"
+    icon: "👶"
+    description: "Pure as the driven snow. You haven't discovered the wonders of self-expression yet."
+  curious:
+    required_xp: 10
+    display_name: "§aCurious Toucher"
+    color: "§a"
+    icon: "🤔"
+    description: "The first step is always the hardest... or is it the easiest?"
+  beginner:
+    required_xp: 25
+    display_name: "§aFirst Steps"
+    color: "§a"
+    icon: "👣"
+    description: "Baby steps! You're learning what your body can do. So innocent, so pure... for now."
+  awakening:
+    required_xp: 50
+    display_name: "§eAwakening"
+    color: "§e"
+    icon: "🌅"
+    description: "The veil has been lifted! You're starting to understand the true purpose of your hands."
+    perks:
+      - type: cooldown_reduction
+        value: 0.05
+  explorer:
+    required_xp: 100
+    display_name: "§eExplorer"
+    color: "§e"
+    icon: "🔍"
+    description: "Adventure awaits! You're exploring new territories, both in-game and... elsewhere."
+  amateur:
+    required_xp: 175
+    display_name: "§eAmateur Stroker"
+    color: "§e"
+    icon: "✋"
+    description: "You're getting the hang of it! Practice makes perfect, they say."
+  practitioner:
+    required_xp: 275
+    display_name: "§6Practitioner"
+    color: "§6"
+    icon: "🎯"
+    description: "You've practiced enough to know what you're doing. Or so you think."
+    perks:
+      - type: cooldown_reduction
+        value: 0.10
+  dedicated:
+    required_xp: 400
+    display_name: "§6Dedicated Learner"
+    color: "§6"
+    icon: "📚"
+    description: "Dedication is key! You're studying the art form intensely."
+  enthusiast:
+    required_xp: 575
+    display_name: "§6Goon Enthusiast"
+    color: "§6"
+    icon: "🔥"
+    description: "Your passion burns bright! You've become a true enthusiast."
+  passionate:
+    required_xp: 800
+    display_name: "§cPassionate Player"
+    color: "§c"
+    icon: "❤️"
+    description: "Your passion knows no bounds! You're in it for the long haul."
+  committed:
+    required_xp: 1100
+    display_name: "§cCommitted Degenerate"
+    color: "§c"
+    icon: "💪"
+    description: "You've committed to the cause. No turning back now!"
+    perks:
+      - type: fap_speed
+        value: 1.15
+  advanced:
+    required_xp: 1500
+    display_name: "§cAdvanced Coomer"
+    color: "§c"
+    icon: "💦"
+    description: "Advanced techniques unlocked! You're getting good at this."
+  skilled:
+    required_xp: 2000
+    display_name: "§dSkilled Performer"
+    color: "§d"
+    icon: "🎪"
+    description: "Your skills are on display! The show must go on!"
+    perks:
+      - type: cockmaster
+  expert:
+    required_xp: 2750
+    display_name: "§dExpert Gooner"
+    color: "§d"
+    icon: "🍆"
+    description: "Expert level achieved! You've mastered the basics and beyond."
+    perks:
+      - type: size_boost
+        value: 1
+  master:
+    required_xp: 3750
+    display_name: "§5Master Bater"
+    color: "§5"
+    icon: "🎓"
+    description: "Master of the art! You've honed your craft to perfection."
+    perks:
+      - type: cooldown_reduction
+        value: 0.20
+  veteran:
+    required_xp: 5000
+    display_name: "§5Veteran"
+    color: "§5"
+    icon: "🛡️"
+    description: "A true veteran! You've seen things... many, many things."
+  professional:
+    required_xp: 6750
+    display_name: "§5Professional Gooner"
+    color: "§5"
+    icon: "👑"
+    description: "Professional status! You could charge for this expertise."
+  elite:
+    required_xp: 9000
+    display_name: "§3Elite Exhibitionist"
+    color: "§3"
+    icon: "⭐"
+    description: "Elite tier unlocked! You stand among the best."
+  champion:
+    required_xp: 12000
+    display_name: "§3Champion"
+    color: "§3"
+    icon: "🏅"
+    description: "Champion of degeneracy! You've earned your title."
+    perks:
+      - type: pussy_magnet
+  legendary:
+    required_xp: 16000
+    display_name: "§4Legendary Pervert"
+    color: "§4"
+    icon: "🏆"
+    description: "Legendary status! Your name will be remembered... probably."
+    perks:
+      - type: size_boost
+        value: 1
+  mythic:
+    required_xp: 21000
+    display_name: "§4Mythic Degenerate"
+    color: "§4"
+    icon: "⚔️"
+    description: "Mythic tier! Stories of your exploits spread far and wide."
+  epic:
+    required_xp: 28000
+    display_name: "§4Epic Coomer"
+    color: "§4"
+    icon: "🗡️"
+    description: "Epic proportions! Everything about you is larger than life."
+    perks:
+      - type: fap_speed
+        value: 1.25
+      - type: size_boost
+        value: 1
+  divine:
+    required_xp: 37000
+    display_name: "§bDivine Gooner"
+    color: "§b"
+    icon: "✨"
+    description: "Divine intervention! The gods smile upon your dedication."
+  transcendent:
+    required_xp: 49000
+    display_name: "§bTranscendent"
+    color: "§b"
+    icon: "🌟"
+    description: "You've transcended mortal limitations! Beyond comprehension!"
+    perks:
+      - type: cooldown_reduction
+        value: 0.25
+  celestial:
+    required_xp: 65000
+    display_name: "§bCelestial Pervert"
+    color: "§b"
+    icon: "☄️"
+    description: "Celestial being! The stars themselves watch in awe."
+    perks:
+      - type: girth_boost
+        value: 1
+  cosmic:
+    required_xp: 85000
+    display_name: "§dCosmic Degenerate"
+    color: "§d"
+    icon: "🌌"
+    description: "Cosmic proportions! Your reach spans galaxies."
+  infinite:
+    required_xp: 110000
+    display_name: "§dInfinite Gooner"
+    color: "§d"
+    icon: "♾️"
+    description: "Infinite power! Your potential knows no bounds!"
+    perks:
+      - type: size_boost
+        value: 1
+  eternal:
+    required_xp: 145000
+    display_name: "§5Eternal Coomer"
+    color: "§5"
+    icon: "🔮"
+    description: "Eternal glory! You'll be remembered for eons."
+    perks:
+      - type: cooldown_reduction
+        value: 0.30
+      - type: fap_speed
+        value: 1.35
+  immortal:
+    required_xp: 190000
+    display_name: "§5Immortal Pervert"
+    color: "§5"
+    icon: "💎"
+    description: "Immortality achieved! Your legend never dies!"
+    perks:
+      - type: size_boost
+        value: 1
+      - type: girth_boost
+        value: 1
+  godlike:
+    required_xp: 250000
+    display_name: "§6Godlike Gooner"
+    color: "§6"
+    icon: "⚡"
+    description: "Godlike power! Mortals tremble before you!"
+    perks:
+      - type: cooldown_reduction
+        value: 0.50
+      - type: fap_speed
+        value: 1.50
+  ultimate:
+    required_xp: 325000
+    display_name: "§6§lUltimate Degenerate"
+    color: "§6§l"
+    icon: "👁️"
+    description: "Ultimate status! You've reached the peak of degeneracy!"
+  omnipotent:
+    required_xp: 425000
+    display_name: "§6§lOmnipotent"
+    color: "§6§l"
+    icon: "🌠"
+    description: "Omnipotent power! Reality bends to your will!"
+  omniscient:
+    required_xp: 550000
+    display_name: "§d§lOmniscient Coomer"
+    color: "§d§l"
+    icon: "🔭"
+    description: "Omniscient knowledge! You know all the secrets!"
+  almighty:
+    required_xp: 715000
+    display_name: "§d§lAlmighty"
+    color: "§d§l"
+    icon: "⚛️"
+    description: "Almighty status! Nothing can stop you now!"
+  supreme:
+    required_xp: 925000
+    display_name: "§5§lSupreme Degenerate"
+    color: "§5§l"
+    icon: "💫"
+    description: "Supreme authority! You rule over all degenerates!"
+  absolute:
+    required_xp: 1200000
+    display_name: "§5§lAbsolute Pervert"
+    color: "§5§l"
+    icon: "🎭"
+    description: "Absolute perfection! The pinnacle of perversion!"
+    perks:
+      - type: cooldown_reduction
+        value: 0.50
+  apex:
+    required_xp: 1550000
+    display_name: "§4§lApex Gooner"
+    color: "§4§l"
+    icon: "👑"
+    description: "Apex predator! You stand at the top of the food chain!"
+    perks:
+      - type: fap_speed
+        value: 1.50
+      - type: size_boost
+        value: 1
+  prime:
+    required_xp: 2000000
+    display_name: "§4§lPrime Coomer"
+    color: "§4§l"
+    icon: "🔥"
+    description: "Prime specimen! The best of the best!"
+  paragon:
+    required_xp: 2600000
+    display_name: "§c§lParagon"
+    color: "§c§l"
+    icon: "⭐"
+    description: "Paragon of virtue! ...wait, that doesn't sound right."
+  phenomenal:
+    required_xp: 3400000
+    display_name: "§c§lPhenomenal Degenerate"
+    color: "§c§l"
+    icon: "🌙"
+    description: "Phenomenal power! Beyond human comprehension!"
+    perks:
+      - type: boob_boost
+        value: 1
+  extraordinary:
+    required_xp: 4400000
+    display_name: "§e§lExtraordinary"
+    color: "§e§l"
+    icon: "☀️"
+    description: "Extraordinary abilities! You've surpassed all expectations!"
+    perks:
+      - type: cooldown_reduction
+        value: 0.40
+  exceptional:
+    required_xp: 5700000
+    display_name: "§e§lExceptional Pervert"
+    color: "§e§l"
+    icon: "💥"
+    description: "Exceptionally exceptional! You break all the rules!"
+    perks:
+      - type: cooldown_reduction
+        value: 1.0
+  monumental:
+    required_xp: 7500000
+    display_name: "§6§lMonumental Gooner"
+    color: "§6§l"
+    icon: "🗿"
+    description: "Monumental achievement! A statue should be built in your honor!"
+  revolutionary:
+    required_xp: 10000000
+    display_name: "§6§lRevolutionary"
+    color: "§6§l"
+    icon: "🚀"
+    description: "Revolutionary! You've changed the game forever!"
+  unprecedented:
+    required_xp: 13000000
+    display_name: "§d§lUnprecedented Coomer"
+    color: "§d§l"
+    icon: "🌊"
+    description: "Unprecedented power! No one has ever reached these heights!"
+  incomparable:
+    required_xp: 17000000
+    display_name: "§d§lIncomparable"
+    color: "§d§l"
+    icon: "🌋"
+    description: "Incomparable greatness! There is no equal!"
+  unmatched:
+    required_xp: 22000000
+    display_name: "§5§lUnmatched Degenerate"
+    color: "§5§l"
+    icon: "⚡"
+    description: "Unmatched skill! You are truly one of a kind!"
+  unstoppable:
+    required_xp: 29000000
+    display_name: "§5§lUnstoppable Pervert"
+    color: "§5§l"
+    icon: "💀"
+    description: "Unstoppable force! Nothing can hold you back!"
+    perks:
+      - type: fap_speed
+        value: 1.60
+  golden:
+    required_xp: 38000000
+    display_name: "§6§l§oGolden Gooner"
+    color: "§6§l§o"
+    icon: "✨"
+    description: "Golden status! Pure perfection encased in gold!"
+  ultimatelegend:
+    required_xp: 50000000
+    display_name: "§d§l§o✦ ULTIMATE DEGENERATE ✦"
+    color: "§d§l§o"
+    icon: "🌟"
+    description: "The ultimate legend! You've achieved what was thought impossible!"

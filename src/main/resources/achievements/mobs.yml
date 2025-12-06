@@ -1,0 +1,347 @@
+# ===== MOB ACHIEVEMENTS =====
+# First encounters and tiered achievements for gooning near mobs
+
+achievements:
+  # ===== MOB PROXIMITY ACHIEVEMENTS - FIRST GOON NEAR MOB =====
+  # These unlock when you goon near a mob for the first time
+  
+  goon_near_zombie:
+    name: "Zombie Encounter"
+    description: "Goon near a zombie"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "zombie"
+    xp_reward: 10
+  
+  goon_near_skeleton:
+    name: "Bone Zone"
+    description: "Goon near a skeleton"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "skeleton"
+    xp_reward: 10
+  
+  goon_near_creeper:
+    name: "Dangerous Liaison"
+    description: "Goon near a creeper"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "creeper"
+    xp_reward: 15
+  
+  goon_near_spider:
+    name: "Web of Intrigue"
+    description: "Goon near a spider"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "spider"
+    xp_reward: 10
+  
+  goon_near_enderman:
+    name: "Tall Dark Stranger"
+    description: "Goon near an enderman"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "enderman"
+    xp_reward: 15
+  
+  goon_near_pig:
+    name: "Piggy Play"
+    description: "Goon near a pig"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "pig"
+    xp_reward: 10
+  
+  goon_near_cow:
+    name: "Bovine Beauty"
+    description: "Goon near a cow"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "cow"
+    xp_reward: 10
+  
+  goon_near_sheep:
+    name: "Sheepish"
+    description: "Goon near a sheep"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "sheep"
+    xp_reward: 10
+  
+  goon_near_chicken:
+    name: "Fowl Play"
+    description: "Goon near a chicken"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "chicken"
+    xp_reward: 10
+  
+  goon_near_horse:
+    name: "Stallion Session"
+    description: "Goon near a horse"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "horse"
+    xp_reward: 10
+  
+  goon_near_wolf:
+    name: "Pack Mentality"
+    description: "Goon near a wolf"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "wolf"
+    xp_reward: 10
+  
+  goon_near_cat:
+    name: "Feline Friend"
+    description: "Goon near a cat"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "cat"
+    xp_reward: 10
+  
+  goon_near_villager:
+    name: "Villager Voyeur"
+    description: "Goon near a villager"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "villager"
+    xp_reward: 10
+  
+  goon_near_iron_golem:
+    name: "Metal Attraction"
+    description: "Goon near an iron golem"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "iron_golem"
+    xp_reward: 15
+  
+  goon_near_warden:
+    name: "Deep Dark Secret"
+    description: "Goon near a warden"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "rare"
+    mob_type: "warden"
+    xp_reward: 100
+
+  # ===== OTHER MOB FIRST ENCOUNTERS =====
+  goon_near_llama:
+    name: "Alpaca Adventure"
+    description: "Goon near a llama"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "llama"
+    xp_reward: 10
+
+  goon_near_panda:
+    name: "Bamboo Breeze"
+    description: "Goon near a panda"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "panda"
+    xp_reward: 15
+
+  goon_near_fox:
+    name: "Sly Fox"
+    description: "Goon near a fox"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "fox"
+    xp_reward: 10
+
+  goon_near_bee:
+    name: "Honey Pot"
+    description: "Goon near a bee"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "bee"
+    xp_reward: 10
+
+  goon_near_dolphin:
+    name: "Dolphin Dive"
+    description: "Goon near a dolphin"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "dolphin"
+    xp_reward: 15
+
+  goon_near_axolotl:
+    name: "Axolotl Adventure"
+    description: "Goon near an axolotl"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "axolotl"
+    xp_reward: 15
+
+  goon_near_goat:
+    name: "Mountain Goat"
+    description: "Goon near a goat"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "goat"
+    xp_reward: 10
+
+  goon_near_frog:
+    name: "Ribbit & Rip"
+    description: "Goon near a frog"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "frog"
+    xp_reward: 10
+
+  goon_near_camel:
+    name: "Desert Oasis"
+    description: "Goon near a camel"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "camel"
+    xp_reward: 15
+
+  goon_near_sniffer:
+    name: "Nose Dive"
+    description: "Goon near a sniffer"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "rare"
+    mob_type: "sniffer"
+    xp_reward: 75
+
+  goon_near_blaze:
+    name: "Fire Starter"
+    description: "Goon near a blaze"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "blaze"
+    xp_reward: 15
+
+  goon_near_ghast:
+    name: "Ghastly Encounter"
+    description: "Goon near a ghast"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "ghast"
+    xp_reward: 15
+
+  goon_near_witch:
+    name: "Witch's Brew"
+    description: "Goon near a witch"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "witch"
+    xp_reward: 15
+
+  goon_near_slime:
+    name: "Bouncy Fun"
+    description: "Goon near a slime"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "common"
+    mob_type: "slime"
+    xp_reward: 10
+
+  goon_near_phantom:
+    name: "Night Flyer"
+    description: "Goon near a phantom"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "phantom"
+    xp_reward: 15
+
+  goon_near_pillager:
+    name: "Raider's Reward"
+    description: "Goon near a pillager"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "uncommon"
+    mob_type: "pillager"
+    xp_reward: 15
+
+  goon_near_ravager:
+    name: "Beast Mode"
+    description: "Goon near a ravager"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "rare"
+    mob_type: "ravager"
+    xp_reward: 75
+
+  goon_near_ender_dragon:
+    name: "Dragon Slayer"
+    description: "Goon near the Ender Dragon"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "legendary"
+    mob_type: "ender_dragon"
+    xp_reward: 1000
+
+  goon_near_wither:
+    name: "Death Wish"
+    description: "Goon near a Wither"
+    category: "location"
+    type: "mob_proximity"
+    threshold: 1
+    rarity: "legendary"
+    mob_type: "wither"
+    xp_reward: 1000

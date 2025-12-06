@@ -8,8 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.miauwrijn.gooncraft.Plugin;
-import com.miauwrijn.gooncraft.PenisStatisticManager;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
+import com.miauwrijn.gooncraft.managers.ConfigManager;
+import com.miauwrijn.gooncraft.managers.GenderManager;
+import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 import com.miauwrijn.gooncraft.models.PenisModel;
 
 public class PenisCommandHandler implements CommandExecutor {
@@ -21,35 +24,35 @@ public class PenisCommandHandler implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            sender.sendMessage("§6Usage: /penis <size|girth|bbc|toggle> [player]");
+            sender.sendMessage(ConfigManager.getMessage("penis.usage"));
             return true;
         }
 
         String subCommand = args[0].toLowerCase();
         
-        if (subCommand.equals("size")) {
-            return handleSizeCommand(sender, args);
-        } else if (subCommand.equals("girth")) {
-            return handleGirthCommand(sender, args);
-        } else if (subCommand.equals("bbc")) {
-            return handleBbcCommand(sender, args);
-        } else if (subCommand.equals("toggle")) {
-            return handleToggleCommand(sender);
-        } else {
-            sender.sendMessage("§cUnknown subcommand. Use: size, girth, bbc, or toggle");
-            return true;
-        }
+        return switch (subCommand) {
+            case "size" -> handleSizeCommand(sender, args);
+            case "girth" -> handleGirthCommand(sender, args);
+            case "bbc" -> handleBbcCommand(sender, args);
+            case "toggle" -> {
+                // Redirect to /genitals command
+                sender.sendMessage("§eUse §6/genitals §efor toggling visibility!");
+                yield true;
+            }
+            default -> {
+                sender.sendMessage(ConfigManager.getMessage("penis.unknown-subcommand"));
+                yield true;
+            }
+        };
     }
 
     private boolean handleSizeCommand(CommandSender sender, String[] args) {
         if (args.length == 1) {
             return showOwnStat(sender, "size");
         }
-
         if (args[1].equalsIgnoreCase("set")) {
             return setStat(sender, args, "size");
         }
-
         return showPlayerStat(sender, args[1], "size");
     }
 
@@ -57,11 +60,9 @@ public class PenisCommandHandler implements CommandExecutor {
         if (args.length == 1) {
             return showOwnStat(sender, "girth");
         }
-
         if (args[1].equalsIgnoreCase("set")) {
             return setStat(sender, args, "girth");
         }
-
         return showPlayerStat(sender, args[1], "girth");
     }
 
@@ -69,88 +70,100 @@ public class PenisCommandHandler implements CommandExecutor {
         if (args.length == 1) {
             return showOwnBbc(sender);
         }
-
         if (args[1].equalsIgnoreCase("set")) {
             return setBbc(sender, args);
         }
-
         return showPlayerBbc(sender, args[1]);
     }
 
     private boolean handleToggleCommand(CommandSender sender) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cOnly players can use this command");
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
             return true;
         }
-        
-        Player player = (Player) sender;
+
+        // Check if player has a penis based on gender
+        if (!GenderManager.hasPenis(player)) {
+            player.sendMessage(ConfigManager.getMessage("penis.no-penis"));
+            return true;
+        }
+
         PenisStatistics stats = PenisStatisticManager.getStatistics(player);
         if (stats == null) {
-            player.sendMessage("§cYou need to have a penis to use this command");
+            player.sendMessage(ConfigManager.getMessage("penis.need-penis"));
             return true;
         }
 
         if (stats.penisModel == null) {
             showPenis(player, stats);
-            player.sendMessage("§aYou whipped it out!");
+            player.sendMessage(ConfigManager.getMessage("penis.whipped-out"));
+            StatisticsManager.startPenisOutTimer(player);
+            // Check animal following when shown
+            com.miauwrijn.gooncraft.managers.RankPerkManager.checkAnimalFollowing(player);
         } else {
             hidePenis(player);
-            player.sendMessage("§aYou put it away.");
+            player.sendMessage(ConfigManager.getMessage("penis.put-away"));
+            StatisticsManager.stopPenisOutTimer(player);
+            // Stop animal following when hidden
+            com.miauwrijn.gooncraft.managers.RankPerkManager.checkAnimalFollowing(player);
         }
         return true;
     }
 
     private boolean showOwnStat(CommandSender sender, String stat) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cOnly players can use this command");
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
             return true;
         }
-        
-        Player player = (Player) sender;
+
         PenisStatistics stats = PenisStatisticManager.getStatistics(player);
         if (stats == null) {
-            sender.sendMessage("§cNo stats found");
+            sender.sendMessage(ConfigManager.getMessage("no-stats"));
             return true;
         }
 
         int value = stat.equals("size") ? stats.size : stats.girth;
-        sender.sendMessage("§6Your penis " + stat + " is §e" + value + "cm");
+        String messageKey = stat.equals("size") ? "penis.your-size" : "penis.your-girth";
+        sender.sendMessage(ConfigManager.getMessage(messageKey, "{value}", String.valueOf(value)));
         return true;
     }
 
     private boolean showPlayerStat(CommandSender sender, String playerName, String stat) {
         Player target = sender.getServer().getPlayer(playerName);
         if (target == null) {
-            sender.sendMessage("§cPlayer not found");
+            sender.sendMessage(ConfigManager.getMessage("player-not-found"));
             return true;
         }
 
         PenisStatistics stats = PenisStatisticManager.getStatistics(target);
         if (stats == null) {
-            sender.sendMessage("§cNo stats found for that player");
+            sender.sendMessage(ConfigManager.getMessage("no-stats"));
             return true;
         }
 
         int value = stat.equals("size") ? stats.size : stats.girth;
-        sender.sendMessage("§6" + target.getName() + "'s penis " + stat + " is §e" + value + "cm");
+        String messageKey = stat.equals("size") ? "penis.player-size" : "penis.player-girth";
+        sender.sendMessage(ConfigManager.getMessage(messageKey, 
+            "{player}", target.getName(), 
+            "{value}", String.valueOf(value)));
         return true;
     }
 
     private boolean setStat(CommandSender sender, String[] args, String stat) {
         String permission = "gooncraft." + stat + ".set";
         if (!sender.hasPermission(permission)) {
-            sender.sendMessage("§cYou don't have permission to do that");
+            sender.sendMessage(ConfigManager.getMessage("no-permission"));
             return true;
         }
 
         if (args.length < 4) {
-            sender.sendMessage("§cUsage: /penis " + stat + " set <player> <value>");
+            sender.sendMessage(ConfigManager.getMessage("penis.usage"));
             return true;
         }
 
         Player target = sender.getServer().getPlayer(args[2]);
         if (target == null) {
-            sender.sendMessage("§cPlayer not found");
+            sender.sendMessage(ConfigManager.getMessage("player-not-found"));
             return true;
         }
 
@@ -158,7 +171,7 @@ public class PenisCommandHandler implements CommandExecutor {
         try {
             value = Integer.parseInt(args[3]);
         } catch (NumberFormatException e) {
-            sender.sendMessage("§cInvalid number");
+            sender.sendMessage(ConfigManager.getMessage("penis.usage"));
             return true;
         }
 
@@ -166,7 +179,10 @@ public class PenisCommandHandler implements CommandExecutor {
         int max = stat.equals("size") ? PenisModel.maxSize : PenisModel.maxGirth;
 
         if (value < min || value > max) {
-            sender.sendMessage("§c" + stat + " must be between " + min + " and " + max + "cm");
+            String rangeKey = stat.equals("size") ? "penis.size-range" : "penis.girth-range";
+            sender.sendMessage(ConfigManager.getMessage(rangeKey, 
+                "{min}", String.valueOf(min), 
+                "{max}", String.valueOf(max)));
             return true;
         }
 
@@ -176,62 +192,62 @@ public class PenisCommandHandler implements CommandExecutor {
             PenisStatisticManager.setPenisGirth(target, value);
         }
 
-        sender.sendMessage("§aSet " + target.getName() + "'s penis " + stat + " to " + value + "cm");
+        String setKey = stat.equals("size") ? "penis.size-set" : "penis.girth-set";
+        sender.sendMessage(ConfigManager.getMessage(setKey, 
+            "{player}", target.getName(), 
+            "{value}", String.valueOf(value)));
         return true;
     }
 
     private boolean showOwnBbc(CommandSender sender) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("§cOnly players can use this command");
-            return true;
-        }
-        
-        Player player = (Player) sender;
-        PenisStatistics stats = PenisStatisticManager.getStatistics(player);
-        if (stats == null) {
-            sender.sendMessage("§cNo stats found");
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ConfigManager.getMessage("only-players"));
             return true;
         }
 
-        String status = stats.bbc ? "§aYes, you have a BBC" : "§cNo, you don't have a BBC";
-        sender.sendMessage(status);
+        PenisStatistics stats = PenisStatisticManager.getStatistics(player);
+        if (stats == null) {
+            sender.sendMessage(ConfigManager.getMessage("no-stats"));
+            return true;
+        }
+
+        String messageKey = stats.bbc ? "penis.you-have-bbc" : "penis.you-no-bbc";
+        sender.sendMessage(ConfigManager.getMessage(messageKey));
         return true;
     }
 
     private boolean showPlayerBbc(CommandSender sender, String playerName) {
         Player target = sender.getServer().getPlayer(playerName);
         if (target == null) {
-            sender.sendMessage("§cPlayer not found");
+            sender.sendMessage(ConfigManager.getMessage("player-not-found"));
             return true;
         }
 
         PenisStatistics stats = PenisStatisticManager.getStatistics(target);
         if (stats == null) {
-            sender.sendMessage("§cNo stats found for that player");
+            sender.sendMessage(ConfigManager.getMessage("no-stats"));
             return true;
         }
 
-        String status = stats.bbc 
-            ? "§a" + target.getName() + " has a BBC" 
-            : "§c" + target.getName() + " doesn't have a BBC";
-        sender.sendMessage(status);
+        String messageKey = stats.bbc ? "penis.player-has-bbc" : "penis.player-no-bbc";
+        sender.sendMessage(ConfigManager.getMessage(messageKey, "{player}", target.getName()));
         return true;
     }
 
     private boolean setBbc(CommandSender sender, String[] args) {
         if (!sender.hasPermission("gooncraft.bbc.set")) {
-            sender.sendMessage("§cYou don't have permission to do that");
+            sender.sendMessage(ConfigManager.getMessage("no-permission"));
             return true;
         }
 
         if (args.length < 4) {
-            sender.sendMessage("§cUsage: /penis bbc set <player> <true|false>");
+            sender.sendMessage(ConfigManager.getMessage("penis.usage"));
             return true;
         }
 
         Player target = sender.getServer().getPlayer(args[2]);
         if (target == null) {
-            sender.sendMessage("§cPlayer not found");
+            sender.sendMessage(ConfigManager.getMessage("player-not-found"));
             return true;
         }
 
@@ -241,25 +257,30 @@ public class PenisCommandHandler implements CommandExecutor {
         } else if (args[3].equalsIgnoreCase("false")) {
             value = false;
         } else {
-            sender.sendMessage("§cValue must be true or false");
+            sender.sendMessage(ConfigManager.getMessage("penis.invalid-boolean"));
             return true;
         }
 
         PenisStatisticManager.setPenisBbc(target, value);
-        String status = value ? "a BBC" : "a regular penis";
-        sender.sendMessage("§aSet " + target.getName() + "'s penis to " + status);
+        String messageKey = value ? "penis.bbc-set-true" : "penis.bbc-set-false";
+        sender.sendMessage(ConfigManager.getMessage(messageKey, "{player}", target.getName()));
         return true;
     }
 
     private void showPenis(Player player, PenisStatistics stats) {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+        // Create model - size/girth boosts are applied via getEffectiveSize() in setBlockTransformation
         PenisModel penis = new PenisModel(player, stats.bbc, stats.size, stats.girth, stats.viagraBoost);
         int taskId = scheduler.scheduleSyncRepeatingTask(Plugin.instance, penis, 0, 1L);
         PenisStatisticManager.setActivePenis(player, penis, taskId);
+        
+        // Reload model to ensure rank boosts are applied
+        if (stats.rankSizeBoost > 0 || stats.rankGirthBoost > 0) {
+            penis.reload(stats);
+        }
     }
 
     private void hidePenis(Player player) {
         PenisStatisticManager.clearActivePenis(player);
     }
 }
-

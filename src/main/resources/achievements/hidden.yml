@@ -1,0 +1,117 @@
+# ===== HIDDEN ACHIEVEMENTS =====
+# Secret achievements and easter eggs
+
+achievements:
+  # ===== ANIMAL EASTER EGGS - SHEEP (3 hidden) =====
+  yellow_sheep:
+    name: "Golden Fleece"
+    description: "Dye a sheep yellow in an... unconventional way"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  brown_sheep:
+    name: "Chocolate Wool"
+    description: "Give a sheep a brown makeover... naturally"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  white_sheep:
+    name: "Glazed & Confused"
+    description: "Cover a sheep in your... essence"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  # ===== ANIMAL EASTER EGGS - CHICKEN (3 hidden) =====
+  yellow_chicken:
+    name: "Lemon Chicken"
+    description: "Make a chicken golden... with your stream"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  brown_chicken:
+    name: "Nugget Maker"
+    description: "Drop something on a chicken"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  white_chicken:
+    name: "Cream Chicken"
+    description: "Give a chicken a special coating"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  # ===== ANIMAL EASTER EGGS - OTHER ANIMALS (4 hidden) =====
+  white_pig:
+    name: "Pork Glazing"
+    description: "Give a pig a makeover"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  white_cow:
+    name: "Holy Cow"
+    description: "Milk isn't the only white fluid"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  yellow_wolf:
+    name: "Wet Wolf"
+    description: "Golden retriever"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  white_cat:
+    name: "Cat Got Your... Cream?"
+    description: "Curious cat"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 150
+  
+  # ===== COMBO ACHIEVEMENT (1 hidden) =====
+  shart:
+    name: "Shart Attack"
+    description: "Fart and poop within 5 seconds"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "rare"
+    hidden: true
+    xp_reward: 200

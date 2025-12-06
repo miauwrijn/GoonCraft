@@ -1,0 +1,54 @@
+# ===== EXPOSURE TIME ACHIEVEMENTS =====
+# Achievements for time spent exposed
+
+achievements:
+  # ===== EXPOSURE TIME ACHIEVEMENTS (5) - Gender Neutral =====
+  time_out_60:
+    name: "Quick Flash"
+    description: "Be exposed for 1 minute total"
+    category: "exposure"
+    type: "stat"
+    threshold: 60
+    rarity: "common"
+    stat_category: "time_out"
+    xp_reward: 5
+  
+  time_out_600:
+    name: "Exhibitionist"
+    description: "Be exposed for 10 minutes total"
+    category: "exposure"
+    type: "stat"
+    threshold: 600
+    rarity: "uncommon"
+    stat_category: "time_out"
+    xp_reward: 20
+  
+  time_out_3600:
+    name: "Nudist"
+    description: "Be exposed for 1 hour total"
+    category: "exposure"
+    type: "stat"
+    threshold: 3600
+    rarity: "rare"
+    stat_category: "time_out"
+    xp_reward: 200
+  
+  time_out_36000:
+    name: "Public Menace"
+    description: "Be exposed for 10 hours total"
+    category: "exposure"
+    type: "stat"
+    threshold: 36000
+    rarity: "rare"
+    stat_category: "time_out"
+    xp_reward: 750
+  
+  time_out_360000:
+    name: "Exhibitionist Prime"
+    description: "Be exposed for 100 hours total"
+    category: "exposure"
+    type: "stat"
+    threshold: 360000
+    rarity: "mythic"
+    stat_category: "time_out"
+    xp_reward: 2500

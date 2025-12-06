@@ -20,6 +20,23 @@ function Write-Success { param($msg) Write-Host $msg -ForegroundColor Green }
 function Write-Info { param($msg) Write-Host $msg -ForegroundColor Cyan }
 function Write-Warn { param($msg) Write-Host $msg -ForegroundColor Yellow }
 
+function Apply-Ops {
+    $envFile = Join-Path $PSScriptRoot ".env"
+    if (Test-Path $envFile) {
+        $ops = Get-Content $envFile | Where-Object { $_ -match "^OPS=" } | ForEach-Object { $_ -replace "^OPS=", "" }
+        if ($ops) {
+            Write-Info "👑 Applying OPs..."
+            foreach ($player in ($ops -split ",")) {
+                $player = $player.Trim()
+                if ($player) {
+                    docker exec gooncraft-server rcon-cli op $player 2>$null
+                    Write-Host "   OP: $player"
+                }
+            }
+        }
+    }
+}
+
 try {
     switch ($Command.ToLower()) {
         "start" {
@@ -27,6 +44,11 @@ try {
             docker compose up -d minecraft
             Write-Success "✅ Server starting at localhost:25565"
             Write-Host "   Use '.\dev\dev.ps1 logs' to view output"
+            Write-Host "   Use '.\dev\dev.ps1 op' to apply OPs after server is ready"
+        }
+        "op" {
+            Apply-Ops
+            Write-Success "✅ OPs applied"
         }
         "stop" {
             Write-Warn "🛑 Stopping server..."
@@ -70,6 +92,7 @@ try {
             Write-Host ""
             Write-Host "  Commands:"
             Write-Host "    start   - Start the Minecraft server"
+            Write-Host "    op      - Apply OPs from .env file"
             Write-Host "    stop    - Stop the server"
             Write-Host "    build   - Build the plugin"
             Write-Host "    reload  - Reload plugin on server"
