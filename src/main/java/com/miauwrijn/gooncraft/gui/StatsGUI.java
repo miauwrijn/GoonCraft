@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
+import com.miauwrijn.gooncraft.managers.SkillPointsManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 
 /**
@@ -23,15 +24,15 @@ public class StatsGUI extends GUI {
         fillBorder(ItemBuilder.filler(Material.PURPLE_STAINED_GLASS_PANE));
         
         // Get rank info
-        RankManager.Rank rank = RankManager.getRank(target);
-        RankManager.Rank nextRank = RankManager.getNextRank(rank);
+        com.miauwrijn.gooncraft.ranks.BaseRank rank = RankManager.getRank(target);
+        com.miauwrijn.gooncraft.ranks.BaseRank nextRank = RankManager.getNextRank(rank);
         int achievementsToNext = RankManager.getAchievementsToNextRank(target);
         double progress = RankManager.getProgressToNextRank(target);
         String progressBar = RankManager.createProgressBar(progress, 10);
         
         // Build rank progress lore
         String rankProgressLine = nextRank != null 
-            ? "§7Next: " + nextRank.displayName + " §7(" + achievementsToNext + " more)"
+            ? "§7Next: " + nextRank.getDisplayName() + " §7(" + achievementsToNext + " more)"
             : "§d§lMAX RANK ACHIEVED!";
         
         // Player head in center top - click to open rank roadmap
@@ -40,7 +41,7 @@ public class StatsGUI extends GUI {
                 .name("§6§l" + target.getName())
                 .lore(
                     "",
-                    rank.icon + " " + rank.displayName,
+                    rank.getIcon() + " " + rank.getDisplayName(),
                     progressBar + " §7" + Math.round(progress * 100) + "%",
                     rankProgressLine,
                     "",
@@ -150,8 +151,25 @@ public class StatsGUI extends GUI {
                 .build(),
                 event -> new LeaderboardGUI(viewer).open());
         
+        // Skill Points button (only show for self)
+        if (isSelf) {
+            int skillPoints = SkillPointsManager.getSkillPoints(target);
+            setItem(slot(3, 6), new ItemBuilder(Material.EMERALD)
+                    .name("§a§lSkill Points")
+                    .lore(
+                        "§7Your skill points: §e" + skillPoints,
+                        "",
+                        "§7Spend them on hilarious perks!",
+                        "",
+                        "§e§lClick to open Skill Points Shop!"
+                    )
+                    .glow()
+                    .build(),
+                    event -> new SkillPointsGUI(viewer, target).open());
+        }
+        
         // Close button
-        setItem(slot(3, 4), new ItemBuilder(Material.BARRIER)
+        setItem(slot(4, 4), new ItemBuilder(Material.BARRIER)
                 .name("§c§lClose")
                 .lore("§7Click to close")
                 .build(),

@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.miauwrijn.gooncraft.Plugin;
+import com.miauwrijn.gooncraft.managers.RankPerkManager;
 import com.miauwrijn.gooncraft.storage.DatabaseStorageProvider.DatabaseType;
 
 /**
@@ -196,12 +197,23 @@ public class StorageManager implements Listener {
         // Load async to not block join
         provider.loadPlayerDataAsync(player.getUniqueId()).thenAccept(data -> {
             cache.put(player.getUniqueId(), data);
+            
+            // Initialize rank perks after data is loaded
+            Bukkit.getScheduler().runTaskLater(Plugin.instance, () -> {
+                if (player.isOnline()) {
+                    RankPerkManager.initializePlayer(player);
+                }
+            }, 60L); // 3 second delay to ensure everything is loaded
         });
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        UUID uuid = event.getPlayer().getUniqueId();
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        
+        // Clean up rank perk manager
+        RankPerkManager.cleanup(player);
         
         // Save async and remove from cache
         PlayerData data = cache.remove(uuid);

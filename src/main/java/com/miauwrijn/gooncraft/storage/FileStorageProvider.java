@@ -2,6 +2,7 @@ package com.miauwrijn.gooncraft.storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -90,6 +91,10 @@ public class FileStorageProvider implements StorageProvider {
             // Load achievements
             data.unlockedAchievements = loadAchievements(config);
             
+            // Load skill points
+            data.skillPoints = config.getInt("SkillPoints", 0);
+            data.purchasedPerks = new HashSet<>(config.getStringList("PurchasedPerks"));
+            
         } catch (Exception e) {
             Plugin.instance.getLogger().log(Level.WARNING, "Failed to load player data for " + uuid, e);
         }
@@ -131,6 +136,10 @@ public class FileStorageProvider implements StorageProvider {
             
             // Save achievements
             saveAchievements(config, data.unlockedAchievements);
+            
+            // Save skill points
+            config.set("SkillPoints", data.skillPoints);
+            config.set("PurchasedPerks", new ArrayList<>(data.purchasedPerks));
             
             config.save(file);
             return true;

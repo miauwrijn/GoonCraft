@@ -14,6 +14,7 @@ import com.miauwrijn.gooncraft.handlers.ButtFingerCommandHandler;
 import com.miauwrijn.gooncraft.handlers.GenderCommandHandler;
 import com.miauwrijn.gooncraft.handlers.GenitalsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.PenisCommandHandler;
+import com.miauwrijn.gooncraft.handlers.SkillPointsCommandHandler;
 import com.miauwrijn.gooncraft.handlers.StatsCommandHandler;
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.ConfigManager;
@@ -71,6 +72,11 @@ public class Plugin extends JavaPlugin {
         getCommand("gender").setExecutor(new GenderCommandHandler());
         getCommand("boobs").setExecutor(new BoobsCommandHandler());
         getCommand("genitals").setExecutor(new GenitalsCommandHandler());
+        
+        // Skill points
+        SkillPointsCommandHandler skillPointsHandler = new SkillPointsCommandHandler();
+        getCommand("skillpoints").setExecutor(skillPointsHandler);
+        getCommand("resetskillpoints").setExecutor(skillPointsHandler);
 
         LOGGER.info("GoonCraft enabled! Time to get weird.");
     }

@@ -1,0 +1,15 @@
+ranks:
+  innocent:
+    required_achievements: 0
+    display_name: "§7Innocent Virgin"
+    color: "§7"
+    icon: "👶"
+    description: "Pure as the driven snow. You haven't discovered the wonders of self-expression yet."
+    skill_points: 0
+  curious:
+    required_achievements: 1
+    display_name: "§aCurious Toucher"
+    color: "§a"
+    icon: "🤔"
+    description: "The first step is always the hardest... or is it the easiest?"
+    skill_points: 1

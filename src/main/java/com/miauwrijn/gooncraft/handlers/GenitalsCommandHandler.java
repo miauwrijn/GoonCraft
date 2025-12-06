@@ -13,6 +13,7 @@ import com.miauwrijn.gooncraft.managers.ConfigManager;
 import com.miauwrijn.gooncraft.managers.GenderManager;
 import com.miauwrijn.gooncraft.managers.GenderManager.Gender;
 import com.miauwrijn.gooncraft.managers.PenisStatisticManager;
+import com.miauwrijn.gooncraft.managers.RankPerkManager;
 import com.miauwrijn.gooncraft.managers.StatisticsManager;
 import com.miauwrijn.gooncraft.models.BoobModel;
 import com.miauwrijn.gooncraft.models.PenisModel;
@@ -54,6 +55,9 @@ public class GenitalsCommandHandler implements CommandExecutor {
             // Hide everything
             hideGenitals(player, gender);
             player.sendMessage(ConfigManager.getMessage("genitals.hidden"));
+            
+            // Stop animal following when hidden
+            RankPerkManager.checkAnimalFollowing(player);
         } else {
             // Show based on gender
             showGenitals(player, gender);
@@ -61,6 +65,9 @@ public class GenitalsCommandHandler implements CommandExecutor {
             
             // Track exposure time start
             StatisticsManager.startExposureTimer(player);
+            
+            // Check animal following when shown
+            RankPerkManager.checkAnimalFollowing(player);
         }
 
         return true;
@@ -114,13 +121,13 @@ public class GenitalsCommandHandler implements CommandExecutor {
     }
 
     private void showPenis(Player player, BukkitScheduler scheduler) {
-        PenisStatistics stats = PenisStatisticManager.getOrCreateStatistics(player);
+        PenisStatistics stats = PenisStatisticManager.getStatistics(player);
         if (stats.penisModel != null) return; // Already showing
 
         PenisModel model = new PenisModel(player, stats.bbc, stats.size, stats.girth, stats.viagraBoost);
         stats.penisModel = model;
         int taskId = scheduler.scheduleSyncRepeatingTask(Plugin.instance, model, 0, 1L);
-        stats.modelTaskId = taskId;
+        stats.runnableTaskId = taskId;
     }
 
     private void showBoobs(Player player, BukkitScheduler scheduler) {

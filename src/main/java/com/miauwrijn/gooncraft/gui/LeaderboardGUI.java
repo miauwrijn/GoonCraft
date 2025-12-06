@@ -129,7 +129,7 @@ public class LeaderboardGUI extends GUI {
             
             // Get stats and rank info
             PlayerStats stats = StatisticsManager.getStats(player);
-            RankManager.Rank playerRank = RankManager.getRank(player);
+            com.miauwrijn.gooncraft.ranks.BaseRank playerRank = RankManager.getRank(player);
             int achievements = AchievementManager.getUnlockedCount(player);
             int totalAchievements = AchievementManager.Achievement.values().length;
             
@@ -139,7 +139,7 @@ public class LeaderboardGUI extends GUI {
             
             List<String> lore = new ArrayList<>();
             lore.add("");
-            lore.add(playerRank.icon + " " + playerRank.displayName);
+            lore.add(playerRank.getIcon() + " " + playerRank.getDisplayName());
             lore.add("§7Achievements: §e" + achievements + "§7/§e" + totalAchievements);
             lore.add("");
             lore.add("§7" + getCategoryDisplayName(currentCategory) + ": §e" + valueStr);
@@ -228,7 +228,7 @@ public class LeaderboardGUI extends GUI {
             case "cummed" -> stats.gotCummedOnCount;
             case "time", "exposure" -> stats.getCurrentTotalTime();
             case "bf", "buttfinger" -> stats.buttfingersGiven;
-            case "rank" -> RankManager.getRank(player).ordinal();
+            case "rank" -> RankManager.getRank(player).getOrdinal();
             case "achievements" -> AchievementManager.getUnlockedCount(player);
             default -> stats.goonCount;
         };

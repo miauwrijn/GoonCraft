@@ -34,10 +34,20 @@ public class PlayerData {
 
     // ===== Achievements =====
     public Set<Achievement> unlockedAchievements;
+    
+    // ===== Skill Points =====
+    public int skillPoints;
+    public Set<String> purchasedPerks; // Perks purchased with skill points
+    
+    // ===== Perk Management =====
+    public Set<String> disabledPerks; // Rank perks that are disabled
 
     public PlayerData() {
         this.stats = new PlayerStats();
         this.unlockedAchievements = new HashSet<>();
+        this.skillPoints = 0;
+        this.purchasedPerks = new HashSet<>();
+        this.disabledPerks = new HashSet<>();
     }
 
     public PlayerData(UUID uuid) {
@@ -65,9 +75,12 @@ public class PlayerData {
         copy.gender = this.gender;
         copy.boobSize = this.boobSize;
         copy.boobPerkiness = this.boobPerkiness;
+        copy.skillPoints = this.skillPoints;
         // Note: stats and achievements are complex objects, shallow copy for now
         copy.stats = this.stats;
         copy.unlockedAchievements = new HashSet<>(this.unlockedAchievements);
+        copy.purchasedPerks = new HashSet<>(this.purchasedPerks);
+        copy.disabledPerks = new HashSet<>(this.disabledPerks);
         return copy;
     }
 }

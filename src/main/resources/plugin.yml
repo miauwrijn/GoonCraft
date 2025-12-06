@@ -48,6 +48,16 @@ commands:
     aliases:
       - tits
       - breasts
+  skillpoints:
+    description: Open skill points shop
+    usage: /<command>
+    aliases:
+      - sp
+      - skills
+  resetskillpoints:
+    description: Reset your skill points and perks
+    usage: /<command> [confirm]
+    permission: gooncraft.skillpoints.reset
 
 permissions:
   gooncraft.reload:
@@ -67,4 +77,7 @@ permissions:
     default: op
   gooncraft.boobs.set:
     description: Allows setting player boob sizes
+    default: op
+  gooncraft.skillpoints.reset:
+    description: Allows resetting skill points
     default: op

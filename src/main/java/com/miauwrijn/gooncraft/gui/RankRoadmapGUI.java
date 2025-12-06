@@ -1,74 +1,126 @@
 package com.miauwrijn.gooncraft.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
-import com.miauwrijn.gooncraft.managers.RankManager.Rank;
+import com.miauwrijn.gooncraft.ranks.BaseRank;
 
 /**
- * GUI showing rank progression in an S-shaped roadmap pattern.
- * Displays all 12 ranks with visual progression path.
+ * GUI showing rank progression in a snake-shaped connected pattern.
+ * Displays ranks with visual path connections and pagination.
  */
 public class RankRoadmapGUI extends GUI {
 
-    // S-shaped pattern positions for 12 ranks in a 6-row inventory
-    // Row 0: rank goes right →
-    // Row 1: continues right, then down ↓
-    // Row 2: goes left ←
-    // Row 3: continues left, then down ↓
-    // Row 4: goes right →
-    // Row 5: final rank
-    private static final int[][] RANK_POSITIONS = {
-        // {row, col} for each rank (0-11)
-        {0, 1},  // Rank 0: Innocent Virgin
-        {0, 3},  // Rank 1: Curious Toucher
-        {0, 5},  // Rank 2: Amateur Stroker
-        {1, 7},  // Rank 3: Goon Enthusiast (turn down)
-        {2, 5},  // Rank 4: Dedicated Degenerate (go left)
-        {2, 3},  // Rank 5: Advanced Coomer
-        {2, 1},  // Rank 6: Professional Gooner
-        {3, 1},  // Rank 7: Master Bater (turn down)
-        {4, 3},  // Rank 8: Elite Exhibitionist (go right)
-        {4, 5},  // Rank 9: Legendary Pervert
-        {4, 7},  // Rank 10: Golden Gooner
-        {5, 4},  // Rank 11: ULTIMATE DEGENERATE (center bottom)
-    };
-
-    // Path connectors between ranks
-    private static final int[][] PATH_POSITIONS = {
-        // {row, col} for path pieces
-        {0, 2},  // Between rank 0-1
-        {0, 4},  // Between rank 1-2
-        {0, 6}, {0, 7}, {1, 7},  // Curve to rank 3
-        {1, 6}, {2, 7}, {2, 6},  // Down and left to rank 4
-        {2, 4},  // Between rank 4-5
-        {2, 2},  // Between rank 5-6
-        {3, 0}, {3, 1}, {4, 1}, {4, 2},  // Curve down to rank 8
-        {4, 4},  // Between rank 8-9
-        {4, 6},  // Between rank 9-10
-        {5, 7}, {5, 6}, {5, 5},  // Curve to final rank
-    };
-
     private final Player target;
+    private int page = 0;
+    private static final int RANKS_PER_PAGE = 28; // 4 rows of 7 ranks (with snake pattern)
+    
+    // Snake pattern positions - winds through rows 1-4, columns 1-7
+    // Pattern: row 1 → right, row 2 ← left, row 3 → right, row 4 ← left
+    private static int[] generateSnakePattern() {
+        int[] pattern = new int[28];
+        int index = 0;
+        
+        // Row 1: left to right (col 1-7)
+        for (int col = 1; col <= 7; col++) {
+            pattern[index++] = slot(1, col);
+        }
+        
+        // Row 2: right to left (col 7-1)
+        for (int col = 7; col >= 1; col--) {
+            pattern[index++] = slot(2, col);
+        }
+        
+        // Row 3: left to right (col 1-7)
+        for (int col = 1; col <= 7; col++) {
+            pattern[index++] = slot(3, col);
+        }
+        
+        // Row 4: right to left (col 7-1)
+        for (int col = 7; col >= 1; col--) {
+            pattern[index++] = slot(4, col);
+        }
+        
+        return pattern;
+    }
+    
+    private static final int[] SNAKE_PATTERN = generateSnakePattern();
 
     public RankRoadmapGUI(Player viewer, Player target) {
         super(viewer, "§6§l✦ Rank Roadmap ✦", 6);
         this.target = target;
+        render();
+    }
+
+    private void render() {
+        inventory.clear();
+        clickHandlers.clear();
         
-        Rank currentRank = RankManager.getRank(target);
+        BaseRank currentRank = RankManager.getRank(target);
         int unlockedAchievements = AchievementManager.getUnlockedCount(target);
+        BaseRank[] allRanks = RankManager.getAllRanks();
+        int currentRankIndex = currentRank.getOrdinal();
         
         // Fill with dark background
         fill(ItemBuilder.filler(Material.BLACK_STAINED_GLASS_PANE));
         
-        // Draw path connectors first (so ranks overlay them)
-        drawPath(currentRank);
+        // Top border
+        fillBorder(ItemBuilder.filler(Material.ORANGE_STAINED_GLASS_PANE));
         
-        // Draw all ranks
-        drawRanks(currentRank, unlockedAchievements);
+        // Calculate pagination
+        int totalPages = (int) Math.ceil(allRanks.length / (double) RANKS_PER_PAGE);
+        int startIndex = page * RANKS_PER_PAGE;
+        int endIndex = Math.min(startIndex + RANKS_PER_PAGE, allRanks.length);
+        int ranksOnThisPage = endIndex - startIndex;
         
+        // Draw path background first (shows the snake path)
+        drawSnakePathBackground(currentRankIndex, startIndex, ranksOnThisPage);
+        
+        // Draw ranks in snake pattern
+        for (int i = 0; i < ranksOnThisPage && i < SNAKE_PATTERN.length; i++) {
+            int rankIndex = startIndex + i;
+            BaseRank rank = allRanks[rankIndex];
+            int slotIndex = SNAKE_PATTERN[i];
+            
+            boolean isUnlocked = rankIndex <= currentRankIndex;
+            boolean isCurrent = rankIndex == currentRankIndex;
+            boolean isNext = rankIndex == currentRankIndex + 1;
+            
+            setItem(slotIndex, createRankItem(rank, isUnlocked, isCurrent, isNext, unlockedAchievements).build());
+        }
+        
+        // Bottom navigation row (row 5)
+        drawNavigation(currentRank, currentRankIndex, unlockedAchievements, allRanks.length, totalPages);
+    }
+    
+    private void drawSnakePathBackground(int currentRankIndex, int startIndex, int ranksOnPage) {
+        // Fill the snake path area with a subtle background color to show the connected path
+        // Use lighter background for unlocked path, darker for locked
+        for (int i = 0; i < ranksOnPage && i < SNAKE_PATTERN.length; i++) {
+            int rankIndex = startIndex + i;
+            int slotIndex = SNAKE_PATTERN[i];
+            
+            // Only set background if slot is empty (ranks will overlay)
+            if (inventory.getItem(slotIndex) == null) {
+                boolean pathUnlocked = rankIndex <= currentRankIndex;
+                Material bgMaterial = pathUnlocked 
+                    ? Material.LIME_STAINED_GLASS_PANE 
+                    : Material.GRAY_STAINED_GLASS_PANE;
+                
+                setItem(slotIndex, new ItemBuilder(bgMaterial)
+                        .name(" ")
+                        .build());
+            }
+        }
+    }
+    
+    private void drawNavigation(BaseRank currentRank, int currentRankIndex, int unlockedAchievements, 
+                                int totalRanks, int totalPages) {
         // Back button
         setItem(slot(5, 0), new ItemBuilder(Material.ARROW)
                 .name("§c§l← Back")
@@ -76,114 +128,117 @@ public class RankRoadmapGUI extends GUI {
                 .build(),
                 event -> new StatsGUI(viewer, target).open());
         
-        // Info in bottom right
-        setItem(slot(5, 8), new ItemBuilder(Material.BOOK)
-                .name("§e§lYour Progress")
+        // Previous page
+        if (page > 0) {
+            setItem(slot(5, 3), new ItemBuilder(Material.ARROW)
+                    .name("§e§l← Previous")
+                    .lore("§7Page " + page + "/" + (totalPages - 1))
+                    .build(),
+                    event -> {
+                        page--;
+                        render();
+                    });
+        }
+        
+        // Page indicator and info
+        setItem(slot(5, 4), new ItemBuilder(Material.BOOK)
+                .name("§6§lPage " + (page + 1) + "/" + Math.max(1, totalPages))
                 .lore(
                     "",
-                    "§7Current Rank: " + currentRank.displayName,
+                    "§7Current Rank: " + currentRank.getDisplayName(),
+                    "§7Rank #§e" + (currentRankIndex + 1) + "§7/§e" + totalRanks,
                     "§7Achievements: §e" + unlockedAchievements + "§7/§e67",
                     "",
                     "§8Unlock more achievements",
                     "§8to rank up!"
                 )
                 .build());
+        
+        // Next page button (only show if there are more ranks)
+        if ((page + 1) * RANKS_PER_PAGE < totalRanks) {
+            setItem(slot(5, 5), new ItemBuilder(Material.ARROW)
+                    .name("§e§lNext →")
+                    .lore("§7Page " + (page + 2) + "/" + totalPages)
+                    .build(),
+                    event -> {
+                        page++;
+                        render();
+                    });
+        }
+        
+        // Close button
+        setItem(slot(5, 8), new ItemBuilder(Material.BARRIER)
+                .name("§c§lClose")
+                .lore("§7Click to close")
+                .build(),
+                event -> viewer.closeInventory());
     }
 
-    private void drawPath(Rank currentRank) {
-        int currentRankIndex = currentRank.ordinal();
-        
-        // Draw simple path markers between ranks
-        for (int i = 0; i < RANK_POSITIONS.length - 1; i++) {
-            int[] from = RANK_POSITIONS[i];
-            int[] to = RANK_POSITIONS[i + 1];
-            
-            // Determine if this path segment is unlocked
-            boolean unlocked = i < currentRankIndex;
-            Material pathMaterial = unlocked ? Material.LIME_STAINED_GLASS_PANE : Material.GRAY_STAINED_GLASS_PANE;
-            
-            // Draw path between ranks
-            drawPathBetween(from[0], from[1], to[0], to[1], pathMaterial, unlocked);
+    private ItemBuilder createRankItem(BaseRank rank, boolean isUnlocked, boolean isCurrent, boolean isNext, int unlockedAchievements) {
+        String statusLine;
+        if (isCurrent) {
+            statusLine = "§a§l✓ CURRENT RANK";
+        } else if (isUnlocked) {
+            statusLine = "§a✓ Unlocked";
+        } else if (isNext) {
+            int needed = rank.getRequiredAchievements() - unlockedAchievements;
+            statusLine = "§e⚡ " + needed + " more achievements needed";
+        } else {
+            statusLine = "§8✗ Locked (" + rank.getRequiredAchievements() + " achievements)";
         }
-    }
-
-    private void drawPathBetween(int fromRow, int fromCol, int toRow, int toCol, Material material, boolean unlocked) {
-        // Simple linear interpolation for path drawing
-        int rowDiff = toRow - fromRow;
-        int colDiff = toCol - fromCol;
-        int steps = Math.max(Math.abs(rowDiff), Math.abs(colDiff));
         
-        if (steps <= 1) return;
+        Material material;
+        if (isCurrent) {
+            material = Material.NETHER_STAR;
+        } else if (isUnlocked) {
+            material = Material.EMERALD;
+        } else if (isNext) {
+            material = Material.GOLD_INGOT;
+        } else {
+            material = Material.COAL;
+        }
         
-        for (int step = 1; step < steps; step++) {
-            int row = fromRow + (rowDiff * step) / steps;
-            int col = fromCol + (colDiff * step) / steps;
-            
-            int slotIndex = slot(row, col);
-            if (slotIndex >= 0 && slotIndex < 54) {
-                String pathChar = unlocked ? "§a═" : "§8═";
-                setItem(slotIndex, new ItemBuilder(material)
-                        .name(pathChar)
-                        .build());
+        // Build lore with description, perks, and rewards
+        List<String> lore = new ArrayList<>();
+        lore.add("");
+        lore.add("§7Rank: §f#" + (rank.getOrdinal() + 1));
+        lore.add("§7Requires: §f" + rank.getRequiredAchievements() + " achievements");
+        
+        // Add description if available
+        String description = rank.getDescription();
+        if (description != null && !description.isEmpty()) {
+            lore.add("");
+            lore.add("§8" + description);
+        }
+        
+        // Add perks if available
+        List<String> perks = rank.getPerkDescriptions();
+        if (perks != null && !perks.isEmpty()) {
+            lore.add("");
+            lore.add("§a§lPerks:");
+            for (String perk : perks) {
+                lore.add("§a  • " + perk);
             }
         }
-    }
-
-    private void drawRanks(Rank currentRank, int unlockedAchievements) {
-        Rank[] ranks = Rank.values();
-        int currentRankIndex = currentRank.ordinal();
         
-        for (int i = 0; i < ranks.length && i < RANK_POSITIONS.length; i++) {
-            Rank rank = ranks[i];
-            int[] pos = RANK_POSITIONS[i];
-            int slotIndex = slot(pos[0], pos[1]);
-            
-            boolean isUnlocked = i <= currentRankIndex;
-            boolean isCurrent = i == currentRankIndex;
-            boolean isNext = i == currentRankIndex + 1;
-            
-            Material material;
-            if (isCurrent) {
-                material = Material.NETHER_STAR;
-            } else if (isUnlocked) {
-                material = Material.EMERALD;
-            } else if (isNext) {
-                material = Material.GOLD_INGOT;
-            } else {
-                material = Material.COAL;
-            }
-            
-            // Calculate progress to this rank
-            int achievementsNeeded = rank.requiredAchievements;
-            int achievementsHave = unlockedAchievements;
-            
-            String statusLine;
-            if (isCurrent) {
-                statusLine = "§a§l✓ CURRENT RANK";
-            } else if (isUnlocked) {
-                statusLine = "§a✓ Unlocked";
-            } else if (isNext) {
-                int needed = achievementsNeeded - achievementsHave;
-                statusLine = "§e⚡ " + needed + " more achievements needed";
-            } else {
-                statusLine = "§8✗ Locked (" + achievementsNeeded + " achievements)";
-            }
-            
-            // Build the item
-            ItemBuilder builder = new ItemBuilder(material)
-                    .name(rank.icon + " " + rank.displayName)
-                    .lore(
-                        "",
-                        "§7Requires: §f" + achievementsNeeded + " achievements",
-                        "",
-                        statusLine
-                    );
-            
-            if (isCurrent || isUnlocked) {
-                builder.glow();
-            }
-            
-            setItem(slotIndex, builder.build());
+        // Add skill point reward
+        int skillPoints = rank.getSkillPoints();
+        if (skillPoints > 0) {
+            lore.add("");
+            lore.add("§6§lReward: §e+" + skillPoints + " Skill Point" + (skillPoints > 1 ? "s" : ""));
         }
+        
+        lore.add("");
+        lore.add(statusLine);
+        
+        ItemBuilder builder = new ItemBuilder(material)
+                .name(rank.getIcon() + " " + rank.getDisplayName())
+                .lore(lore);
+        
+        if (isCurrent || isUnlocked) {
+            builder.glow();
+        }
+        
+        return builder;
     }
 }

@@ -1,6 +1,11 @@
 package com.miauwrijn.gooncraft.managers;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
+
+import com.miauwrijn.gooncraft.ranks.BaseRank;
+import com.miauwrijn.gooncraft.ranks.RankBuilder;
 
 /**
  * Manages player ranks based on achievement count.
@@ -12,42 +17,21 @@ import org.bukkit.entity.Player;
  */
 public class RankManager {
 
+    // Array of all ranks in order (loaded from YAML)
+    private static final BaseRank[] RANKS = initializeRanks();
+
     /**
-     * Rank definitions with funny names.
-     * Each rank requires a minimum number of achievements.
-     * Thresholds adjusted for 67 total achievements.
+     * Initialize all rank instances from YAML configuration.
      */
-    public enum Rank {
-        INNOCENT(0, "§7Innocent Virgin", "§7", "👶"),
-        CURIOUS(2, "§aCurious Toucher", "§a", "🤔"),
-        AMATEUR(5, "§eAmateur Stroker", "§e", "✋"),
-        ENTHUSIAST(10, "§6Goon Enthusiast", "§6", "🔥"),
-        DEDICATED(15, "§cDedicated Degenerate", "§c", "💦"),
-        ADVANCED(22, "§dAdvanced Coomer", "§d", "🍆"),
-        PROFESSIONAL(30, "§5Professional Gooner", "§5", "👑"),
-        EXPERT(38, "§bMaster Bater", "§b", "🎓"),
-        ELITE(47, "§3Elite Exhibitionist", "§3", "⭐"),
-        LEGENDARY(55, "§4Legendary Pervert", "§4", "🏆"),
-        GOLDEN(62, "§6§lGolden Gooner", "§6§l", "✨"),
-        ULTIMATE(67, "§d§l✦ ULTIMATE DEGENERATE ✦", "§d§l", "🌟");
-
-        public final int requiredAchievements;
-        public final String displayName;
-        public final String color;
-        public final String icon;
-
-        Rank(int requiredAchievements, String displayName, String color, String icon) {
-            this.requiredAchievements = requiredAchievements;
-            this.displayName = displayName;
-            this.color = color;
-            this.icon = icon;
-        }
+    private static BaseRank[] initializeRanks() {
+        List<BaseRank> ranks = RankBuilder.loadRanks();
+        return ranks.toArray(new BaseRank[0]);
     }
 
     /**
      * Gets the rank for a player based on their achievement count.
      */
-    public static Rank getRank(Player player) {
+    public static BaseRank getRank(Player player) {
         int achievementCount = AchievementManager.getUnlockedCount(player);
         return getRankForAchievements(achievementCount);
     }
@@ -55,11 +39,11 @@ public class RankManager {
     /**
      * Gets the rank for a specific achievement count.
      */
-    public static Rank getRankForAchievements(int achievementCount) {
-        Rank currentRank = Rank.INNOCENT;
+    public static BaseRank getRankForAchievements(int achievementCount) {
+        BaseRank currentRank = RANKS[0]; // Innocent
         
-        for (Rank rank : Rank.values()) {
-            if (achievementCount >= rank.requiredAchievements) {
+        for (BaseRank rank : RANKS) {
+            if (achievementCount >= rank.getRequiredAchievements()) {
                 currentRank = rank;
             } else {
                 break;
@@ -68,16 +52,32 @@ public class RankManager {
         
         return currentRank;
     }
+    
+    /**
+     * Get all ranks.
+     */
+    public static BaseRank[] getAllRanks() {
+        return RANKS.clone();
+    }
+    
+    /**
+     * Get rank by ordinal/index.
+     */
+    public static BaseRank getRankByOrdinal(int ordinal) {
+        if (ordinal < 0 || ordinal >= RANKS.length) {
+            return RANKS[0];
+        }
+        return RANKS[ordinal];
+    }
 
     /**
      * Gets the next rank after the current one, or null if max rank.
      */
-    public static Rank getNextRank(Rank currentRank) {
-        Rank[] ranks = Rank.values();
-        int currentIndex = currentRank.ordinal();
+    public static BaseRank getNextRank(BaseRank currentRank) {
+        int currentIndex = currentRank.getOrdinal();
         
-        if (currentIndex + 1 < ranks.length) {
-            return ranks[currentIndex + 1];
+        if (currentIndex + 1 < RANKS.length) {
+            return RANKS[currentIndex + 1];
         }
         return null;
     }
@@ -87,15 +87,15 @@ public class RankManager {
      */
     public static double getProgressToNextRank(Player player) {
         int achievements = AchievementManager.getUnlockedCount(player);
-        Rank currentRank = getRankForAchievements(achievements);
-        Rank nextRank = getNextRank(currentRank);
+        BaseRank currentRank = getRankForAchievements(achievements);
+        BaseRank nextRank = getNextRank(currentRank);
         
         if (nextRank == null) {
             return 1.0; // Max rank
         }
         
-        int currentThreshold = currentRank.requiredAchievements;
-        int nextThreshold = nextRank.requiredAchievements;
+        int currentThreshold = currentRank.getRequiredAchievements();
+        int nextThreshold = nextRank.getRequiredAchievements();
         int range = nextThreshold - currentThreshold;
         int progress = achievements - currentThreshold;
         
@@ -107,14 +107,14 @@ public class RankManager {
      */
     public static int getAchievementsToNextRank(Player player) {
         int achievements = AchievementManager.getUnlockedCount(player);
-        Rank currentRank = getRankForAchievements(achievements);
-        Rank nextRank = getNextRank(currentRank);
+        BaseRank currentRank = getRankForAchievements(achievements);
+        BaseRank nextRank = getNextRank(currentRank);
         
         if (nextRank == null) {
             return 0; // Max rank
         }
         
-        return nextRank.requiredAchievements - achievements;
+        return nextRank.getRequiredAchievements() - achievements;
     }
 
     /**

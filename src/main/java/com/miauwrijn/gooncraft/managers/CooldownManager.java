@@ -11,6 +11,10 @@ public class CooldownManager {
     private static final Map<String, Long> cooldowns = new ConcurrentHashMap<>();
 
     public static boolean hasCooldown(Player player, String action, long cooldownSeconds) {
+        // Apply rank-based cooldown reduction
+        double reduction = RankPerkManager.getCooldownReduction(player);
+        long effectiveCooldown = (long) (cooldownSeconds * (1.0 - reduction));
+        
         String key = createKey(player.getUniqueId(), action);
         Long lastUsed = cooldowns.get(key);
         
@@ -19,7 +23,7 @@ public class CooldownManager {
         }
         
         long elapsedSeconds = (System.currentTimeMillis() - lastUsed) / 1000;
-        return elapsedSeconds < cooldownSeconds;
+        return elapsedSeconds < effectiveCooldown;
     }
 
     public static void setCooldown(Player player, String action) {

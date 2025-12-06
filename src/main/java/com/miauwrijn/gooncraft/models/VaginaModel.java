@@ -87,8 +87,8 @@ public class VaginaModel implements Runnable {
         List<Player> nearbyPlayers = world.getPlayers();
 
         // Higher rank = more frequent orgasm
-        RankManager.Rank rank = RankManager.getRank(owner);
-        int rankBonus = rank.ordinal() * 4;
+        com.miauwrijn.gooncraft.ranks.BaseRank rank = RankManager.getRank(owner);
+        int rankBonus = rank.getOrdinal() * 4;
         int orgasmChance = Math.max(5, BASE_ORGASM_CHANCE - rankBonus);
         int orgasmRoll = ThreadLocalRandom.current().nextInt(orgasmChance);
         boolean isOrgasming = orgasmRoll == 0;

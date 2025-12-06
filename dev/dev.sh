@@ -22,7 +22,14 @@ NC='\033[0m'
 
 apply_ops() {
     if [ -f .env ]; then
-        OPS=$(grep "^OPS=" .env | cut -d'=' -f2)
+        # Try MC_USERNAME first (current format), then fall back to OPS (legacy format)
+        OPS=""
+        if grep -q "^MC_USERNAME=" .env; then
+            OPS=$(grep "^MC_USERNAME=" .env | cut -d'=' -f2- | xargs)
+        elif grep -q "^OPS=" .env; then
+            OPS=$(grep "^OPS=" .env | cut -d'=' -f2- | xargs)
+        fi
+        
         if [ -n "$OPS" ]; then
             echo -e "${CYAN}👑 Applying OPs...${NC}"
             IFS=',' read -ra PLAYERS <<< "$OPS"
@@ -33,7 +40,11 @@ apply_ops() {
                     echo "   OP: $player"
                 fi
             done
+        else
+            echo -e "${YELLOW}⚠️  No MC_USERNAME or OPS found in .env file${NC}"
         fi
+    else
+        echo -e "${YELLOW}⚠️  .env file not found${NC}"
     fi
 }
 

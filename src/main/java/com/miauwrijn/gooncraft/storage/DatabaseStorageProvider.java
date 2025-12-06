@@ -152,6 +152,19 @@ public class DatabaseStorageProvider implements StorageProvider {
                 // Load achievements
                 String achievementsStr = rs.getString("achievements");
                 data.unlockedAchievements = parseAchievements(achievementsStr);
+                
+                // Load skill points (if columns exist - graceful fallback for old databases)
+                try {
+                    data.skillPoints = rs.getInt("skill_points");
+                } catch (SQLException e) {
+                    data.skillPoints = 0; // Column doesn't exist yet
+                }
+                try {
+                    String perksStr = rs.getString("purchased_perks");
+                    data.purchasedPerks = parsePerks(perksStr);
+                } catch (SQLException e) {
+                    data.purchasedPerks = new HashSet<>(); // Column doesn't exist yet
+                }
             } else {
                 // New player - set defaults
                 data.penisSize = PenisModel.getRandomSize();
@@ -503,5 +516,23 @@ public class DatabaseStorageProvider implements StorageProvider {
             } catch (IllegalArgumentException ignored) {}
         }
         return set;
+    }
+    
+    private Set<String> parsePerks(String str) {
+        Set<String> set = new HashSet<>();
+        if (str == null || str.isEmpty()) return set;
+        
+        for (String perk : str.split(",")) {
+            String trimmed = perk.trim();
+            if (!trimmed.isEmpty()) {
+                set.add(trimmed);
+            }
+        }
+        return set;
+    }
+    
+    private String serializePerks(Set<String> perks) {
+        if (perks == null || perks.isEmpty()) return "";
+        return String.join(",", perks);
     }
 }

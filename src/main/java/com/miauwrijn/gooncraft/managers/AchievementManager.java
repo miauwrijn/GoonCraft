@@ -126,7 +126,40 @@ public class AchievementManager {
         WHITE_CAT("Cat Got Your... Cream?", "Curious cat", "hidden", 1, true),
         
         // ===== COMBO ACHIEVEMENT (1 hidden) =====
-        SHART("Shart Attack", "Fart and poop within 5 seconds", "hidden", 1, true);
+        SHART("Shart Attack", "Fart and poop within 5 seconds", "hidden", 1, true),
+        
+        // ===== GROUP GOONING ACHIEVEMENTS (4) - Gender Neutral =====
+        CIRCLE_GOON("Circle Goon", "Goon with 3+ players at the same time", "group_goon", 1),
+        THREESOME("Threesome", "Three's company - goon with 2 others", "group_goon_3", 1),
+        ORGY("Orgy", "Goon party - 5+ players together", "group_goon_5", 1),
+        GANGBANG("Gangbang", "Seven's a crowd - goon with 6+ others", "group_goon_7", 1),
+        
+        // ===== MOB PROXIMITY ACHIEVEMENTS (20+) - Gender Neutral =====
+        GOON_NEAR_ZOMBIE("Zombie Encounter", "Goon near a zombie", "mob_proximity", 1, false, "zombie"),
+        GOON_NEAR_SKELETON("Bone Zone", "Goon near a skeleton", "mob_proximity", 1, false, "skeleton"),
+        GOON_NEAR_CREEPER("Dangerous Liaison", "Goon near a creeper", "mob_proximity", 1, false, "creeper"),
+        GOON_NEAR_SPIDER("Web of Intrigue", "Goon near a spider", "mob_proximity", 1, false, "spider"),
+        GOON_NEAR_ENDERMAN("Tall Dark Stranger", "Goon near an enderman", "mob_proximity", 1, false, "enderman"),
+        GOON_NEAR_PIG("Piggy Play", "Goon near a pig", "mob_proximity", 1, false, "pig"),
+        GOON_NEAR_COW("Bovine Beauty", "Goon near a cow", "mob_proximity", 1, false, "cow"),
+        GOON_NEAR_SHEEP("Sheepish", "Goon near a sheep", "mob_proximity", 1, false, "sheep"),
+        GOON_NEAR_CHICKEN("Fowl Play", "Goon near a chicken", "mob_proximity", 1, false, "chicken"),
+        GOON_NEAR_HORSE("Stallion Session", "Goon near a horse", "mob_proximity", 1, false, "horse"),
+        GOON_NEAR_WOLF("Pack Mentality", "Goon near a wolf", "mob_proximity", 1, false, "wolf"),
+        GOON_NEAR_CAT("Feline Friend", "Goon near a cat", "mob_proximity", 1, false, "cat"),
+        GOON_NEAR_VILLAGER("Villager Voyeur", "Goon near a villager", "mob_proximity", 1, false, "villager"),
+        GOON_NEAR_IRON_GOLEM("Metal Attraction", "Goon near an iron golem", "mob_proximity", 1, false, "iron_golem"),
+        GOON_NEAR_LLAMA("Alpaca Adventure", "Goon near a llama", "mob_proximity", 1, false, "llama"),
+        GOON_NEAR_PANDA("Bamboo Breeze", "Goon near a panda", "mob_proximity", 1, false, "panda"),
+        GOON_NEAR_FOX("Sly Fox", "Goon near a fox", "mob_proximity", 1, false, "fox"),
+        GOON_NEAR_BEE("Honey Pot", "Goon near a bee", "mob_proximity", 1, false, "bee"),
+        GOON_NEAR_OCELOT("Jungle Fever", "Goon near an ocelot", "mob_proximity", 1, false, "ocelot"),
+        GOON_NEAR_DOLPHIN("Dolphin Dive", "Goon near a dolphin", "mob_proximity", 1, false, "dolphin"),
+        GOON_NEAR_TURTLE("Turtle Time", "Goon near a turtle", "mob_proximity", 1, false, "turtle"),
+        GOON_NEAR_SQUID("Inkredible", "Goon near a squid", "mob_proximity", 1, false, "squid"),
+        GOON_NEAR_GOAT("Mountain Goat", "Goon near a goat", "mob_proximity", 1, false, "goat"),
+        GOON_NEAR_ALLAY("Allay Play", "Goon near an allay", "mob_proximity", 1, false, "allay"),
+        GOON_NEAR_AXOLOTL("Axolotl Adventure", "Goon near an axolotl", "mob_proximity", 1, false, "axolotl");
 
         public final String name;
         public final String description;
@@ -266,6 +299,40 @@ public class AchievementManager {
         
         // Save immediately via StorageManager
         StorageManager.savePlayerData(player.getUniqueId());
+        
+        // Check for rank up and award skill points
+        checkRankUp(player);
+    }
+    
+    /**
+     * Check if player ranked up and award skill points.
+     */
+    private static void checkRankUp(Player player) {
+        com.miauwrijn.gooncraft.ranks.BaseRank oldRank = RankManager.getRankForAchievements(getUnlockedCount(player) - 1);
+        com.miauwrijn.gooncraft.ranks.BaseRank newRank = RankManager.getRank(player);
+        
+        if (oldRank != newRank) {
+            // Player ranked up!
+            com.miauwrijn.gooncraft.managers.SkillPointsManager.awardSkillPointsOnRankUp(player, newRank);
+            
+            // Apply rank perks (they'll be applied by applyAllRankPerks which checks up to current rank)
+            RankPerkManager.applyAllRankPerks(player);
+            
+            // Notify about rank up
+            player.sendMessage("");
+            player.sendMessage("§6§l✨ RANK UP! ✨");
+            player.sendMessage("§7You are now: " + newRank.getDisplayName());
+            if (!newRank.getDescription().isEmpty()) {
+                player.sendMessage("§8" + newRank.getDescription());
+            }
+            if (!newRank.getPerkDescriptions().isEmpty()) {
+                player.sendMessage("§aPerks:");
+                for (String perk : newRank.getPerkDescriptions()) {
+                    player.sendMessage("§a  • " + perk);
+                }
+            }
+            player.sendMessage("");
+        }
     }
 
     public static int getUnlockedCount(Player player) {

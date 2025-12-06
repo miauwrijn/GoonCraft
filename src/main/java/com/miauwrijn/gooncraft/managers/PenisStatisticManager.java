@@ -118,6 +118,20 @@ public class PenisStatisticManager implements Listener {
             stats.runnableTaskId = 0;
         }
     }
+    
+    /**
+     * Update rank boosts and reload model if active.
+     */
+    public static void updateRankBoosts(Player player, int sizeBoost, int girthBoost) {
+        PenisStatistics stats = getStatistics(player);
+        stats.rankSizeBoost = sizeBoost;
+        stats.rankGirthBoost = girthBoost;
+        
+        // Update model if active
+        if (stats.penisModel != null) {
+            stats.penisModel.reload(stats);
+        }
+    }
 
     /**
      * Removes all GoonCraft block display entities from all worlds.

@@ -85,6 +85,7 @@ public class PenisModel implements Runnable {
         this.girth = clamp(stats.girth, minGirth, maxGirth);
         this.bbc = stats.bbc;
         this.viagraBoost = stats.viagraBoost;
+        // Rank boosts are applied in setBlockTransformation via effective size
         discard();
         buildModel();
     }
@@ -198,8 +199,8 @@ public class PenisModel implements Runnable {
         // Higher rank = more frequent ejaculation
         // Rank 0 (Innocent Virgin) = 1 in 50 chance
         // Rank 11 (Ultimate Degenerate) = 1 in 5 chance
-        RankManager.Rank rank = RankManager.getRank(owner);
-        int rankBonus = rank.ordinal() * 4; // Each rank reduces the divisor by 4
+        com.miauwrijn.gooncraft.ranks.BaseRank rank = RankManager.getRank(owner);
+        int rankBonus = rank.getOrdinal() * 4; // Each rank reduces the divisor by 4
         int ejaculateChance = Math.max(5, BASE_EJACULATE_CHANCE - rankBonus);
         int ejaculateRoll = ThreadLocalRandom.current().nextInt(ejaculateChance);
         boolean isEjaculating = ejaculateRoll == 0;
@@ -296,9 +297,21 @@ public class PenisModel implements Runnable {
         // Apply stiffness modifier (cold = smaller)
         float stiffnessModifier = currentStiffness;
         
-        float g = girth * 0.01f * stiffnessModifier;
-        int totalSize = size + viagraBoost;
-        float effectiveSize = totalSize * stiffnessModifier;
+        // Get effective size/girth including all temporary boosts (viagra + rank)
+        int effectiveSizeInt = size + viagraBoost;
+        int effectiveGirthInt = girth;
+        
+        if (owner != null) {
+            com.miauwrijn.gooncraft.data.PenisStatistics stats = 
+                com.miauwrijn.gooncraft.managers.PenisStatisticManager.getStatistics(owner);
+            if (stats != null) {
+                effectiveSizeInt = stats.getEffectiveSize();
+                effectiveGirthInt = stats.getEffectiveGirth();
+            }
+        }
+        
+        float g = effectiveGirthInt * 0.01f * stiffnessModifier;
+        float effectiveSize = effectiveSizeInt * stiffnessModifier;
 
         Vector3f scale;
         if (isShaft) {
