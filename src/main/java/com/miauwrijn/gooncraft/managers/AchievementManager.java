@@ -1,13 +1,21 @@
 package com.miauwrijn.gooncraft.managers;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import com.miauwrijn.gooncraft.Plugin;
+import com.miauwrijn.gooncraft.achievements.AchievementBuilder;
+import com.miauwrijn.gooncraft.achievements.MobProximityAchievement;
 import com.miauwrijn.gooncraft.data.PlayerStats;
 import com.miauwrijn.gooncraft.storage.PlayerData;
 import com.miauwrijn.gooncraft.storage.StorageManager;
@@ -381,6 +389,67 @@ public class AchievementManager {
                         (category.equals("hidden") && a.hidden) ||
                         (category.equals("location") && a.locationTag != null))
             .toList();
+    }
+
+    /**
+     * Check for mob proximity achievements when player is gooning.
+     * Checks all nearby entities and unlocks achievements if matching mob types are found.
+     */
+    public static void checkMobProximityAchievements(Player player) {
+        if (player == null || !player.isOnline()) {
+            return;
+        }
+        
+        // Get nearby entities (within 10 blocks)
+        List<Entity> nearbyEntities = player.getNearbyEntities(10, 10, 10);
+        
+        // Build a set of nearby mob types (normalized to lowercase)
+        Set<String> nearbyMobTypes = new HashSet<>();
+        for (Entity entity : nearbyEntities) {
+            if (entity instanceof LivingEntity) {
+                EntityType type = entity.getType();
+                // Convert EntityType to lowercase string (e.g., ZOMBIE -> "zombie")
+                String mobType = type.name().toLowerCase();
+                nearbyMobTypes.add(mobType);
+            }
+        }
+        
+        if (nearbyMobTypes.isEmpty()) {
+            return; // No nearby mobs
+        }
+        
+        // Get all achievements loaded from YAML
+        Map<String, com.miauwrijn.gooncraft.achievements.BaseAchievement> allAchievements = 
+            AchievementBuilder.getAllAchievementsById();
+        
+        // Check each mob proximity achievement
+        for (com.miauwrijn.gooncraft.achievements.BaseAchievement achievement : allAchievements.values()) {
+            if (!(achievement instanceof MobProximityAchievement mobAchievement)) {
+                continue;
+            }
+            
+            String requiredMobType = mobAchievement.getMobType().toLowerCase();
+            
+            // Check if player is near the required mob type
+            if (nearbyMobTypes.contains(requiredMobType)) {
+                // Convert achievement ID to enum (e.g., "goon_near_zombie" -> "GOON_NEAR_ZOMBIE")
+                String enumName = mobAchievement.getId().toUpperCase().replace("-", "_");
+                try {
+                    Achievement enumAchievement = Achievement.valueOf(enumName);
+                    
+                    // Check if already unlocked
+                    Set<Achievement> unlocked = getUnlocked(player);
+                    if (!unlocked.contains(enumAchievement)) {
+                        unlockAchievement(player, enumAchievement);
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Achievement ID doesn't match enum - this is okay, some achievements
+                    // might only exist in YAML and not in the enum
+                    Plugin.instance.getLogger().fine("Achievement " + mobAchievement.getId() + 
+                        " not found in enum, skipping");
+                }
+            }
+        }
     }
 
 }

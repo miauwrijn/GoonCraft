@@ -72,6 +72,7 @@ public class StatisticsManager implements Listener {
         
         AchievementManager.checkAchievements(player, stats);
         AchievementManager.checkLocationAchievements(player, stats);
+        AchievementManager.checkMobProximityAchievements(player);
     }
 
     /** @deprecated Use incrementGoonCount instead */
