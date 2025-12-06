@@ -1,19 +1,26 @@
 package com.miauwrijn.gooncraft.managers;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import com.miauwrijn.gooncraft.Plugin;
 import com.miauwrijn.gooncraft.data.PenisStatistics;
@@ -29,12 +36,124 @@ public class PenisStatisticManager implements Listener {
 
     // Runtime-only state: active models and task IDs (not persisted)
     private static final Map<UUID, PenisStatistics> runtimeStats = new ConcurrentHashMap<>();
+    
+    // Cooldown for genital bump kicks (player UUID pair -> last kick time)
+    private static final Map<String, Long> bumpCooldowns = new ConcurrentHashMap<>();
+    private static final long BUMP_COOLDOWN_MS = 1500; // 1.5 second cooldown between kicks
 
     public PenisStatisticManager() {
         // Clean up any floating models from previous session
         cleanupFloatingModels();
         
         Bukkit.getPluginManager().registerEvents(this, Plugin.instance);
+        
+        // Start the genital bump collision checker
+        startBumpCollisionChecker();
+    }
+    
+    /**
+     * Starts a task that checks for genital bump collisions.
+     * If a player has genitals out and bumps into another player while facing them,
+     * the other player gets kicked based on genital size.
+     */
+    private void startBumpCollisionChecker() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                
+                // Clean up old cooldowns
+                bumpCooldowns.entrySet().removeIf(e -> now - e.getValue() > BUMP_COOLDOWN_MS * 2);
+                
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    // Check if player has genitals out
+                    int genitalSize = getActiveGenitalSize(player);
+                    if (genitalSize <= 0) continue;
+                    
+                    Location playerLoc = player.getLocation();
+                    Vector playerDirection = playerLoc.getDirection().setY(0).normalize();
+                    
+                    // Check nearby players
+                    for (Player target : player.getWorld().getPlayers()) {
+                        if (target.equals(player)) continue;
+                        
+                        Location targetLoc = target.getLocation();
+                        double distance = playerLoc.distance(targetLoc);
+                        
+                        // Must be very close (within 1.5 blocks)
+                        if (distance > 1.5 || distance < 0.3) continue;
+                        
+                        // Check if player is facing the target
+                        Vector toTarget = targetLoc.toVector().subtract(playerLoc.toVector()).setY(0).normalize();
+                        double dot = playerDirection.dot(toTarget);
+                        
+                        // Must be facing them (dot > 0.7 means within ~45 degrees)
+                        if (dot < 0.7) continue;
+                        
+                        // Check cooldown
+                        String cooldownKey = player.getUniqueId() + "-" + target.getUniqueId();
+                        Long lastKick = bumpCooldowns.get(cooldownKey);
+                        if (lastKick != null && now - lastKick < BUMP_COOLDOWN_MS) continue;
+                        
+                        // Apply the kick!
+                        applyGenitalBump(player, target, genitalSize, toTarget);
+                        bumpCooldowns.put(cooldownKey, now);
+                    }
+                }
+            }
+        }.runTaskTimer(Plugin.instance, 5L, 5L); // Check every 5 ticks (0.25 seconds)
+    }
+    
+    /**
+     * Get the size of active genitals (penis size or vagina equivalent).
+     * Returns 0 if no genitals are out.
+     */
+    private static int getActiveGenitalSize(Player player) {
+        // Check penis
+        PenisStatistics stats = runtimeStats.get(player.getUniqueId());
+        if (stats != null && stats.penisModel != null) {
+            return stats.size + stats.viagraBoost + stats.rankSizeBoost;
+        }
+        
+        // Check vagina (use a base "size" for vagina - we'll use arousal/wetness equivalent)
+        if (GenderManager.getActiveVaginaModel(player) != null) {
+            // Vagina bump power based on boob size (if they have boobs) as a proxy
+            PlayerData data = StorageManager.getPlayerData(player);
+            return Math.max(10, data.boobSize / 2); // Min 10, scales with boob size
+        }
+        
+        return 0;
+    }
+    
+    /**
+     * Apply the genital bump kick to a target player.
+     */
+    private static void applyGenitalBump(Player bumper, Player target, int genitalSize, Vector direction) {
+        // Calculate kick strength based on genital size
+        // Size ranges from ~5 to ~30, we want velocity from 0.3 to 1.0
+        double strength = 0.3 + (genitalSize / 40.0) * 0.7;
+        strength = Math.min(1.2, strength); // Cap at 1.2
+        
+        // Add slight upward component
+        Vector kickVelocity = direction.clone().multiply(strength);
+        kickVelocity.setY(0.2 + (genitalSize / 100.0)); // Small upward boost
+        
+        // Apply velocity
+        target.setVelocity(target.getVelocity().add(kickVelocity));
+        
+        // Play a bonk sound
+        target.getWorld().playSound(target.getLocation(), Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK, 0.8f, 0.8f);
+        
+        // Send messages
+        String bumperName = bumper.getName();
+        PenisStatistics stats = runtimeStats.get(bumper.getUniqueId());
+        boolean isPenis = stats != null && stats.penisModel != null;
+        
+        if (isPenis) {
+            target.sendMessage("§d" + bumperName + " §7bonked you with their §dcock§7!");
+        } else {
+            target.sendMessage("§d" + bumperName + " §7hip-checked you with their §dpussy§7!");
+        }
     }
 
     /**
@@ -173,6 +292,15 @@ public class PenisStatisticManager implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         clearActivePenis(event.getPlayer());
         runtimeStats.remove(event.getPlayer().getUniqueId());
+    }
+    
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        // Check if player has genitals exposed
+        if (GenderManager.hasActiveGenitals(player)) {
+            StatisticsManager.incrementBlocksMinedWhileExposed(player);
+        }
     }
 
     @EventHandler

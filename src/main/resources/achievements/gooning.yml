@@ -153,7 +153,7 @@ achievements:
     type: "stat"
     threshold: 1
     rarity: "common"
-    stat_category: "goon"
+    stat_category: "group_goon_3"
     xp_reward: 50
   
   orgy:
@@ -163,7 +163,7 @@ achievements:
     type: "stat"
     threshold: 1
     rarity: "common"
-    stat_category: "goon"
+    stat_category: "group_goon_5"
     xp_reward: 150
   
   gangbang:
@@ -173,7 +173,7 @@ achievements:
     type: "stat"
     threshold: 1
     rarity: "common"
-    stat_category: "goon"
+    stat_category: "group_goon_7"
     xp_reward: 250
 
   # ===== SPEED ACHIEVEMENTS (2) - Gender Neutral =====

@@ -43,7 +43,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
  * %gooncraft_exposure_time%  - Formatted exposure time (e.g., "5h 30m")
  * %gooncraft_exposure_seconds% - Raw exposure time in seconds
  * %gooncraft_ejaculations%   - Total ejaculations/orgasms
- * %gooncraft_strokes%        - Total strokes (arm swings while gooning)
  * %gooncraft_streak%         - Current goon streak (MC days)
  * %gooncraft_streak_best%    - Best goon streak ever
  * %gooncraft_buttfingers_given%
@@ -176,7 +175,6 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             
             // Detailed goon stats
             case "ejaculations", "orgasms" -> String.valueOf(stats.totalEjaculations);
-            case "strokes" -> String.valueOf(stats.totalStrokes);
             case "streak" -> stats.getStreakDisplay();
             case "streak_days" -> String.valueOf(stats.currentGoonStreak);
             case "streak_best" -> String.valueOf(stats.longestGoonStreak);
@@ -194,7 +192,12 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             // Gender
             case "gender" -> {
                 GenderManager.Gender gender = GenderManager.getGender(player);
-                yield gender != null ? gender.getDisplayName() : "Not Set";
+                if (gender == null) yield "Not Set";
+                yield switch (gender) {
+                    case MALE -> "Male";
+                    case FEMALE -> "Female";
+                    case OTHER -> "Other";
+                };
             }
 
             // Boob/jiggle stats (for female/other)
@@ -261,7 +264,6 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
                 case "time" -> stats.getCurrentTotalTime();
                 case "achievements" -> AchievementManager.getUnlockedCount(player);
                 case "cum", "ejaculations" -> stats.totalEjaculations;
-                case "strokes" -> stats.totalStrokes;
                 case "streak" -> stats.currentGoonStreak;
                 case "buttfingers", "bf" -> stats.buttfingersGiven;
                 case "farts" -> stats.fartCount;

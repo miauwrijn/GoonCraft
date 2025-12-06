@@ -63,7 +63,6 @@ public class StatsGUI extends GUI {
                 .name("§d§lGoon Count")
                 .lore(
                     "§7Total goons: §e" + formatNumber(stats.goonCount),
-                    "§7Total strokes: §e" + formatNumber(stats.totalStrokes),
                     "",
                     "§8Crouch + swing to fap"
                 )
@@ -82,16 +81,18 @@ public class StatsGUI extends GUI {
                 .build());
         
         // Goon streak
-        setItem(slot(2, 3), new ItemBuilder(Material.BLAZE_POWDER)
+        ItemBuilder streakBuilder = new ItemBuilder(Material.BLAZE_POWDER)
                 .name("§6§lGoon Streak")
                 .lore(
                     "§7Current streak: §e" + stats.getStreakDisplay(),
                     "§7Best streak: §e" + stats.longestGoonStreak + " days",
                     "",
                     "§8Goon every MC day to keep your streak!"
-                )
-                .glow(stats.currentGoonStreak >= 7) // Glow for 7+ day streaks
-                .build());
+                );
+        if (stats.currentGoonStreak >= 7) {
+            streakBuilder.glow(); // Glow for 7+ day streaks
+        }
+        setItem(slot(2, 3), streakBuilder.build());
         
         // Got cummed on (slot 2,4)
         setItem(slot(2, 4), new ItemBuilder(Material.SLIME_BALL)

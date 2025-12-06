@@ -115,3 +115,46 @@ achievements:
     rarity: "rare"
     hidden: true
     xp_reward: 200
+
+  # ===== SPECIAL HIDDEN ACHIEVEMENTS =====
+  strip_miner:
+    name: "Strip Miner"
+    description: "Mine 100 blocks while exposed"
+    category: "hidden"
+    type: "stat"
+    threshold: 100
+    rarity: "uncommon"
+    stat_category: "blocks_mined_exposed"
+    hidden: true
+    xp_reward: 100
+
+  seamen:
+    name: "SeaMen"
+    description: "Ejaculate in an ocean biome"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "uncommon"
+    hidden: true
+    xp_reward: 75
+
+  mr_poopie_butthole:
+    name: "Mr Poopie Butthole"
+    description: "Buttfinger yourself 1000 times"
+    category: "hidden"
+    type: "stat"
+    threshold: 1000
+    rarity: "legendary"
+    stat_category: "self_buttfinger"
+    hidden: true
+    xp_reward: 2500
+
+  epstein_invitee:
+    name: "Epstein Invitee"
+    description: "Goon with 10 baby villagers nearby"
+    category: "hidden"
+    type: "hidden"
+    threshold: 1
+    rarity: "legendary"
+    hidden: true
+    xp_reward: 666

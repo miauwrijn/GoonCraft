@@ -102,6 +102,13 @@ public class AchievementManager {
             case "creeper_death" -> stats.creeperDeathsWhileExposed;
             case "speed_goon" -> stats.maxGoonsInMinute;
             case "rapid_fire" -> stats.ejaculationsIn30Seconds;
+            case "self_buttfinger" -> stats.selfButtfingers;
+            case "blocks_mined_exposed" -> stats.blocksMinedWhileExposed;
+            case "baby_villagers" -> stats.goonsNearBabyVillagers;
+            // Group gooning (returns 1 if threshold met, 0 otherwise)
+            case "group_goon_3" -> stats.maxNearbyGooners >= 2 ? 1 : 0; // 3 total = player + 2 others
+            case "group_goon_5" -> stats.maxNearbyGooners >= 4 ? 1 : 0; // 5 total = player + 4 others
+            case "group_goon_7" -> stats.maxNearbyGooners >= 6 ? 1 : 0; // 7 total = player + 6 others
             default -> 0;
         };
     }

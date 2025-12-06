@@ -63,6 +63,7 @@ public class ButtFingerCommandHandler implements CommandExecutor {
         // Track statistics (with target for unique player tracking)
         if (isSelf) {
             StatisticsManager.incrementButtfingersGiven(executor);
+            StatisticsManager.incrementSelfButtfingers(executor);
         } else {
             StatisticsManager.incrementButtfingersGiven(executor, target);
             StatisticsManager.incrementButtfingersReceived(target);

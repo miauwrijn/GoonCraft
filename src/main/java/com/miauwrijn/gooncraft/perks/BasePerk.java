@@ -153,5 +153,19 @@ public abstract class BasePerk {
     public String getAnimalType() {
         return null;
     }
+    
+    /**
+     * Check if this is a villager discount perk.
+     */
+    public boolean isVillagerDiscountPerk() {
+        return false;
+    }
+    
+    /**
+     * Get the villager discount level (1-5).
+     */
+    public int getVillagerDiscountLevel() {
+        return 0;
+    }
 }
 

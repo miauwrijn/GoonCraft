@@ -125,7 +125,7 @@ public class RankPerkManager {
         double multiplier = 1.0;
         Set<BaseRank> active = activeRankPerks.get(player.getUniqueId());
         if (active == null) return 1.0;
-        
+
         for (BaseRank rank : active) {
             for (BasePerk perk : rank.getPerks()) {
                 if (perk instanceof FapSpeedPerk) {
@@ -133,8 +133,28 @@ public class RankPerkManager {
                 }
             }
         }
-        
+
         return Math.min(2.0, multiplier); // Cap at 2x speed
+    }
+    
+    /**
+     * Get villager discount level from active rank perks.
+     * Returns 0 if player doesn't have the perk, 1-5 otherwise.
+     */
+    public static int getVillagerDiscountLevel(Player player) {
+        int level = 0;
+        Set<BaseRank> active = activeRankPerks.get(player.getUniqueId());
+        if (active == null) return 0;
+
+        for (BaseRank rank : active) {
+            for (BasePerk perk : rank.getPerks()) {
+                if (perk.isVillagerDiscountPerk()) {
+                    level = Math.max(level, perk.getVillagerDiscountLevel());
+                }
+            }
+        }
+
+        return Math.min(5, level); // Cap at level 5
     }
     
     /**
@@ -195,17 +215,21 @@ public class RankPerkManager {
             animals.add(chicken);
         });
         
-        // Make chickens walk towards player using pathfinder
+        // Make chickens walk towards player by giving them a velocity boost
         animals.stream()
             .filter(entity -> entity instanceof Chicken && entity.isValid() && !entity.isDead())
             .forEach(entity -> {
                 Chicken chicken = (Chicken) entity;
                 double distance = chicken.getLocation().distance(player.getLocation());
                 
-                // Only pathfind if chicken is more than 3 blocks away but within 20 blocks
-                if (distance > 3 && distance < 20) {
-                    // Use pathfinder to walk to player
-                    chicken.getPathfinder().moveTo(player.getLocation(), 1.2);
+                // Only move if chicken is more than 2 blocks away but within 20 blocks
+                if (distance > 2 && distance < 20) {
+                    // Calculate direction to player
+                    org.bukkit.util.Vector direction = player.getLocation().toVector()
+                        .subtract(chicken.getLocation().toVector()).normalize();
+                    // Apply gentle velocity towards player (keep Y minimal to avoid floating)
+                    direction.setY(0).normalize().multiply(0.15);
+                    chicken.setVelocity(direction);
                 } else if (distance >= 20) {
                     // Too far - remove from tracking
                     animals.remove(chicken);
@@ -235,17 +259,21 @@ public class RankPerkManager {
             animals.add(cat);
         });
         
-        // Make cats walk towards player using pathfinder
+        // Make cats walk towards player by giving them a velocity boost
         animals.stream()
             .filter(entity -> entity instanceof Cat && entity.isValid() && !entity.isDead())
             .forEach(entity -> {
                 Cat cat = (Cat) entity;
                 double distance = cat.getLocation().distance(player.getLocation());
                 
-                // Only pathfind if cat is more than 3 blocks away but within 20 blocks
-                if (distance > 3 && distance < 20) {
-                    // Use pathfinder to walk to player
-                    cat.getPathfinder().moveTo(player.getLocation(), 1.3);
+                // Only move if cat is more than 2 blocks away but within 20 blocks
+                if (distance > 2 && distance < 20) {
+                    // Calculate direction to player
+                    org.bukkit.util.Vector direction = player.getLocation().toVector()
+                        .subtract(cat.getLocation().toVector()).normalize();
+                    // Apply gentle velocity towards player (keep Y minimal to avoid floating)
+                    direction.setY(0).normalize().multiply(0.18);
+                    cat.setVelocity(direction);
                 } else if (distance >= 20) {
                     // Too far - remove from tracking
                     animals.remove(cat);

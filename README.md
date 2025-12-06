@@ -316,6 +316,111 @@ Click on any player to view their detailed stats!
 
 ---
 
+## 🔗 PlaceholderAPI Support
+
+GoonCraft integrates with [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) for use with scoreboards, holograms, and other plugins!
+
+**Soft Dependency:** PlaceholderAPI is optional. If installed, placeholders are automatically registered.
+
+### Personal Stats Placeholders
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%gooncraft_rank%` | Player's rank display name | `§dExpert Gooner` |
+| `%gooncraft_rank_name%` | Rank name (no colors) | `Expert Gooner` |
+| `%gooncraft_rank_ordinal%` | Rank number (0-indexed) | `5` |
+| `%gooncraft_rank_icon%` | Rank icon/emoji | `🍆` |
+| `%gooncraft_xp%` | Player's total XP | `1500` |
+| `%gooncraft_xp_formatted%` | XP with K/M/B suffix | `1.5K` |
+| `%gooncraft_xp_next%` | XP needed for next rank | `500` |
+| `%gooncraft_xp_progress%` | Progress to next rank (0-100) | `75` |
+| `%gooncraft_xp_bar%` | Visual progress bar | `████████░░` |
+
+### Activity Stats Placeholders
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%gooncraft_goons%` | Total goon count | `420` |
+| `%gooncraft_faps%` | Alias for goons | `420` |
+| `%gooncraft_ejaculations%` | Total ejaculations/orgasms | `69` |
+| `%gooncraft_cum_on%` | Times cummed on others | `15` |
+| `%gooncraft_got_cummed%` | Times got cummed on | `8` |
+| `%gooncraft_exposure_time%` | Formatted exposure time | `5h 30m` |
+| `%gooncraft_exposure_seconds%` | Raw exposure time (seconds) | `19800` |
+| `%gooncraft_buttfingers_given%` | Buttfingers given | `12` |
+| `%gooncraft_buttfingers_received%` | Buttfingers received | `5` |
+
+### Bodily Functions Placeholders
+
+| Placeholder | Description |
+|-------------|-------------|
+| `%gooncraft_farts%` | Total fart count |
+| `%gooncraft_poops%` | Total poop count |
+| `%gooncraft_piss%` | Total piss count |
+| `%gooncraft_viagra%` | Viagra pills used |
+
+### Streak & Achievement Placeholders
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%gooncraft_streak%` | Current goon streak display | `5 days` |
+| `%gooncraft_streak_days%` | Current streak (number) | `5` |
+| `%gooncraft_streak_best%` | Best streak ever | `12` |
+| `%gooncraft_achievements%` | Unlocked achievement count | `42` |
+| `%gooncraft_achievements_total%` | Total achievements available | `67` |
+| `%gooncraft_achievements_percent%` | Percentage unlocked | `63` |
+
+### Other Placeholders
+
+| Placeholder | Description | Example Output |
+|-------------|-------------|----------------|
+| `%gooncraft_gender%` | Player's gender | `Male` / `Female` / `Other` |
+| `%gooncraft_jiggles%` | Boob jiggle count | `25` |
+| `%gooncraft_boob_toggles%` | Boob toggle count | `10` |
+
+### Leaderboard Placeholders
+
+Get top players for any stat! Format: `%gooncraft_top_<category>_<1-10>_<name|value>%`
+
+| Category | Description |
+|----------|-------------|
+| `goons` | Top goon counts |
+| `xp` | Top XP totals |
+| `time` | Top exposure time |
+| `achievements` | Top achievement counts |
+| `ejaculations` | Top ejaculation counts |
+| `streak` | Top goon streaks |
+| `buttfingers` | Top buttfingers given |
+| `farts` | Top fart counts |
+| `poops` | Top poop counts |
+| `piss` | Top piss counts |
+
+**Examples:**
+```
+%gooncraft_top_goons_1_name%     → "Miauwrijn"
+%gooncraft_top_goons_1_value%    → "1.5K"
+%gooncraft_top_xp_3_name%        → "Player3"
+%gooncraft_top_time_1_value%     → "5h 30m"
+%gooncraft_top_streak_1_value%   → "12"
+```
+
+### Example Scoreboard Config (using FeatherBoard)
+
+```yaml
+lines:
+  - "&6&lGoonCraft Stats"
+  - ""
+  - "&eRank: %gooncraft_rank%"
+  - "&eXP: %gooncraft_xp_formatted%"
+  - "%gooncraft_xp_bar%"
+  - ""
+  - "&dGoons: &f%gooncraft_goons%"
+  - "&dStreak: &f%gooncraft_streak%"
+  - "&dAchievements: &f%gooncraft_achievements%/%gooncraft_achievements_total%"
+```
+
+---
+
 ## 💊 Crafting Recipes
 
 ### Viagra Pill

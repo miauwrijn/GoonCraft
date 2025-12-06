@@ -255,13 +255,18 @@ public class FileStorageProvider implements StorageProvider {
         
         // Detailed goon stats
         stats.totalEjaculations = config.getInt("Stats.TotalEjaculations", 0);
-        stats.totalStrokes = config.getLong("Stats.TotalStrokes", 0);
         
+        // Special achievement stats
+        stats.selfButtfingers = config.getInt("Stats.SelfButtfingers", 0);
+        stats.blocksMinedWhileExposed = config.getInt("Stats.BlocksMinedWhileExposed", 0);
+        stats.ejaculatedInOcean = config.getBoolean("Stats.EjaculatedInOcean", false);
+        stats.goonsNearBabyVillagers = config.getInt("Stats.GoonsNearBabyVillagers", 0);
+
         // Streak stats
         stats.currentGoonStreak = config.getInt("Stats.CurrentGoonStreak", 0);
         stats.longestGoonStreak = config.getInt("Stats.LongestGoonStreak", 0);
         stats.lastGoonMinecraftDay = config.getLong("Stats.LastGoonMinecraftDay", 0);
-        
+
         return stats;
     }
 
@@ -338,8 +343,13 @@ public class FileStorageProvider implements StorageProvider {
         
         // Detailed goon stats
         config.set("Stats.TotalEjaculations", stats.totalEjaculations);
-        config.set("Stats.TotalStrokes", stats.totalStrokes);
         
+        // Special achievement stats
+        config.set("Stats.SelfButtfingers", stats.selfButtfingers);
+        config.set("Stats.BlocksMinedWhileExposed", stats.blocksMinedWhileExposed);
+        config.set("Stats.EjaculatedInOcean", stats.ejaculatedInOcean);
+        config.set("Stats.GoonsNearBabyVillagers", stats.goonsNearBabyVillagers);
+
         // Streak stats
         config.set("Stats.CurrentGoonStreak", stats.currentGoonStreak);
         config.set("Stats.LongestGoonStreak", stats.longestGoonStreak);

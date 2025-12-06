@@ -277,7 +277,7 @@ achievements:
     type: "stat"
     threshold: 1
     rarity: "common"
-    stat_category: "goon"
+    stat_category: "goon_fire"
     xp_reward: 15
   
   goon_falling:
@@ -287,7 +287,7 @@ achievements:
     type: "stat"
     threshold: 1
     rarity: "common"
-    stat_category: "goon"
+    stat_category: "goon_falling"
     xp_reward: 15
   
   creeper_death:

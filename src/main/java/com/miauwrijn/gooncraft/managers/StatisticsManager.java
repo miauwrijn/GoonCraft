@@ -8,7 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -70,23 +72,29 @@ public class StatisticsManager implements Listener {
     public static void incrementGoonCount(Player player) {
         PlayerStats stats = getStats(player);
         stats.goonCount++;
-        
+
         // Track streak and strokes (using Minecraft day)
         long currentMcDay = player.getWorld().getFullTime() / 24000L;
         stats.trackGoonStreak(currentMcDay);
-        
+
         // Award XP and show progress
         awardXpWithProgress(player, stats, 1, "Gooning");
-        
+
         // Track speed for speed achievement
         stats.trackGoonSpeed();
-        
+
         // Check location-based achievements
         checkGoonLocation(player, stats);
-        
+
         // Check if gooning in danger
         checkGoonDanger(player, stats);
         
+        // Check for baby villagers nearby (Epstein achievement)
+        checkBabyVillagersNearby(player, stats);
+        
+        // Check for group gooning (threesome, orgy, gangbang achievements)
+        checkGroupGooning(player, stats);
+
         AchievementManager.checkAchievements(player, stats);
         AchievementManager.checkLocationAchievements(player, stats);
         AchievementManager.checkMobProximityAchievements(player);
@@ -127,6 +135,34 @@ public class StatisticsManager implements Listener {
     
     public static void incrementSquirtOnOthers(Player player) {
         incrementCumOnOthers(player);
+    }
+    
+    /**
+     * Apply cum discount to a villager if the player has the perk.
+     * Uses Hero of the Village effect as a workaround for reputation system.
+     */
+    public static void cumOnVillager(Player player, Villager villager) {
+        // Check if player has villager discount perk
+        int discountLevel = RankPerkManager.getVillagerDiscountLevel(player);
+        if (discountLevel <= 0) return;
+        
+        // Apply Hero of the Village effect to player (gives trade discounts)
+        // Duration based on discount level (1 minute per level)
+        int durationTicks = discountLevel * 60 * 20; // ticks
+        int amplifier = Math.min(discountLevel - 1, 4); // 0-4 amplifier
+        
+        player.addPotionEffect(new org.bukkit.potion.PotionEffect(
+            org.bukkit.potion.PotionEffectType.HERO_OF_THE_VILLAGE,
+            durationTicks,
+            amplifier,
+            false, // ambient
+            true,  // particles
+            true   // icon
+        ));
+        
+        // Send message
+        String villagerName = villager.getCustomName() != null ? villager.getCustomName() : "Villager";
+        player.sendMessage("§d" + villagerName + " §7seems to §dlike §7your... gift. §a(Trade discount applied!)");
     }
     
     /**
@@ -178,6 +214,33 @@ public class StatisticsManager implements Listener {
         PlayerStats stats = getStats(player);
         stats.buttfingersReceived++;
         AchievementManager.checkAchievements(player, stats);
+    }
+    
+    public static void incrementSelfButtfingers(Player player) {
+        PlayerStats stats = getStats(player);
+        stats.selfButtfingers++;
+        AchievementManager.checkAchievements(player, stats);
+    }
+    
+    public static void incrementBlocksMinedWhileExposed(Player player) {
+        PlayerStats stats = getStats(player);
+        stats.blocksMinedWhileExposed++;
+        AchievementManager.checkAchievements(player, stats);
+    }
+    
+    public static void setEjaculatedInOcean(Player player) {
+        PlayerStats stats = getStats(player);
+        if (!stats.ejaculatedInOcean) {
+            stats.ejaculatedInOcean = true;
+            AchievementManager.tryUnlockById(player, "seamen");
+        }
+    }
+    
+    public static void incrementGoonsNearBabyVillagers(Player player) {
+        PlayerStats stats = getStats(player);
+        stats.goonsNearBabyVillagers++;
+        // Check for Epstein achievement at 10 baby villagers in one goon
+        // The actual achievement is unlocked elsewhere when 10 are nearby
     }
 
     public static void incrementViagraUsed(Player player) {
@@ -445,11 +508,54 @@ public class StatisticsManager implements Listener {
             stats.goonsWhileOnFire++;
             AchievementManager.tryUnlockById(player, "goon_on_fire");
         }
-        
+
         // Check if falling (velocity Y is negative and not on ground)
         if (!player.isOnGround() && player.getVelocity().getY() < -0.5) {
             stats.goonsWhileFalling++;
             AchievementManager.tryUnlockById(player, "goon_falling");
+        }
+    }
+    
+    private static void checkBabyVillagersNearby(Player player, PlayerStats stats) {
+        // Count baby villagers within 10 blocks
+        int babyVillagersNearby = 0;
+        for (Entity entity : player.getNearbyEntities(10, 10, 10)) {
+            if (entity instanceof Villager villager && !villager.isAdult()) {
+                babyVillagersNearby++;
+            }
+        }
+        
+        // Track the stat
+        if (babyVillagersNearby > 0) {
+            stats.goonsNearBabyVillagers += babyVillagersNearby;
+        }
+        
+        // Unlock achievement if 10+ baby villagers nearby in one goon
+        if (babyVillagersNearby >= 10) {
+            AchievementManager.tryUnlockById(player, "epstein_invitee");
+        }
+    }
+    
+    /**
+     * Check for group gooning - count nearby players who also have genitals out.
+     * Used for threesome (3+), orgy (5+), and gangbang (7+) achievements.
+     */
+    private static void checkGroupGooning(Player player, PlayerStats stats) {
+        int nearbyGooners = 0;
+        
+        // Check players within 10 blocks
+        for (Player nearby : player.getWorld().getPlayers()) {
+            if (nearby != player && nearby.getLocation().distance(player.getLocation()) <= 10) {
+                // Check if the nearby player has active genitals (is gooning)
+                if (GenderManager.hasActiveGenitals(nearby)) {
+                    nearbyGooners++;
+                }
+            }
+        }
+        
+        // Update max if we found more gooners than before
+        if (nearbyGooners > stats.maxNearbyGooners) {
+            stats.maxNearbyGooners = nearbyGooners;
         }
     }
 
