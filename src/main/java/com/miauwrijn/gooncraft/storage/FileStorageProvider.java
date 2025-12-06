@@ -255,7 +255,6 @@ public class FileStorageProvider implements StorageProvider {
         
         // Detailed goon stats
         stats.totalEjaculations = config.getInt("Stats.TotalEjaculations", 0);
-        stats.totalStrokes = config.getLong("Stats.TotalStrokes", 0);
         
         // Streak stats
         stats.currentGoonStreak = config.getInt("Stats.CurrentGoonStreak", 0);
@@ -338,7 +337,6 @@ public class FileStorageProvider implements StorageProvider {
         
         // Detailed goon stats
         config.set("Stats.TotalEjaculations", stats.totalEjaculations);
-        config.set("Stats.TotalStrokes", stats.totalStrokes);
         
         // Streak stats
         config.set("Stats.CurrentGoonStreak", stats.currentGoonStreak);

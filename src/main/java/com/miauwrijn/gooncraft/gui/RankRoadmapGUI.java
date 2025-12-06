@@ -6,8 +6,8 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import com.miauwrijn.gooncraft.managers.AchievementManager;
 import com.miauwrijn.gooncraft.managers.RankManager;
+import com.miauwrijn.gooncraft.managers.StatisticsManager;
 import com.miauwrijn.gooncraft.ranks.BaseRank;
 
 /**
@@ -63,7 +63,7 @@ public class RankRoadmapGUI extends GUI {
         clickHandlers.clear();
         
         BaseRank currentRank = RankManager.getRank(target);
-        int unlockedAchievements = AchievementManager.getUnlockedCount(target);
+        long playerXp = StatisticsManager.getStats(target).experience;
         BaseRank[] allRanks = RankManager.getAllRanks();
         
         // Sort ranks based on sortType
@@ -105,11 +105,11 @@ public class RankRoadmapGUI extends GUI {
             boolean isCurrent = rankIndex == currentRankIndex;
             boolean isNext = rankIndex == currentRankIndex + 1;
             
-            setItem(slotIndex, createRankItem(rank, isUnlocked, isCurrent, isNext, unlockedAchievements).build());
+            setItem(slotIndex, createRankItem(rank, isUnlocked, isCurrent, isNext, playerXp).build());
         }
         
         // Bottom navigation row (row 5)
-        drawNavigation(currentRank, currentRankIndex, unlockedAchievements, allRanks.length, totalPages);
+        drawNavigation(currentRank, currentRankIndex, playerXp, allRanks.length, totalPages);
     }
     
     private void drawSnakePathBackground(int currentRankIndex, int startIndex, int ranksOnPage) {
@@ -133,7 +133,7 @@ public class RankRoadmapGUI extends GUI {
         }
     }
     
-    private void drawNavigation(BaseRank currentRank, int currentRankIndex, int unlockedAchievements, 
+    private void drawNavigation(BaseRank currentRank, int currentRankIndex, long playerXp, 
                                 int totalRanks, int totalPages) {
         // Back button
         setItem(slot(5, 0), new ItemBuilder(Material.ARROW)
@@ -161,9 +161,9 @@ public class RankRoadmapGUI extends GUI {
                     "",
                     "§7Current Rank: " + currentRank.getDisplayName(),
                     "§7Rank #§e" + (currentRankIndex + 1) + "§7/§e" + totalRanks,
-                    "§7Achievements: §e" + unlockedAchievements + "§7/§e67",
+                    "§7XP: §e" + formatNumber(playerXp),
                     "",
-                    "§8Unlock more achievements",
+                    "§8Earn more XP",
                     "§8to rank up!"
                 )
                 .build());
@@ -217,7 +217,7 @@ public class RankRoadmapGUI extends GUI {
     
     private String getSortTypeName(String sortType) {
         return switch (sortType) {
-            case "required" -> "Required Achievements";
+            case "required" -> "Required XP";
             case "rarity" -> "Rarity";
             case "alphabetical" -> "Alphabetical";
             default -> "Unknown";
@@ -232,25 +232,25 @@ public class RankRoadmapGUI extends GUI {
             case "rarity" -> sorted.sort((a, b) -> {
                 int rarityCompare = Integer.compare(b.getRarityOrder(), a.getRarityOrder()); // Higher rarity first
                 if (rarityCompare != 0) return rarityCompare;
-                return Integer.compare(a.getRequiredAchievements(), b.getRequiredAchievements()); // Then by required
+                return Long.compare(a.getRequiredXp(), b.getRequiredXp()); // Then by required XP
             });
-            case "required" -> sorted.sort((a, b) -> Integer.compare(a.getRequiredAchievements(), b.getRequiredAchievements()));
+            case "required" -> sorted.sort((a, b) -> Long.compare(a.getRequiredXp(), b.getRequiredXp()));
         }
         
         return sorted;
     }
 
-    private ItemBuilder createRankItem(BaseRank rank, boolean isUnlocked, boolean isCurrent, boolean isNext, int unlockedAchievements) {
+    private ItemBuilder createRankItem(BaseRank rank, boolean isUnlocked, boolean isCurrent, boolean isNext, long playerXp) {
         String statusLine;
         if (isCurrent) {
             statusLine = "§a§l✓ CURRENT RANK";
         } else if (isUnlocked) {
             statusLine = "§a✓ Unlocked";
         } else if (isNext) {
-            int needed = rank.getRequiredAchievements() - unlockedAchievements;
-            statusLine = "§e⚡ " + needed + " more achievements needed";
+            long needed = rank.getRequiredXp() - playerXp;
+            statusLine = "§e⚡ " + formatNumber(needed) + " more XP needed";
         } else {
-            statusLine = "§8✗ Locked (" + rank.getRequiredAchievements() + " achievements)";
+            statusLine = "§8✗ Locked (" + formatNumber(rank.getRequiredXp()) + " XP)";
         }
         
         Material material;
@@ -268,7 +268,7 @@ public class RankRoadmapGUI extends GUI {
         List<String> lore = new ArrayList<>();
         lore.add("");
         lore.add("§7Rank: §f#" + (rank.getOrdinal() + 1));
-        lore.add("§7Requires: §f" + rank.getRequiredAchievements() + " achievements");
+        lore.add("§7Requires: §f" + formatNumber(rank.getRequiredXp()) + " XP");
         
         // Add description if available
         String description = rank.getDescription();
@@ -300,5 +300,22 @@ public class RankRoadmapGUI extends GUI {
         }
         
         return builder;
+    }
+    
+    /**
+     * Format large numbers (e.g., 1500 -> "1.5K")
+     */
+    private String formatNumber(long number) {
+        if (number < 1000) return String.valueOf(number);
+        if (number < 1000000) {
+            double val = number / 1000.0;
+            return String.format("%.1fK", val).replace(".0K", "K");
+        }
+        if (number < 1000000000) {
+            double val = number / 1000000.0;
+            return String.format("%.1fM", val).replace(".0M", "M");
+        }
+        double val = number / 1000000000.0;
+        return String.format("%.1fB", val).replace(".0B", "B");
     }
 }

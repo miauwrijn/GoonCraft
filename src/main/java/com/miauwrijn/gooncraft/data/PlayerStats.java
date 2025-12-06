@@ -75,7 +75,6 @@ public class PlayerStats {
     
     // Detailed goon stats
     public int totalEjaculations; // Total times finished/orgasmed
-    public long totalStrokes; // Total arm swings while gooning (each goon attempt)
     
     // Goon streak stats (consecutive Minecraft days)
     public int currentGoonStreak; // Current consecutive MC days
@@ -129,7 +128,6 @@ public class PlayerStats {
         this.wolvesAffected = 0;
         this.catsAffected = 0;
         this.totalEjaculations = 0;
-        this.totalStrokes = 0;
         this.currentGoonStreak = 0;
         this.longestGoonStreak = 0;
         this.lastGoonMinecraftDay = 0;
@@ -273,14 +271,11 @@ public class PlayerStats {
     }
     
     /**
-     * Track a goon/stroke and update streak.
-     * Call this every time the player attempts to goon (arm swing while exposed).
+     * Track a goon and update streak.
+     * Call this every time the player goons.
      * @param currentMinecraftDay The current Minecraft day (world.getFullTime() / 24000)
      */
     public void trackGoonStreak(long currentMinecraftDay) {
-        // Increment stroke count
-        totalStrokes++;
-        
         // Check streak
         if (lastGoonMinecraftDay == 0) {
             // First time gooning

@@ -64,7 +64,9 @@ public class BodilyFunctionsHandler implements CommandExecutor {
 
         // Green/brown cloud particles
         player.getWorld().spawnParticle(Particle.SMOKE, particleLoc, 15, 0.2, 0.1, 0.2, 0.02);
-        player.getWorld().spawnParticle(Particle.ENTITY_EFFECT, particleLoc, 10, 0.3, 0.1, 0.3, 1);
+        // Green dust for the fart cloud
+        DustOptions fartDust = new DustOptions(Color.fromRGB(139, 119, 42), 1.5f);
+        player.getWorld().spawnParticle(Particle.DUST, particleLoc, 10, 0.3, 0.1, 0.3, 0, fartDust);
 
         // Fart sound
         player.getWorld().playSound(loc, Sound.ENTITY_CREEPER_HURT, 0.8f, 0.5f);

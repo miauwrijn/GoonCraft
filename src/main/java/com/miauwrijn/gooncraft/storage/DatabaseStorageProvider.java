@@ -239,7 +239,6 @@ public class DatabaseStorageProvider implements StorageProvider {
             
             // Detailed goon stats
             stmt.setInt(i++, stats.totalEjaculations);
-            stmt.setLong(i++, stats.totalStrokes);
             
             // Streak stats
             stmt.setInt(i++, stats.currentGoonStreak);
@@ -356,7 +355,6 @@ public class DatabaseStorageProvider implements StorageProvider {
                 wolves_affected INT DEFAULT 0,
                 cats_affected INT DEFAULT 0,
                 total_ejaculations INT DEFAULT 0,
-                total_strokes BIGINT DEFAULT 0,
                 current_goon_streak INT DEFAULT 0,
                 longest_goon_streak INT DEFAULT 0,
                 last_goon_mc_day BIGINT DEFAULT 0,
@@ -380,7 +378,6 @@ public class DatabaseStorageProvider implements StorageProvider {
         addColumnIfNotExists("experience", "BIGINT DEFAULT 0");
         addColumnIfNotExists("mob_goon_counts", "TEXT");
         addColumnIfNotExists("total_ejaculations", "INT DEFAULT 0");
-        addColumnIfNotExists("total_strokes", "BIGINT DEFAULT 0");
         addColumnIfNotExists("current_goon_streak", "INT DEFAULT 0");
         addColumnIfNotExists("longest_goon_streak", "INT DEFAULT 0");
         addColumnIfNotExists("last_goon_mc_day", "BIGINT DEFAULT 0");
@@ -423,10 +420,10 @@ public class DatabaseStorageProvider implements StorageProvider {
                 deaths_exposed, damage_gooning, goons_falling, goons_on_fire, creeper_deaths,
                 gooned_nether, gooned_end, gooned_underwater, gooned_desert, gooned_snow, gooned_altitude,
                 max_goons_minute, max_ejaculations_30s, pigs_affected, cows_affected, wolves_affected, cats_affected,
-                total_ejaculations, total_strokes, current_goon_streak, longest_goon_streak, last_goon_mc_day,
+                total_ejaculations, current_goon_streak, longest_goon_streak, last_goon_mc_day,
                 unique_cummed_on, unique_got_cummed_by, unique_buttfingered, unique_pissed_near, unique_farted_near,
                 mob_goon_counts, achievements
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 penis_size = VALUES(penis_size), penis_girth = VALUES(penis_girth), bbc = VALUES(bbc),
                 viagra_boost = VALUES(viagra_boost), gender = VALUES(gender), boob_size = VALUES(boob_size),
@@ -445,7 +442,7 @@ public class DatabaseStorageProvider implements StorageProvider {
                 max_goons_minute = VALUES(max_goons_minute), max_ejaculations_30s = VALUES(max_ejaculations_30s),
                 pigs_affected = VALUES(pigs_affected), cows_affected = VALUES(cows_affected),
                 wolves_affected = VALUES(wolves_affected), cats_affected = VALUES(cats_affected),
-                total_ejaculations = VALUES(total_ejaculations), total_strokes = VALUES(total_strokes),
+                total_ejaculations = VALUES(total_ejaculations),
                 current_goon_streak = VALUES(current_goon_streak), longest_goon_streak = VALUES(longest_goon_streak),
                 last_goon_mc_day = VALUES(last_goon_mc_day),
                 unique_cummed_on = VALUES(unique_cummed_on), unique_got_cummed_by = VALUES(unique_got_cummed_by),
@@ -465,10 +462,10 @@ public class DatabaseStorageProvider implements StorageProvider {
                 deaths_exposed, damage_gooning, goons_falling, goons_on_fire, creeper_deaths,
                 gooned_nether, gooned_end, gooned_underwater, gooned_desert, gooned_snow, gooned_altitude,
                 max_goons_minute, max_ejaculations_30s, pigs_affected, cows_affected, wolves_affected, cats_affected,
-                total_ejaculations, total_strokes, current_goon_streak, longest_goon_streak, last_goon_mc_day,
+                total_ejaculations, current_goon_streak, longest_goon_streak, last_goon_mc_day,
                 unique_cummed_on, unique_got_cummed_by, unique_buttfingered, unique_pissed_near, unique_farted_near,
                 mob_goon_counts, achievements
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT (uuid) DO UPDATE SET
                 penis_size = EXCLUDED.penis_size, penis_girth = EXCLUDED.penis_girth, bbc = EXCLUDED.bbc,
                 viagra_boost = EXCLUDED.viagra_boost, gender = EXCLUDED.gender, boob_size = EXCLUDED.boob_size,
@@ -487,7 +484,7 @@ public class DatabaseStorageProvider implements StorageProvider {
                 max_goons_minute = EXCLUDED.max_goons_minute, max_ejaculations_30s = EXCLUDED.max_ejaculations_30s,
                 pigs_affected = EXCLUDED.pigs_affected, cows_affected = EXCLUDED.cows_affected,
                 wolves_affected = EXCLUDED.wolves_affected, cats_affected = EXCLUDED.cats_affected,
-                total_ejaculations = EXCLUDED.total_ejaculations, total_strokes = EXCLUDED.total_strokes,
+                total_ejaculations = EXCLUDED.total_ejaculations,
                 current_goon_streak = EXCLUDED.current_goon_streak, longest_goon_streak = EXCLUDED.longest_goon_streak,
                 last_goon_mc_day = EXCLUDED.last_goon_mc_day,
                 unique_cummed_on = EXCLUDED.unique_cummed_on, unique_got_cummed_by = EXCLUDED.unique_got_cummed_by,
@@ -540,7 +537,6 @@ public class DatabaseStorageProvider implements StorageProvider {
         
         // Detailed goon stats
         stats.totalEjaculations = getIntOrDefault(rs, "total_ejaculations", 0);
-        stats.totalStrokes = getLongOrDefault(rs, "total_strokes", 0);
         
         // Streak stats
         stats.currentGoonStreak = getIntOrDefault(rs, "current_goon_streak", 0);

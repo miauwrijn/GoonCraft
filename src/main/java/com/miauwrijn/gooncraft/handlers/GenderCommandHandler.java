@@ -41,8 +41,9 @@ public class GenderCommandHandler implements CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase("change") || args[0].equalsIgnoreCase("set")) {
-            // Clear active models before changing
+            // Clear all active models before changing gender
             GenderManager.clearActiveBoobModel(player);
+            GenderManager.clearActiveVaginaModel(player);
             com.miauwrijn.gooncraft.managers.PenisStatisticManager.clearActivePenis(player);
             
             // Track gender change statistic
